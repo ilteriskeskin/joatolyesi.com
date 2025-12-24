@@ -11,7 +11,7 @@
     </script>
     
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jo Atölyesi | Aikido & Zanaat</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
@@ -32,9 +32,10 @@
             color: var(--text);
             font-family: 'Montserrat', sans-serif;
             line-height: 1.7;
+            overflow-x: hidden;
         }
 
-        /* Navigation */
+        /* --- NAVIGATION --- */
         nav {
             position: fixed;
             top: 0; width: 100%;
@@ -54,7 +55,14 @@
             padding: 0 20px;
         }
 
-        nav a {
+        nav .logo {
+            font-weight: 600; 
+            color: var(--main); 
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        nav .links a {
             text-decoration: none;
             color: var(--text);
             font-size: 0.75rem;
@@ -65,9 +73,7 @@
             transition: 0.3s;
         }
 
-        nav a:hover { color: var(--accent); }
-
-        /* Hero Section */
+        /* --- HERO --- */
         .hero {
             height: 100vh;
             display: flex;
@@ -76,7 +82,7 @@
             align-items: center;
             text-align: center;
             background: linear-gradient(rgba(253, 251, 247, 0.8), rgba(253, 251, 247, 0.8)), 
-                        url('https://images.unsplash.com/photo-1581447100595-3a74ad993bd1?auto=format&fit=crop&q=80'); /* Hafif ahşap dokusu */
+                        url('https://images.unsplash.com/photo-1581447100595-3a74ad993bd1?auto=format&fit=crop&q=80');
             background-size: cover;
             padding: 0 20px;
         }
@@ -99,7 +105,7 @@
             margin-bottom: 20px;
         }
 
-        /* Common Section Style */
+        /* --- SECTIONS --- */
         section {
             max-width: 1100px;
             margin: 0 auto;
@@ -121,16 +127,30 @@
             align-items: center;
         }
 
-        /* Video Box */
-        .video-box iframe {
+        .video-wrapper {
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        .video-box {
+            position: relative;
             width: 100%;
             aspect-ratio: 9/16;
             border-radius: 20px;
-            border: none;
+            overflow: hidden;
             box-shadow: 0 30px 60px rgba(78, 52, 46, 0.15);
+            background: #000;
         }
 
-        /* Info Cards */
+        .video-box iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+
+        /* --- CARDS & STEPS --- */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -143,50 +163,70 @@
             padding: 40px 30px;
             border-radius: 15px;
             text-align: center;
-            transition: 0.4s;
             border: 1px solid rgba(78, 52, 46, 0.05);
         }
 
-        .feature-card i {
-            font-size: 2.5rem;
+        .step { text-align: center; padding: 20px; position: relative; }
+        .step-num { font-size: 3rem; font-weight: 600; color: rgba(78, 52, 46, 0.1); position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+
+        /* --- FOOTER --- */
+        footer { 
+            text-align: center; 
+            padding: 60px 20px; 
+            background: #f4f1ec; 
+            border-top: 1px solid rgba(78, 52, 46, 0.1); 
+        }
+
+        footer .social-links a {
+            color: var(--main);
+            font-size: 1.5rem;
+            margin: 0 15px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        footer .social-links a:hover {
             color: var(--accent);
-            margin-bottom: 20px;
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(78, 52, 46, 0.08);
-        }
-
-        /* Progress Steps */
-        .step {
-            text-align: center;
-            padding: 20px;
-            position: relative;
-        }
-
-        .step-num {
-            font-size: 3rem;
-            font-weight: 600;
-            color: rgba(78, 52, 46, 0.1);
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            z-index: 0;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 60px 20px;
-            background: #f4f1ec;
-            border-top: 1px solid rgba(78, 52, 46, 0.1);
-            font-size: 0.9rem;
-        }
-
+        /* --- MOBİL OPTİMİZASYON --- */
         @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; gap: 40px; }
-            .hero h1 { font-size: 3rem; }
+            nav .nav-container {
+                flex-direction: column; /* Alt alta getir */
+                gap: 15px;
+            }
+            nav .links {
+                display: flex;
+                gap: 10px;
+            }
+            nav .links a {
+                margin-left: 0;
+                font-size: 0.65rem; /* Biraz küçült */
+                margin: 0 10px;
+            }
+            section {
+                padding: 60px 0;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            #hikaye > div:first-child, 
+            #antrenman > div:last-child,
+            #felsefe > div,
+            #atolye > p,
+            .section-title {
+                padding: 0 25px;
+            }
+            .video-wrapper {
+                max-width: 100%;
+                margin: 0;
+            }
+            .video-box {
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .hero h1 { font-size: 2.8rem; }
         }
     </style>
 </head>
@@ -195,8 +235,8 @@
 
     <nav>
         <div class="nav-container">
-            <div style="font-weight: 600; color: var(--main); letter-spacing: 2px;">JO ATÖLYESİ</div>
-            <div>
+            <a href="#" class="logo">JO ATÖLYESİ</a>
+            <div class="links">
                 <a href="#hikaye">Hikaye</a>
                 <a href="#felsefe">Felsefe</a>
                 <a href="#atolye">Atölye</a>
@@ -217,27 +257,29 @@
             <p>Bir yazılımcı için ekran başındaki saatler bazen zihni yorabilir. 126+ gün önce, bu yorgunluğu Jo'nun ahşap dokusuyla dengelemeye karar verdim.</p>
             <p>Samsun sahilinde her sabah yaptığım bu çalışma, sadece bir spor değil; her vuruşta daha iyiye odaklanan bir zanaat yolculuğu. <strong>0 ve 1'lerden, yaşayan bir ağaca uzanan bir denge.</strong></p>
         </div>
-        <div class="video-box">
-            <iframe src="https://www.youtube.com/embed/DNUm5IkExgk" allowfullscreen></iframe>
+        <div class="video-wrapper">
+            <div class="video-box">
+                <iframe src="https://www.youtube.com/embed/DNUm5IkExgk" allowfullscreen></iframe>
+            </div>
         </div>
     </section>
 
     <section id="felsefe" style="background: rgba(78, 52, 46, 0.02); max-width: 100%;">
-        <div style="max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+        <div style="max-width: 1100px; margin: 0 auto;">
             <h2 class="section-title">Neden Bir Jo Atölyesi?</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <i class="fas fa-tree"></i>
+                    <i class="fas fa-tree" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
                     <h3>Doğru Hammadde</h3>
                     <p>Sadece darbe emiciliği yüksek, budaksız ve fırınlanmış beyaz meşe ve gürgen ağaçları seçilir.</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fas fa-balance-scale"></i>
+                    <i class="fas fa-balance-scale" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
                     <h3>Mükemmel Denge</h3>
                     <p>Bir yazılımcı titizliğiyle, milimetrik ağırlık merkezi ve pürüzsüz yüzey bitişi hedeflenir.</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-heart" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
                     <h3>Ruhu Olan İşçilik</h3>
                     <p>Seri üretim değil, her bir Jo ile 126 günlük antrenman tecrübesinin aktarıldığı butik üretim.</p>
                 </div>
@@ -246,8 +288,10 @@
     </section>
 
     <section id="antrenman" class="grid">
-        <div class="video-box">
-            <iframe src="https://www.youtube.com/embed/PAC6t-hWeg0" allowfullscreen></iframe>
+        <div class="video-wrapper">
+            <div class="video-box">
+                <iframe src="https://www.youtube.com/embed/PAC6t-hWeg0" allowfullscreen></iframe>
+            </div>
         </div>
         <div style="text-align: left;">
             <div class="badge" style="background: var(--accent);">GÜNLÜK DİSİPLİN</div>
@@ -279,7 +323,7 @@
             </div>
         </div>
 
-        <div style="margin-top: 80px; background: var(--main); color: white; padding: 50px; border-radius: 20px;">
+        <div style="margin: 80px 20px 0; background: var(--main); color: white; padding: 50px; border-radius: 20px;">
             <h3>İlk Üretimden Haberdar Olun</h3>
             <p>Sınırlı sayıdaki ilk Jo serisi çıktığında size haber verelim.</p>
             <a href="https://instagram.com/joryu.art" target="_blank"
@@ -290,11 +334,11 @@
     </section>
 
     <footer>
-        <p style="font-family: 'Noto Serif JP', serif; font-size: 1.2rem;">Jo Atölyesi</p>
-        <p>© 2025 • Bir Aikidoka ve Yazılım Takım Liderinin ortak hikayesi.</p>
-        <div style="margin-top: 20px; font-size: 1.2rem;">
-            <i class="fab fa-youtube" style="margin: 0 10px;"></i>
-            <i class="fab fa-instagram" style="margin: 0 10px;"></i>
+        <p style="font-family: 'Noto Serif JP', serif; font-size: 1.2rem; margin-bottom: 5px;">Jo Atölyesi</p>
+        <p style="margin-bottom: 20px;">© 2025 • Bir Aikidoka ve Yazılım Takım Liderinin ortak hikayesi.</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@aliilteriskeskin" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com/joryu.art" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
     </footer>
 
