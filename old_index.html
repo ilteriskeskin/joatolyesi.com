@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jo Atölyesi | Bir Yolculuğun Hikayesi</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;600&family=Montserrat:wght@300;400&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f1ea;
+            color: #2c3e50;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            color: #5d4037;
+        }
+
+        .subtitle {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        .quote {
+            font-family: 'Noto Serif JP', serif;
+            border-left: 3px solid #5d4037;
+            padding: 15px;
+            text-align: left;
+            margin: 30px auto;
+            max-width: 500px;
+            color: #8d6e63;
+            background: rgba(93, 64, 55, 0.05);
+        }
+
+        #day-count {
+            font-weight: 600;
+            color: #5d4037;
+            font-size: 1.3rem;
+        }
+
+        .links {
+            margin-top: 30px;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #5d4037;
+            padding: 12px 25px;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .links a:hover {
+            background-color: #8d6e63;
+            transform: translateY(-3px);
+        }
+
+        .footer {
+            margin-top: 50px;
+            font-size: 0.8rem;
+            color: #888d90;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>JO ATÖLYESİ</h1>
+        <p class="subtitle">"Bir parça ahşap, bir ömürlük yol arkadaşı."</p>
+
+        <div class="content">
+            <p>Her sabah gün doğarken başlayan bir disiplin, her suburide hissedilen bir denge... <br>
+                Aikido yolculuğumda Jo, sadece bir antrenman aracı değil; sessiz bir dost.</p>
+
+            <div class="quote">
+                "<span id="day-count">...</span> gündür her sabah birlikte çalışıyoruz. <br>
+                Ona dokunmayı, onunla akmayı ve onun ruhunu anlamayı öğreniyorum."
+            </div>
+
+            <p>Yakında, bu dostluğu ve zanaatı paylaşmak için burada olacağız. <br>
+                Kendi ellerimle hazırladığım, ruhu olan Jo'lar için takipte kalın.</p>
+        </div>
+
+        <div class="links">
+            <a href="https://www.youtube.com/@aliilteriskeskin" target="_blank">YouTube Yolculuğum</a>
+            <a href="https://www.instagram.com/joryu.art" target="_blank">Instagram</a>
+        </div>
+
+        <div class="footer">
+            © 2025 Jo Atölyesi. Sabır ve disiplinle hazırlanıyor.
+        </div>
+    </div>
+
+    <script>
+        // Antrenmana başladığın gerçek tarihi buraya YYYY-MM-DD formatında yaz
+        const baslangicTarihi = new Date("2025-08-20");
+        const bugun = new Date();
+
+        // Milisaniye farkını gün farkına çevirme
+        const fark = bugun - baslangicTarihi;
+        const gunSayisi = Math.floor(fark / (1000 * 60 * 60 * 24));
+
+        // Ekrana yazdırma
+        document.getElementById("day-count").innerText = gunSayisi;
+    </script>
+
+</body>
+
+</html>
