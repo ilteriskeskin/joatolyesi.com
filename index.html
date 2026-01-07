@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="tr" style="scroll-behavior: smooth;">
+<!DOCTYPE html lang="tr" style="scroll-behavior: smooth;">
 
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-54NX2S2Z01"></script>
@@ -9,14 +8,16 @@
         gtag('js', new Date());
         gtag('config', 'G-54NX2S2Z01');
     </script>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jo Atölyesi | Aikido & Zanaat</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;600&family=Montserrat:wght@300;400;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         :root {
             --main: #4e342e;
@@ -38,7 +39,8 @@
         /* --- NAVIGATION --- */
         nav {
             position: fixed;
-            top: 0; width: 100%;
+            top: 0;
+            width: 100%;
             background: rgba(253, 251, 247, 0.95);
             padding: 15px 0;
             z-index: 1000;
@@ -56,8 +58,8 @@
         }
 
         nav .logo {
-            font-weight: 600; 
-            color: var(--main); 
+            font-weight: 600;
+            color: var(--main);
             letter-spacing: 2px;
             text-decoration: none;
         }
@@ -75,14 +77,14 @@
 
         /* --- HERO --- */
         .hero {
-            height: 100vh;
+            height: 85vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(rgba(253, 251, 247, 0.8), rgba(253, 251, 247, 0.8)), 
-                        url('https://images.unsplash.com/photo-1581447100595-3a74ad993bd1?auto=format&fit=crop&q=80');
+            background: linear-gradient(rgba(253, 251, 247, 0.8), rgba(253, 251, 247, 0.8)),
+                url('https://images.unsplash.com/photo-1581447100595-3a74ad993bd1?auto=format&fit=crop&q=80');
             background-size: cover;
             padding: 0 20px;
         }
@@ -102,7 +104,8 @@
             border-radius: 4px;
             font-size: 0.8rem;
             letter-spacing: 1px;
-            margin-bottom: 20px;
+            margin-top: 75px;
+            margin-bottom: 50px;
         }
 
         /* --- SECTIONS --- */
@@ -145,8 +148,10 @@
 
         .video-box iframe {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border: none;
         }
 
@@ -166,15 +171,28 @@
             border: 1px solid rgba(78, 52, 46, 0.05);
         }
 
-        .step { text-align: center; padding: 20px; position: relative; }
-        .step-num { font-size: 3rem; font-weight: 600; color: rgba(78, 52, 46, 0.1); position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+        .step {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .step-num {
+            font-size: 3rem;
+            font-weight: 600;
+            color: rgba(78, 52, 46, 0.1);
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
 
         /* --- FOOTER --- */
-        footer { 
-            text-align: center; 
-            padding: 60px 20px; 
-            background: #f4f1ec; 
-            border-top: 1px solid rgba(78, 52, 46, 0.1); 
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: #f4f1ec;
+            border-top: 1px solid rgba(78, 52, 46, 0.1);
         }
 
         footer .social-links a {
@@ -189,44 +207,119 @@
             color: var(--accent);
         }
 
+        /* Atölye Bölümü Güncellemesi */
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            background: #fff;
+            border-radius: 15px;
+            border: 1px solid rgba(78, 52, 46, 0.05);
+            transition: 0.3s;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(78, 52, 46, 0.05);
+        }
+
+        .step-num {
+            font-size: 5rem;
+            /* Daha belirgin numara */
+            font-weight: 800;
+            color: rgba(78, 52, 46, 0.05);
+            /* Çok silik, arka plan gibi */
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .step h4,
+        .step p {
+            position: relative;
+            z-index: 1;
+            /* Yazıları numaranın üstüne taşır */
+        }
+
         /* --- MOBİL OPTİMİZASYON --- */
         @media (max-width: 768px) {
+            .step-grid {
+                grid-template-columns: 1fr;
+                /* Mobilde tek kolon: alt alta dizilim */
+                padding: 0 25px;
+                gap: 20px;
+            }
+
+            .step {
+                padding: 30px 20px;
+                text-align: left;
+                /* Mobilde sola yaslı daha şık durur */
+            }
+
+            .step-num {
+                left: 20px;
+                transform: none;
+                top: 0;
+            }
+
             nav .nav-container {
-                flex-direction: column; /* Alt alta getir */
+                flex-direction: column;
+                /* Alt alta getir */
                 gap: 15px;
             }
+
             nav .links {
                 display: flex;
                 gap: 10px;
             }
+
             nav .links a {
                 margin-left: 0;
-                font-size: 0.65rem; /* Biraz küçült */
+                font-size: 0.65rem;
+                /* Biraz küçült */
                 margin: 0 10px;
             }
+
             section {
                 padding: 60px 0;
             }
+
             .grid {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-            #hikaye > div:first-child, 
-            #antrenman > div:last-child,
-            #felsefe > div,
-            #atolye > p,
+
+            #hikaye>div:first-child,
+            #antrenman>div:last-child,
+            #felsefe>div,
+            #atolye>p,
             .section-title {
                 padding: 0 25px;
             }
+
             .video-wrapper {
                 max-width: 100%;
                 margin: 0;
             }
+
             .video-box {
                 border-radius: 0;
                 box-shadow: none;
             }
-            .hero h1 { font-size: 2.8rem; }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
         }
     </style>
 </head>
@@ -246,16 +339,24 @@
 
     <div class="hero">
         <div class="badge">Yazılım Takım Lideri & 8. KYU AIKIDOKA</div>
+        <!--
         <h1>JO ATÖLYESİ</h1>
+        -->
+        <img src="img/logo1.jpeg" alt="Jo Atolyesi Logo" width="50%">
         <p style="letter-spacing: 4px; color: var(--accent); font-weight: 300;">DİSİPLİN • ZANAAT • AKIŞ</p>
-        <a href="#atolye" style="margin-top: 40px; color: var(--main); text-decoration: none; font-weight: 600; border-bottom: 2px solid var(--main); padding-bottom: 5px;">Süreci Keşfet</a>
+        <a href="#atolye"
+            style="margin-top: 10px; color: var(--main); text-decoration: none; font-weight: 600; border-bottom: 2px solid var(--main); padding-bottom: 5px;">Süreci
+            Keşfet</a>
     </div>
 
     <section id="hikaye" class="grid">
         <div>
-            <h2 style="font-family: 'Noto Serif JP', serif; font-size: 2.5rem; color: var(--main); line-height: 1.2;">Kodlar Arasında<br>Bir Dojo</h2>
-            <p>Bir yazılımcı için ekran başındaki saatler bazen zihni yorabilir. 126+ gün önce, bu yorgunluğu Jo'nun ahşap dokusuyla dengelemeye karar verdim.</p>
-            <p>Samsun sahilinde her sabah yaptığım bu çalışma, sadece bir spor değil; her vuruşta daha iyiye odaklanan bir zanaat yolculuğu. <strong>0 ve 1'lerden, yaşayan bir ağaca uzanan bir denge.</strong></p>
+            <h2 style="font-family: 'Noto Serif JP', serif; font-size: 2.5rem; color: var(--main); line-height: 1.2;">
+                Kodlar Arasında<br>Bir Dojo</h2>
+            <p>Bir yazılımcı için ekran başındaki saatler bazen zihni yorabilir. <strong id="day-counter1"></strong> gün
+                önce, bu yorgunluğu Jo'nun ahşap dokusuyla dengelemeye karar verdim.</p>
+            <p>Samsun sahilinde her sabah yaptığım bu çalışma, sadece bir spor değil; her vuruşta daha iyiye odaklanan
+                bir zanaat yolculuğu. <strong>0 ve 1'lerden, yaşayan bir ağaca uzanan bir denge.</strong></p>
         </div>
         <div class="video-wrapper">
             <div class="video-box">
@@ -264,6 +365,7 @@
         </div>
     </section>
 
+    <!--
     <section id="felsefe" style="background: rgba(78, 52, 46, 0.02); max-width: 100%;">
         <div style="max-width: 1100px; margin: 0 auto;">
             <h2 class="section-title">Neden Bir Jo Atölyesi?</h2>
@@ -274,7 +376,8 @@
                     <p>Sadece darbe emiciliği yüksek, budaksız ve fırınlanmış beyaz meşe ve gürgen ağaçları seçilir.</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fas fa-balance-scale" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
+                    <i class="fas fa-balance-scale"
+                        style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
                     <h3>Mükemmel Denge</h3>
                     <p>Bir yazılımcı titizliğiyle, milimetrik ağırlık merkezi ve pürüzsüz yüzey bitişi hedeflenir.</p>
                 </div>
@@ -286,46 +389,82 @@
             </div>
         </div>
     </section>
+    -->
+
+    <section id="felsefe" style="background: rgba(78, 52, 46, 0.02); max-width: 100%;">
+        <div style="max-width: 1100px; margin: 0 auto;">
+            <h2 class="section-title">Neden Jo?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-tree" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
+                    <h3>Mental Rahatlama</h3>
+                    <p>Jo sadece bir silah değil odağımı tek bir işte toplamamı sağlayan meditasyon aracı.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-balance-scale"
+                        style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
+                    <h3>Mükemmel Denge</h3>
+                    <p>Uzuvlarımın koordineli çalışmasını ve dengemi geliştiriyorum.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-heart" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
+                    <h3>Ruhu Olan Bir Amaç</h3>
+                    <p>Bazı şeylerin felsefi/manevi anlamı olur. Bu da öyle bir şey. Felsefi bir yolculuğun ruhu olan
+                        bir aracı.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section id="antrenman" class="grid">
         <div class="video-wrapper">
             <div class="video-box">
-                <iframe src="https://www.youtube.com/embed/PAC6t-hWeg0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/V5yeJLl7Jgw" allowfullscreen></iframe>
             </div>
         </div>
         <div style="text-align: left;">
             <div class="badge" style="background: var(--accent);">GÜNLÜK DİSİPLİN</div>
-            <h3 id="day-counter" style="font-size: 5rem; margin: 0; color: var(--main); line-height: 1;">126</h3>
+            <h3 id="day-counter2" style="font-size: 5rem; margin: 0; color: var(--main); line-height: 1;"></h3>
             <p style="font-size: 1.4rem; font-weight: 600; margin-top: 10px;">Gündür Kesintisiz Akış</p>
-            <p>8. Kyu seviyesine giden yolda her sabah, her hava koşulunda matın üzerindeydik. Bu disiplin, atölyedeki üretim kalitemizin de teminatıdır.</p>
+            <p>8. Kyu seviyesine giden yolda her sabah, her hava koşulunda çalışmak için kendime bir yer buldum. Bir
+                amaç edindim ve bu amaca ulaşmak için çok sıkı çalıştım. Jo kullanımı konusunda başladığın yere dönüp
+                bakınca olduğum yerden oldukça memnunum diyebilirim.</p>
+            </p>
         </div>
     </section>
 
+
     <section id="atolye" style="text-align: center;">
         <h2 class="section-title">Atölye Yol Haritası</h2>
-        <p style="max-width: 600px; margin: 0 auto 60px;">Şu an üretim hattımızı ve hammadde tedariğimizi kusursuz hale getiriyoruz.</p>
-        
-        <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+        <p style="max-width: 600px; margin: 0 auto 40px; padding: 0 20px;">Şu an Jo kullanımı ve bir tahta parçasının
+            kusursuzluğu
+            konusunda kendimi geliştiriyorum.</p>
+
+        <div class="step-grid">
             <div class="step">
                 <span class="step-num">01</span>
-                <h4>Seçim</h4>
-                <p style="font-size: 0.85rem;">Doğru doku ve ağırlıktaki ağaçların tedariği.</p>
+                <h4>Suburi</h4>
+                <p style="font-size: 0.85rem;">Jo ile vuruş tekniklerinin tekrarı, doğru form ve akışın
+                    kazanılması.
+                </p>
             </div>
             <div class="step">
                 <span class="step-num">02</span>
-                <h4>İşleme</h4>
-                <p style="font-size: 0.85rem;">Geleneksel yöntemlerle şekillendirme ve zımpara.</p>
+                <h4>Kata</h4>
+                <p style="font-size: 0.85rem;">Belirli hareket dizilerinin öğrenilmesi ve Jo'nun
+                    vücutla uyumunun sağlanması.
+                </p>
             </div>
             <div class="step">
                 <span class="step-num">03</span>
-                <h4>Mühür</h4>
-                <p style="font-size: 0.85rem;">Doğal yağlar ile koruma ve son denge testi.</p>
+                <h4>Üretim</h4>
+                <p style="font-size: 0.85rem;">Kusursuz ve el emeği Jo üretimi için gerekli tecrübe kazanımı.</p>
             </div>
         </div>
 
         <div style="margin: 80px 20px 0; background: var(--main); color: white; padding: 50px; border-radius: 20px;">
             <h3>İlk Üretimden Haberdar Olun</h3>
-            <p>Sınırlı sayıdaki ilk Jo serisi çıktığında size haber verelim.</p>
+            <p>Biriken tecrübelerim ile sınırlı sayıdaki ilk Jo serisi çıktığında haberdar olun.</p>
             <a href="https://instagram.com/joryu.art" target="_blank"
                 style="display: inline-block; margin-top: 20px; background: white; color: var(--main); padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: 600;">
                 <i class="fab fa-instagram"></i> joryu.art Takip Et
@@ -337,8 +476,10 @@
         <p style="font-family: 'Noto Serif JP', serif; font-size: 1.2rem; margin-bottom: 5px;">Jo Atölyesi</p>
         <p style="margin-bottom: 20px;">© 2025 • Bir Aikidoka ve Yazılım Takım Liderinin ortak hikayesi.</p>
         <div class="social-links">
-            <a href="https://youtube.com/@aliilteriskeskin" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-            <a href="https://instagram.com/joryu.art" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/@aliilteriskeskin" target="_blank" title="YouTube"><i
+                    class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com/joryu.art" target="_blank" title="Instagram"><i
+                    class="fab fa-instagram"></i></a>
         </div>
     </footer>
 
@@ -346,7 +487,9 @@
         const start = new Date("2025-08-20");
         const today = new Date();
         const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
-        document.getElementById("day-counter").innerText = diff;
+        document.getElementById("day-counter1").innerText = diff;
+        document.getElementById("day-counter2").innerText = diff;
     </script>
 </body>
+
 </html>
