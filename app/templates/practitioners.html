@@ -16,6 +16,11 @@
     <h3>{{ person.display_name or person.username }}</h3>
     <p class="muted">@{{ person.username }}</p>
     <span class="badge badge--pro">{{ t["discipline_" ~ person.discipline] }}</span>
+    {% set belt = belts[person.id] %}
+    <span class="belt belt--mini belt--{{ belt.id }}" data-tip="{{ belt.tip(t) }}">
+      {% include "_belt_svg.html" %}
+      <span class="belt__label">{{ belt.label(t) }}</span>
+    </span>
     {% if person.bio %}<p class="muted person-bio">{{ person.bio[:120] }}{% if person.bio|length > 120 %}…{% endif %}</p>{% endif %}
   </a>
   {% endfor %}

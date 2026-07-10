@@ -2,12 +2,7 @@
   {% for b in belts %}
   <span class="belt belt--{{ b.id }}{% if not b.earned %} belt--locked{% endif %}"
         tabindex="0" data-tip="{{ b.tip(t) }}">
-    <svg viewBox="0 0 72 44" aria-hidden="true">
-      <rect class="belt__band" x="2" y="14" width="68" height="12" rx="2"/>
-      <path class="belt__strap" d="M31 25 L25 41 L31 41 L35 27 Z"/>
-      <path class="belt__strap" d="M41 25 L47 41 L41 41 L37 27 Z"/>
-      <rect class="belt__knot" x="29" y="11" width="14" height="18" rx="3"/>
-    </svg>
+    {% include "_belt_svg.html" %}
     <span class="belt__label">{{ b.label(t) }}</span>
   </span>
   {% endfor %}

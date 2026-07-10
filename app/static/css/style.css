@@ -1069,3 +1069,13 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
   .belt, .achievement, [data-tip]::after { transition: none; }
   .belt:hover svg { animation: none; }
 }
+
+/* Topluluk kartındaki mini kuşak */
+.belt--mini {
+  flex-direction: row;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+}
+.belt--mini svg { width: 40px; height: 25px; }
+.belt--mini .belt__label { font-size: 0.78rem; }
+.belt--mini:hover, .belt--mini:focus-visible { transform: translateY(-3px); }

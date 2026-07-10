@@ -58,6 +58,11 @@ def compute_belts(total_practice_days: int) -> list[Belt]:
     return [Belt(id=belt_id, threshold=n, earned=total_practice_days >= n) for belt_id, n in BELTS]
 
 
+def current_belt(total_practice_days: int) -> Belt:
+    """Kişinin şu anki kuşağı: kazanılmış en yüksek kuşak (en kötü beyaz)."""
+    return [b for b in compute_belts(total_practice_days) if b.earned][-1]
+
+
 def compute_badges(total_sessions: int) -> list[Badge]:
     return [
         Badge(id=f"sessions-{n}", threshold=n, earned=total_sessions >= n)

@@ -11,8 +11,8 @@ from app.deps import get_current_user, require_user
 from app.models import User
 from app.rate_limit import limiter
 from app.render import render
-from app.badges import compute_badges, compute_belts
-from app.stats import build_heatmap, compute_streak, practice_stats, total_practice_days
+from app.badges import compute_badges, compute_belts, current_belt
+from app.stats import build_heatmap, compute_streak, practice_day_counts, practice_stats, total_practice_days
 
 router = APIRouter()
 
@@ -72,7 +72,10 @@ async def practitioners(
         stmt = stmt.where(or_(User.username.ilike(like), User.display_name.ilike(like)))
     stmt = stmt.order_by(User.created_at.desc()).limit(50)
     result = await db.execute(stmt)
-    return render(request, "practitioners.html", user=user, people=list(result.scalars().all()), q=q)
+    people = list(result.scalars().all())
+    day_counts = await practice_day_counts(db, [p.id for p in people])
+    belts = {p.id: current_belt(day_counts.get(p.id, 0)) for p in people}
+    return render(request, "practitioners.html", user=user, people=people, belts=belts, q=q)
 
 
 @router.get("/u/{username}", response_class=HTMLResponse)

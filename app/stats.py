@@ -65,6 +65,18 @@ async def total_practice_days(db: AsyncSession, user_id: uuid.UUID) -> int:
     return result.scalar_one()
 
 
+async def practice_day_counts(db: AsyncSession, user_ids: list[uuid.UUID]) -> dict[uuid.UUID, int]:
+    """Birden çok kullanıcı için toplam pratik günü — topluluk listesi tek sorguda."""
+    if not user_ids:
+        return {}
+    result = await db.execute(
+        select(PracticeLog.user_id, func.count(func.distinct(PracticeLog.practiced_on)))
+        .where(PracticeLog.user_id.in_(user_ids))
+        .group_by(PracticeLog.user_id)
+    )
+    return dict(result.all())
+
+
 async def practice_stats(db: AsyncSession, user_id: uuid.UUID) -> dict:
     result = await db.execute(
         select(func.count(PracticeLog.id), func.coalesce(func.sum(PracticeLog.minutes), 0)).where(
