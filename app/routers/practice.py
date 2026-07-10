@@ -14,16 +14,16 @@ from app.models import Enrollment, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import compute_badges, compute_belts
 from app.render import render
-from app.stats import build_heatmap, compute_longest_streak, compute_streak, practice_stats
+from app.stats import build_heatmap, compute_streak, practice_stats, total_practice_days
 
 router = APIRouter()
 
 
 async def dashboard_context(db: AsyncSession, user: User) -> dict:
     streak = await compute_streak(db, user.id)
-    longest_streak = await compute_longest_streak(db, user.id)
+    practice_days = await total_practice_days(db, user.id)
     stats = await practice_stats(db, user.id)
-    belts = compute_belts(longest_streak)
+    belts = compute_belts(practice_days)
     badges = compute_badges(stats["total_sessions"])
     heatmap = await build_heatmap(db, user.id)
     recent = await db.execute(

@@ -12,7 +12,7 @@ from app.models import User
 from app.rate_limit import limiter
 from app.render import render
 from app.badges import compute_badges, compute_belts
-from app.stats import build_heatmap, compute_longest_streak, compute_streak, practice_stats
+from app.stats import build_heatmap, compute_streak, practice_stats, total_practice_days
 
 router = APIRouter()
 
@@ -89,9 +89,9 @@ async def public_profile(
         return render(request, "404.html", user=viewer)
 
     streak = await compute_streak(db, person.id)
-    longest_streak = await compute_longest_streak(db, person.id)
+    practice_days = await total_practice_days(db, person.id)
     stats = await practice_stats(db, person.id)
-    belts = [b for b in compute_belts(longest_streak) if b.earned]
+    belts = [b for b in compute_belts(practice_days) if b.earned]
     badges = [b for b in compute_badges(stats["total_sessions"]) if b.earned]
     heatmap = await build_heatmap(db, person.id)
     return render(

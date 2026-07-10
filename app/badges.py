@@ -1,20 +1,21 @@
 """Kuşaklar ve rozetler: pratik verisinden anlık hesaplanır, tablo gerektirmez.
 
-Kuşaklar seriye bağlıdır ve klasik kyu ilerleyişini izler: beyazdan siyaha.
-Bir eşik bir kez geçilince kaybolmaz — tüm zamanların en uzun serisine bakılır.
+Kuşaklar toplam pratik gününe (farklı gün sayısı) bağlıdır ve klasik kyu
+ilerleyişini izler: herkes beyaz kuşakla başlar, 365 pratik gününü dolduran
+siyah kuşak olur. Toplam gün azalmayacağı için kazanılan kuşak kaybolmaz.
 Siyah kuşak sonrası dan sistemi (1. dan, 2. dan...) ileride eklenecek.
 """
 
 from dataclasses import dataclass
 
-# (id, gün eşiği) — siyah kuşak 365 gün kesintisiz seri
+# (id, toplam pratik günü eşiği) — beyaz herkese, siyah 365 günde
 BELTS = (
-    ("white", 7),
-    ("yellow", 21),
-    ("orange", 45),
-    ("green", 90),
-    ("blue", 180),
-    ("brown", 270),
+    ("white", 0),
+    ("yellow", 30),
+    ("orange", 60),
+    ("green", 120),
+    ("blue", 200),
+    ("brown", 280),
     ("black", 365),
 )
 
@@ -31,6 +32,8 @@ class Belt:
         return t[f"belt_{self.id}"]
 
     def tip(self, t: dict) -> str:
+        if self.threshold == 0:
+            return t["belt_tip_start"]
         fmt = t["belt_tip_earned_fmt"] if self.earned else t["belt_tip_locked_fmt"]
         return fmt.format(n=self.threshold)
 
@@ -51,8 +54,8 @@ class Badge:
         return fmt.format(n=self.threshold)
 
 
-def compute_belts(longest_streak: int) -> list[Belt]:
-    return [Belt(id=belt_id, threshold=n, earned=longest_streak >= n) for belt_id, n in BELTS]
+def compute_belts(total_practice_days: int) -> list[Belt]:
+    return [Belt(id=belt_id, threshold=n, earned=total_practice_days >= n) for belt_id, n in BELTS]
 
 
 def compute_badges(total_sessions: int) -> list[Badge]:

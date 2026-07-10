@@ -32,8 +32,9 @@ STRINGS = {
         "solution_title": "What Joryu gives you",
         "feature_1_title": "Streaks that earn you belts",
         "feature_1_body": (
-            "Log every session and grow your streak — from white belt at 7 days "
-            "all the way to black belt at 365. Then the dan ranks begin."
+            "Log every session and keep your streak alive. Everyone starts with "
+            "the white belt — 365 days of practice earns the black belt. Then "
+            "the dan ranks begin."
         ),
         "feature_2_title": "Kata & suburi video library",
         "feature_2_body": "Reference videos for the forms you're trying to remember.",
@@ -154,7 +155,7 @@ STRINGS = {
         "community_empty": "No one found.",
         # Belts & badges
         "belts_title": "Belts",
-        "belts_hint": "Belts are earned with unbroken practice streaks. The black belt takes 365 days.",
+        "belts_hint": "Everyone starts with the white belt. Belts advance with total practice days — 365 days of practice earns the black belt.",
         "belt_white": "White Belt",
         "belt_yellow": "Yellow Belt",
         "belt_orange": "Orange Belt",
@@ -162,8 +163,9 @@ STRINGS = {
         "belt_blue": "Blue Belt",
         "belt_brown": "Brown Belt",
         "belt_black": "Black Belt",
-        "belt_tip_earned_fmt": "{n}-day streak — earned",
-        "belt_tip_locked_fmt": "Unlocks at a {n}-day streak",
+        "belt_tip_start": "The starting belt — everyone begins in white",
+        "belt_tip_earned_fmt": "{n} practice days — earned",
+        "belt_tip_locked_fmt": "Unlocks at {n} total practice days",
         "badges_title": "Badges",
         "badge_first_session": "First Session",
         "badge_sessions_fmt": "{n} Sessions",
@@ -203,8 +205,8 @@ STRINGS = {
         "solution_title": "Joryu sana ne sunuyor",
         "feature_1_title": "Kuşak kazandıran seriler",
         "feature_1_body": (
-            "Her seansı kaydet, serini büyüt — 7 günde beyaz kuşaktan 365 günde "
-            "siyah kuşağa. Sonrası dan dereceleri."
+            "Her seansı kaydet, serini canlı tut. Herkes beyaz kuşakla başlar — "
+            "365 pratik gününü dolduran siyah kuşak olur. Sonrası dan dereceleri."
         ),
         "feature_2_title": "Kata ve suburi video kütüphanesi",
         "feature_2_body": "Hatırlamaya çalıştığın formlar için referans videolar.",
@@ -325,7 +327,7 @@ STRINGS = {
         "community_empty": "Kimse bulunamadı.",
         # Kuşaklar ve rozetler
         "belts_title": "Kuşaklar",
-        "belts_hint": "Kuşaklar kesintisiz pratik serisiyle kazanılır. Siyah kuşak 365 gün ister.",
+        "belts_hint": "Herkes beyaz kuşakla başlar. Kuşaklar toplam pratik gününle ilerler — 365 pratik gününü dolduran siyah kuşak olur.",
         "belt_white": "Beyaz Kuşak",
         "belt_yellow": "Sarı Kuşak",
         "belt_orange": "Turuncu Kuşak",
@@ -333,8 +335,9 @@ STRINGS = {
         "belt_blue": "Mavi Kuşak",
         "belt_brown": "Kahverengi Kuşak",
         "belt_black": "Siyah Kuşak",
-        "belt_tip_earned_fmt": "{n} gün seri — kazanıldı",
-        "belt_tip_locked_fmt": "{n} gün seriye ulaşınca açılır",
+        "belt_tip_start": "Başlangıç kuşağı — herkes beyazla başlar",
+        "belt_tip_earned_fmt": "{n} pratik günü — kazanıldı",
+        "belt_tip_locked_fmt": "Toplam {n} pratik gününde açılır",
         "badges_title": "Rozetler",
         "badge_first_session": "İlk Seans",
         "badge_sessions_fmt": "{n} Seans",

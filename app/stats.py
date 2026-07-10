@@ -57,6 +57,14 @@ async def compute_longest_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
     return longest
 
 
+async def total_practice_days(db: AsyncSession, user_id: uuid.UUID) -> int:
+    """Toplam pratik günü (farklı gün sayısı) — kuşaklar buna göre ilerler."""
+    result = await db.execute(
+        select(func.count(func.distinct(PracticeLog.practiced_on))).where(PracticeLog.user_id == user_id)
+    )
+    return result.scalar_one()
+
+
 async def practice_stats(db: AsyncSession, user_id: uuid.UUID) -> dict:
     result = await db.execute(
         select(func.count(PracticeLog.id), func.coalesce(func.sum(PracticeLog.minutes), 0)).where(
