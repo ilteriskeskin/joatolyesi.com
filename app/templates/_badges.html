@@ -1,0 +1,8 @@
+<div class="achievement-grid">
+  {% for b in badges %}
+  <span class="achievement achievement--{{ b.kind }}{% if not b.earned %} achievement--locked{% endif %}">
+    <span class="achievement__num">{{ b.threshold }}</span>
+    <span class="achievement__label">{{ b.label(t) }}</span>
+  </span>
+  {% endfor %}
+</div>

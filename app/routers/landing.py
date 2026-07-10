@@ -55,8 +55,12 @@ async def join_waitlist(request: Request, db: AsyncSession = Depends(get_db)):
         .values(email=email, lang=resolved_lang, source=clean_source)
         .on_conflict_do_nothing(index_elements=["email"])
     )
-    await db.execute(stmt)
+    result = await db.execute(stmt)
     await db.commit()
+
+    # Çakışmada insert olmaz (rowcount 0) — kayıt zaten var, kullanıcıya söyle
+    if result.rowcount == 0:
+        return HTMLResponse(f'<p class="form-message form-message--success">{strings["form_already"]}</p>')
 
     return HTMLResponse(f'<p class="form-message form-message--success">{strings["form_success"]}</p>')
 

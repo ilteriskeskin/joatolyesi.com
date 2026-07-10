@@ -12,14 +12,19 @@ from app.models import PracticeLog
 HEATMAP_WEEKS = 16
 
 
-async def compute_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
+async def _practice_dates(db: AsyncSession, user_id: uuid.UUID) -> list:
+    """Kullanıcının pratik yaptığı günler, en yeniden eskiye."""
     result = await db.execute(
         select(PracticeLog.practiced_on)
         .where(PracticeLog.user_id == user_id)
         .distinct()
         .order_by(PracticeLog.practiced_on.desc())
     )
-    dates = list(result.scalars().all())
+    return list(result.scalars().all())
+
+
+async def compute_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
+    dates = await _practice_dates(db, user_id)
     if not dates:
         return 0
     today = datetime.now(UTC).date()
@@ -34,6 +39,22 @@ async def compute_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
         else:
             break
     return streak
+
+
+async def compute_longest_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
+    """Tüm zamanların en uzun serisi — rozetler buna bakar, bozulan seri
+    kazanılmış rozeti geri almaz."""
+    dates = await _practice_dates(db, user_id)
+    if not dates:
+        return 0
+    longest = current = 1
+    for prev, curr in zip(dates, dates[1:]):
+        if prev - curr == timedelta(days=1):
+            current += 1
+            longest = max(longest, current)
+        else:
+            current = 1
+    return longest
 
 
 async def practice_stats(db: AsyncSession, user_id: uuid.UUID) -> dict:

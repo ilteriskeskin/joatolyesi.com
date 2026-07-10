@@ -12,15 +12,16 @@ STRINGS = {
             "For aikido, iaido, jodo and kobudo practitioners who train alone "
             "between dojo days: log your jo, bokken and kata practice, keep "
             "your streak, and follow ready-made programs — built by a "
-            "practitioner who trained 290 days straight."
+            "practitioner who trained {days} days straight."
         ),
-        "hero_disciplines": "Aikido · Iaido · Jodo · Kenjutsu · Kobudo",
+        "hero_disciplines": "Aikido · Iaido · Jodo · Kendo · Kenjutsu · Karate-do · Taekwondo · Kobudo",
         "cta_button": "Join the waitlist",
         "email_placeholder": "you@example.com",
         "form_success": "You're in. First invites go out soon.",
         "form_error": "Something went wrong. Please try again.",
         "form_error_invalid": "Please enter a valid email address.",
         "form_error_rate_limit": "Too many attempts. Try again in a minute.",
+        "form_already": "You're already on the list — your spot is saved.",
         "problem_title": "You already know the problem",
         "problem_1_title": "The dojo is open two days a week",
         "problem_1_body": "But you want to train every day.",
@@ -44,7 +45,7 @@ STRINGS = {
         "devices_phone_label": "Log a session — on your phone",
         "devices_desktop_label": "Progress & programs — on your computer",
         "devices_note": "Installable: add it to your home screen and use it like a native app.",
-        "social_proof": "Born from 290+ days of uninterrupted jo practice.",
+        "social_proof": "Born from {days} days of uninterrupted jo practice.",
         "social_link_label": "Follow the practice on Instagram",
         "cta2_title": "Be first in line",
         "footer_tagline": "A practice companion for people who train alone.",
@@ -148,6 +149,12 @@ STRINGS = {
         "community_search_placeholder": "Search by username or name",
         "community_search_button": "Search",
         "community_empty": "No one found.",
+        # Badges
+        "badges_title": "Badges",
+        "badge_first_session": "First Session",
+        "badge_streak_fmt": "{n}-Day Streak",
+        "badge_sessions_fmt": "{n} Sessions",
+        "badges_empty": "Badges are earned through practice. The first one comes with your first session.",
     },
     "tr": {
         "html_lang": "tr",
@@ -161,16 +168,17 @@ STRINGS = {
         "hero_sub": (
             "Dojo günleri arasında tek başına çalışan aikido, iaido, jodo ve "
             "kobudo pratisyenleri için: jo, bokken ve kata seanslarını kaydet, "
-            "serini koru, hazır programlarla ilerle — 290 gün aralıksız "
+            "serini koru, hazır programlarla ilerle — {days} gün aralıksız "
             "çalışmış bir pratisyenden."
         ),
-        "hero_disciplines": "Aikido · Iaido · Jodo · Kenjutsu · Kobudo",
+        "hero_disciplines": "Aikido · Iaido · Jodo · Kendo · Kenjutsu · Karate-do · Taekwondo · Kobudo",
         "cta_button": "Bekleme listesine katıl",
         "email_placeholder": "sen@ornek.com",
         "form_success": "Listedesin. İlk davetler yakında gelecek.",
         "form_error": "Bir şeyler ters gitti. Lütfen tekrar dene.",
         "form_error_invalid": "Lütfen geçerli bir e-posta adresi gir.",
         "form_error_rate_limit": "Çok fazla deneme yaptın. Bir dakika sonra tekrar dene.",
+        "form_already": "Bu e-posta zaten listede — yerin hazır.",
         "problem_title": "Sorunu zaten biliyorsun",
         "problem_1_title": "Dojo haftada iki gün açık",
         "problem_1_body": "Ama sen her gün çalışmak istiyorsun.",
@@ -194,7 +202,7 @@ STRINGS = {
         "devices_phone_label": "Seans kaydı — telefonda",
         "devices_desktop_label": "İlerleme ve programlar — bilgisayarda",
         "devices_note": "Yüklenebilir: ana ekranına ekle, normal bir uygulama gibi kullan.",
-        "social_proof": "290+ gün kesintisiz jo pratiğinden doğdu.",
+        "social_proof": "{days} gün kesintisiz jo pratiğinden doğdu.",
         "social_link_label": "Pratiği Instagram'da takip et",
         "cta2_title": "İlk sırada yer al",
         "footer_tagline": "Tek başına çalışanlar için bir pratik yoldaşı.",
@@ -298,6 +306,12 @@ STRINGS = {
         "community_search_placeholder": "Kullanıcı adı veya isim ara",
         "community_search_button": "Ara",
         "community_empty": "Kimse bulunamadı.",
+        # Badges
+        "badges_title": "Rozetler",
+        "badge_first_session": "İlk Seans",
+        "badge_streak_fmt": "{n} Gün Seri",
+        "badge_sessions_fmt": "{n} Seans",
+        "badges_empty": "Rozetler pratikle kazanılır. İlki, ilk seansınla gelir.",
     },
 }
 

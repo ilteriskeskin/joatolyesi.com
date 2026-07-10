@@ -9,6 +9,11 @@
 </div>
 
 <div class="card">
+  <h2>{{ t.badges_title }}</h2>
+  {% include "_badges.html" %}
+</div>
+
+<div class="card">
   <h2>{{ t.dash_log_title }}</h2>
   <form hx-post="/app/practice" hx-target="#practice-panel" hx-swap="innerHTML" class="practice-form">
     <div class="practice-form__row">

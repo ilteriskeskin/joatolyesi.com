@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ t.meta_title }}</title>
-  <meta name="description" content="{{ t.meta_description }}">
+  <meta name="description" content="{{ t.meta_description.format(days=practice_days) }}">
   <meta name="theme-color" content="#0b0c0d">
   <link rel="manifest" href="/static/manifest.webmanifest">
   <link rel="icon" href="/static/img/icon.svg" type="image/svg+xml">
@@ -16,7 +16,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://joatolyesi.com/">
   <meta property="og:title" content="{{ t.meta_title }}">
-  <meta property="og:description" content="{{ t.meta_description }}">
+  <meta property="og:description" content="{{ t.meta_description.format(days=practice_days) }}">
   <meta property="og:image" content="https://joatolyesi.com/static/img/icon-512.png">
   <link rel="stylesheet" href="/static/css/style.css">
   <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
@@ -60,7 +60,7 @@
   </svg>
   <div class="hero__content">
     <h1>{{ t.hero_h1 }}</h1>
-    <p class="hero__sub">{{ t.hero_sub }}</p>
+    <p class="hero__sub">{{ t.hero_sub.format(days=practice_days) }}</p>
     <p class="hero__disciplines">{{ t.hero_disciplines }}</p>
 
     <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
@@ -185,7 +185,7 @@
 </section>
 
 <section class="social-proof">
-  <p class="social-proof__line">{{ t.social_proof }}</p>
+  <p class="social-proof__line">{{ t.social_proof.format(days=practice_days) }}</p>
   <a class="social-proof__link" href="https://instagram.com/joryu.art" target="_blank" rel="noopener">
     {{ t.social_link_label }} — @joryu.art
   </a>

@@ -30,6 +30,13 @@
     </div>
   </div>
 
+  {% if badges %}
+  <div class="card">
+    <h2>{{ t.badges_title }}</h2>
+    {% include "_badges.html" %}
+  </div>
+  {% endif %}
+
   <div class="card">
     <h2>{{ t.activity_title }}</h2>
     {% include "_heatmap.html" %}

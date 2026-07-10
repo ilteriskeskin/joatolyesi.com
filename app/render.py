@@ -1,3 +1,6 @@
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
+
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
@@ -7,6 +10,14 @@ from app.i18n.strings import DEFAULT_LANG, SUPPORTED_LANGS, get_strings
 from app.models import User
 
 templates = Jinja2Templates(directory="app/templates")
+
+# Kesintisiz pratik serisinin başlangıcı — landing'deki gün sayacı buradan türer
+PRACTICE_START = date(2025, 8, 11)
+
+
+def practice_days() -> int:
+    today = datetime.now(ZoneInfo("Europe/Istanbul")).date()
+    return (today - PRACTICE_START).days + 1
 
 
 def resolve_lang(request: Request, lang_param: str | None = None) -> str:
@@ -35,6 +46,7 @@ def render(request: Request, template: str, user: User | None = None, **context)
             "user": user,
             "user_is_pro": is_pro(user),
             "waitlist_only": settings.waitlist_only,
+            "practice_days": practice_days(),
             **context,
         },
     )

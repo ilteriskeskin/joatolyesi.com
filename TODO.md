@@ -17,8 +17,8 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
       ayarları (`ENV=production` → secure cookie), joatolyesi.com DNS.
       Lemon Squeezy webhook URL'i prod domain'e tanımlanmalı, gerçek
       checkout URL'leri + webhook secret .env'e girilmeli.
-- [ ] **Postgres yedekleme.** Günlük `pg_dump` cron + offsite kopya.
-      Kullanıcı verisi kaybedilirse güven bir daha gelmez.
+- [x] **Postgres yedekleme.** `scripts/backup.sh` yazıldı (günlük cron,
+      son 14 yedek); offsite kopya hâlâ manuel (ayda bir scp).
 - [ ] **CSRF koruması.** Formlar cookie auth ile korunmasız (SameSite=lax
       kısmen koruyor ama POST'lara token eklenmeli).
 - [ ] **Kata videoları.** Katalog hazır ama videolar boş. En azından
@@ -69,8 +69,11 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
 - [ ] **4. Seri dondurma hakkı.** Ayda 1-2 "donma" hakkı (hastalık, seyahat).
       Seriyi kaybetmek bırakmanın en büyük sebebi; affetme mekanizması
       elde tutmayı ciddi artırır (Duolingo etkisi).
-- [ ] **5. Kilometre taşı rozetleri.** 7/30/100/365 gün; profilde görünür,
-      paylaşim kartına işlenir. Ucuz, etkili.
+- [x] **5. Kilometre taşı rozetleri.** Yapıldı: `app/badges.py` — seri
+      (7/30/90/180/365, tüm zamanların en uzun serisine bakar) + seans
+      sayısı (1/25/100/300) rozetleri; dashboard'da tümü (kilitliler soluk),
+      herkese açık profilde sadece kazanılanlar. Anlık hesaplanır, tablo yok.
+      Kalan: paylaşım kartına işlenmesi (madde 2 ile birlikte).
 - [ ] **6. Takip + basit akış.** Toplulukta kişileri takip et; "bugün kim
       ne çalıştı" akışı. Sosyal baskı = düzenlilik. (Yorum/beğeni değil,
       sadece görünürlük — basit tut.)
