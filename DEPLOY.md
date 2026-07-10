@@ -25,23 +25,23 @@ DNS yayılmadan Caddy sertifika ALAMAZ; önce DNS, sonra compose up.
 
 ## 3. Sunucu mimarisi (droplet)
 
-```
-İnternet → Caddy (80/443, otomatik SSL) → app (FastAPI, internal :8000)
-                                        → postgres (internal, DIŞARI KAPALI)
-```
+Sunucuda halihazırda **nginx** çalışıyor ve `/var/www` altındaki başka
+siteleri yayınlıyor. 80/443 nginx'te kalır; Caddy KULLANILMAZ.
+Joryu, mevcut sitelere DOKUNMADAN yeni bir nginx server block olarak eklenir.
 
-Caddyfile (özet):
 ```
-joatolyesi.com, www.joatolyesi.com {
-    reverse_proxy app:8000
-}
+İnternet → nginx (80/443, mevcut) ── diğer siteler (/var/www/..., AYNEN KALIR)
+                                  └─ joatolyesi.com → 127.0.0.1:8000 (Docker: FastAPI)
+                                                          └─ postgres (internal, DIŞARI KAPALI)
 ```
 
 Kurallar:
-- 80/443 dışında hiçbir port dışarı açık değil (SSH 22 hariç)
+- Diğer sitelerin server block'larına ve `/var/www`'a ASLA dokunulmaz;
+  sadece joatolyesi.com'a ait yeni bir conf dosyası eklenir
+- App portu compose'da `127.0.0.1:8000` — dışarıdan doğrudan erişilemez
 - Postgres portu compose'da host'a MAP EDİLMEZ (ports: yok, sadece internal network)
-- SSL Caddy'de otomatik — manuel sertifika yönetimi YOK
-  (api-dev.heybooster.ai vakasının tekrarı istenmiyor)
+- SSL certbot ile (sunucudaki mevcut düzen neyse o); sadece joatolyesi.com
+  için sertifika yenilenir, diğer sertifikalara dokunulmaz
 
 ## 4. Firewall (droplet üzerinde)
 
@@ -116,8 +116,153 @@ Landing page yayında 2 hafta: **100+ e-posta → uygulama lansmanı**.
 
 ---
 
-## Sunucuda çalıştırılacak komutlar (Claude Code doldurur)
+## Sunucuda çalıştırılacak komutlar — Phase 0 (waitlist-only) yayını
 
-> Phase 1 production hazırlığı bitince Claude Code bu bölümü projenin
-> gerçek dosya/servis adlarıyla, sıralı ve kopyala-yapıştır çalışır
-> halde yazar.
+> Senaryo: joatolyesi.com şu ana kadar nginx'ten statik index.html olarak
+> yayındaydı. Aynı makinede `/var/www` altında başka canlı siteler var —
+> aşağıdaki adımların hiçbiri onlara dokunmaz. Sadece joatolyesi.com'un
+> kendi server block'u değişir.
+
+### 0) Ön kontrol — çakışma var mı?
+
+```bash
+# 8000 portu boş mu? (doluysa compose.yml'de 127.0.0.1:8001:8000 yap,
+# nginx conf'ta proxy_pass'i de 8001 yap)
+sudo ss -tlnp | grep :8000 || echo "8000 bos"
+
+# Docker ve compose kurulu mu?
+docker --version && docker compose version
+
+# joatolyesi.com'un MEVCUT nginx conf'u hangisi? (yedeklemek için)
+grep -rl "joatolyesi" /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>/dev/null
+```
+
+Docker yoksa: https://docs.docker.com/engine/install/ (resmî script yeterli).
+
+### 1) Uygulamayı kur ve başlat
+
+```bash
+git clone https://github.com/ilteriskeskin/joatolyesi.com.git ~/joryu && cd ~/joryu
+cp .env.example .env
+nano .env
+```
+
+`.env`'de doldurulacaklar:
+- `POSTGRES_PASSWORD` ve `DATABASE_URL` içindeki şifre (aynı olacak) → `openssl rand -hex 24`
+- `ADMIN_TOKEN` → `openssl rand -hex 32` (CSV export bununla açılır, sakla)
+- `SECRET_KEY` → `openssl rand -hex 32`
+- `ENV=production`
+- `WAITLIST_ONLY=true`  ← Phase 0'ın anahtarı: sadece landing + mail toplama
+- Lemon Squeezy alanları şimdilik boş kalır
+
+```bash
+docker compose up -d --build
+
+# Migration'ları çalıştır (waitlist tablosu burada oluşur)
+docker compose exec app alembic upgrade head
+
+# Yerelden doğrula: landing 200 dönmeli
+curl -sI http://127.0.0.1:8000/ | head -1
+```
+
+### 2) nginx: statik site yerine reverse proxy
+
+Önce mevcut conf'u yedekle (adım 0'da bulunan dosya, örn.
+`/etc/nginx/sites-available/joatolyesi.com`):
+
+```bash
+sudo cp /etc/nginx/sites-available/joatolyesi.com ~/joatolyesi.com.nginx.bak
+```
+
+Sonra AYNI dosyanın içeriğini şununla değiştir (başka dosyaya dokunma;
+`ssl_certificate` satırlarını eski conf'tan aynen koru — certbot yazmıştı):
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name joatolyesi.com www.joatolyesi.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name joatolyesi.com www.joatolyesi.com;
+
+    # Eski conf'taki certbot satırlarını AYNEN buraya taşı:
+    ssl_certificate     /etc/letsencrypt/live/joatolyesi.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/joatolyesi.com/privkey.pem;
+    include             /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+> Site şimdiye kadar HTTP-only yayındaysa (sertifika yoksa): üstteki 443
+> bloğunu atla, 80 bloğunda `return 301` yerine `location /` proxy bloğunu
+> kullan, sonra `sudo certbot --nginx -d joatolyesi.com -d www.joatolyesi.com`
+> çalıştır — certbot conf'u kendisi SSL'e çevirir.
+
+```bash
+# Sözdizimi kontrolü — "syntax is ok" görmeden reload ETME
+sudo nginx -t
+
+# reload restart DEĞİLDİR: diğer sitelerde kesinti olmaz
+sudo systemctl reload nginx
+```
+
+### 3) Doğrulama
+
+```bash
+curl -sI https://joatolyesi.com/ | head -1          # HTTP/2 200
+curl -s -o /dev/null -w "%{http_code}\n" https://joatolyesi.com/login   # 404 (waitlist-only)
+
+# Waitlist formu uçtan uca
+curl -s -X POST https://joatolyesi.com/waitlist -d "email=test@test.com&lang=tr"
+
+# Kayıt düştü mü? (CSV export, ADMIN_TOKEN ile)
+curl -s "https://joatolyesi.com/admin/waitlist?token=<ADMIN_TOKEN>"
+
+# Diğer siteler hâlâ ayakta mı? Birkaçını kontrol et:
+curl -sI https://<diger-site>/ | head -1
+```
+
+Tarayıcıdan da bak: sayfada login/register linki OLMAMALI, waitlist formu
+çalışmalı (TR/EN dil değişimi dahil).
+
+### 4) Güncelleme akışı (sonraki deploylar)
+
+```bash
+cd ~/joryu && git pull && docker compose up -d --build
+docker compose exec app alembic upgrade head   # yeni migration varsa
+```
+
+### 5) App lansmanı günü (Phase 1'e geçiş)
+
+```bash
+cd ~/joryu
+sed -i 's/WAITLIST_ONLY=true/WAITLIST_ONLY=false/' .env
+docker compose up -d   # restart yeterli, build gerekmez
+```
+
+Sonra toplanan maillere "yayındayız" duyurusu (CSV: adım 3'teki export).
+
+### Geri alma (rollback)
+
+Bir şey ters giderse eski statik site 2 komutla geri gelir:
+
+```bash
+sudo cp ~/joatolyesi.com.nginx.bak /etc/nginx/sites-available/joatolyesi.com
+sudo nginx -t && sudo systemctl reload nginx
+docker compose -f ~/joryu/compose.yml down   # istenirse
+```
+
+(Eski statik dosyalar `/var/www`'da duruyorsa silme — rollback sigortan.)
