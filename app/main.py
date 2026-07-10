@@ -12,7 +12,7 @@ if settings.sentry_dsn:
 
     sentry_sdk.init(dsn=settings.sentry_dsn, environment=settings.env, traces_sample_rate=0)
 from app.rate_limit import limiter
-from app.routers import admin, auth, billing, kata, landing, practice, profile, programs
+from app.routers import admin, auth, billing, guide, kata, landing, practice, profile, programs
 from app.seed import seed_content
 
 app = FastAPI(title="Joryu")
@@ -21,6 +21,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(landing.router)
+app.include_router(guide.router)  # rehber halka açık: SEO + üyelik öncesi değer
 if not settings.waitlist_only:
     app.include_router(auth.router)
     app.include_router(practice.router)

@@ -65,6 +65,37 @@ async def total_practice_days(db: AsyncSession, user_id: uuid.UUID) -> int:
     return result.scalar_one()
 
 
+async def weekly_summary(db: AsyncSession, user_id: uuid.UUID) -> dict:
+    """Bu hafta / geçen hafta karşılaştırması + haftanın branşı (dashboard kartı)."""
+    today = datetime.now(UTC).date()
+    week_start = today - timedelta(days=today.weekday())  # pazartesi
+    prev_start = week_start - timedelta(days=7)
+
+    result = await db.execute(
+        select(PracticeLog.practiced_on, PracticeLog.discipline, func.sum(PracticeLog.minutes))
+        .where(PracticeLog.user_id == user_id, PracticeLog.practiced_on >= prev_start)
+        .group_by(PracticeLog.practiced_on, PracticeLog.discipline)
+    )
+    this_days: set = set()
+    this_minutes = prev_minutes = 0
+    discipline_minutes: dict[str, int] = {}
+    for day, discipline, minutes in result.all():
+        if day >= week_start:
+            this_days.add(day)
+            this_minutes += minutes
+            discipline_minutes[discipline] = discipline_minutes.get(discipline, 0) + minutes
+        else:
+            prev_minutes += minutes
+
+    top = max(discipline_minutes, key=discipline_minutes.get) if discipline_minutes else None
+    return {
+        "week_days": len(this_days),
+        "week_minutes": this_minutes,
+        "prev_week_minutes": prev_minutes,
+        "week_top_discipline": top,
+    }
+
+
 async def practice_day_counts(db: AsyncSession, user_ids: list[uuid.UUID]) -> dict[uuid.UUID, int]:
     """Birden çok kullanıcı için toplam pratik günü — topluluk listesi tek sorguda."""
     if not user_ids:

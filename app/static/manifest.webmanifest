@@ -31,5 +31,29 @@
       "type": "image/svg+xml",
       "purpose": "any"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pratik kaydet",
+      "short_name": "Kaydet",
+      "url": "/app",
+      "icons": [
+        {
+          "src": "/static/img/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Kata kütüphanesi",
+      "short_name": "Kata",
+      "url": "/kata",
+      "icons": [
+        {
+          "src": "/static/img/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }

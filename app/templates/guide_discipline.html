@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ t["discipline_" ~ d] }} — {{ t.guide_title }} — Joryu{% endblock %}
+{% block content %}
+<article class="guide-page">
+  <p class="guide-breadcrumb"><a href="/guide">{{ t.guide_title }}</a> / {{ t["discipline_" ~ d] }}</p>
+  <h1>{{ t["discipline_" ~ d] }}</h1>
+  <p class="guide-intro">{{ g.intro[lang] if lang in g.intro else g.intro.tr }}</p>
+
+  {% if g.kata %}
+  <h2 class="guide-section-title">{{ t.guide_kata_title }}</h2>
+  {% for k in g.kata %}
+  <div class="card guide-item" id="{{ k.name | lower | replace(' ', '-') }}">
+    <div class="guide-item__head">
+      <h3>{{ k.name }}{% if k.jp %} <span class="guide-jp">{{ k.jp }}</span>{% endif %}</h3>
+      <span class="badge badge--pro">{{ k.level[lang] if lang in k.level else k.level.tr }}</span>
+    </div>
+    <div class="guide-item__body">
+      <div class="guide-item__text">
+        <p>{{ k.summary[lang] if lang in k.summary else k.summary.tr }}</p>
+        {% if k.steps %}
+        <details class="guide-steps">
+          <summary>{{ t.guide_steps_label }}</summary>
+          <ol>
+            {% for s in (k.steps[lang] if lang in k.steps else k.steps.tr) %}
+            <li>{{ s }}</li>
+            {% endfor %}
+          </ol>
+        </details>
+        {% endif %}
+      </div>
+      {% if k.diagram %}
+      <img class="guide-diagram" src="/static/img/guide/{{ k.diagram }}.svg" alt="{{ k.name }} — {{ t.guide_diagram_alt }}" loading="lazy">
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <h2 class="guide-section-title">{{ t.guide_techniques_title }}</h2>
+  {% for group in g.techniques %}
+  <div class="card guide-item">
+    <h3>{{ group.group[lang] if lang in group.group else group.group.tr }}</h3>
+    <dl class="guide-techlist">
+      {% for item in group["items"] %}
+      <dt>{{ item.name }}</dt>
+      <dd>{{ item.detail[lang] if lang in item.detail else item.detail.tr }}</dd>
+      {% endfor %}
+    </dl>
+  </div>
+  {% endfor %}
+
+  <div class="card guide-cta">
+    <p>{{ t.guide_cta_text }}</p>
+    {% if user %}
+    <a class="button" href="/app">{{ t.nav_practice }}</a>
+    {% elif waitlist_only %}
+    <a class="button" href="/">{{ t.cta_button }}</a>
+    {% else %}
+    <a class="button" href="/register">{{ t.nav_register }}</a>
+    {% endif %}
+  </div>
+</article>
+{% endblock %}

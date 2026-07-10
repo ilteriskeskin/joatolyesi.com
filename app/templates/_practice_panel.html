@@ -3,6 +3,35 @@
   <span class="streak-label">{{ t.dash_streak_label }}</span>
 </div>
 
+<div class="card week-card">
+  <h2>{{ t.week_title }}</h2>
+  <div class="week-stats">
+    <div class="stat">
+      <span class="stat-number">{{ week.week_days }}</span>
+      <span class="stat-label">{{ t.week_days_label }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">{{ week.week_minutes }}</span>
+      <span class="stat-label">{{ t.stats_minutes }}</span>
+    </div>
+    {% if week.week_top_discipline %}
+    <div class="stat">
+      <span class="stat-number stat-number--text">{{ t["discipline_" ~ week.week_top_discipline] }}</span>
+      <span class="stat-label">{{ t.week_top_label }}</span>
+    </div>
+    {% endif %}
+  </div>
+  {% if week.prev_week_minutes %}
+  <p class="muted week-compare">
+    {% if week.week_minutes >= week.prev_week_minutes %}
+    {{ t.week_ahead.format(n=week.week_minutes - week.prev_week_minutes) }}
+    {% else %}
+    {{ t.week_behind.format(n=week.prev_week_minutes - week.week_minutes) }}
+    {% endif %}
+  </p>
+  {% endif %}
+</div>
+
 <div class="card">
   <h2>{{ t.activity_title }}</h2>
   {% include "_heatmap.html" %}

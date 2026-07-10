@@ -38,6 +38,7 @@
 <header class="site-header">
   <span class="brand">joryu</span>
   <nav class="app-nav">
+    <a href="/guide">{{ t.nav_guide }}</a>
     {% if user %}
     <a href="/app">{{ t.nav_practice }}</a>
     {% elif not waitlist_only %}

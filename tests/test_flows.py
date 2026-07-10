@@ -163,3 +163,41 @@ async def test_waitlist_duplicate_message(client):
     r2 = await client.post("/waitlist", data={"email": email, "lang": "tr", "csrf_token": token})
     assert "Listedesin" in r1.text
     assert "zaten listede" in r2.text
+
+
+async def test_guide_public_and_complete(client):
+    # Rehber giriş istemez
+    r = await client.get("/guide")
+    assert r.status_code == 200
+    # DISCIPLINES'taki her rehberli branş açılıyor ve iki bölümü de var
+    from app.guide_content import GUIDE
+    for d in GUIDE:
+        r = await client.get(f"/guide/{d}")
+        assert r.status_code == 200, d
+        assert "guide-techlist" in r.text, d
+        if GUIDE[d]["kata"]:
+            assert "Kata" in r.text, d
+    r = await client.get("/guide/olmayan-brans")
+    assert "404" in r.text or r.status_code == 200  # 404 sablonu
+
+
+async def test_kata_quick_log_and_weekly_card(client):
+    email, username = f"{unique('k')}@test.com", unique("kata")
+    await register(client, email, username)
+    r = await client.get("/app")
+    assert "week-card" in r.text  # haftalık özet kartı
+
+    # seed'lenmiş ücretsiz bir kata bul
+    from app.db import async_session
+    from app.models import Kata
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.is_free))).scalars().first()
+    if kata is None:
+        pytest.skip("seed içerik yok")
+    token = await get_csrf(client, f"/kata/{kata.slug}")
+    r = await client.post(f"/kata/{kata.slug}/log", data={"minutes": "25", "csrf_token": token})
+    assert r.status_code == 303
+    r = await client.get(f"/kata/{kata.slug}?logged=1")
+    assert "form-message--success" in r.text
+    r = await client.get("/app")
+    assert 'streak-number">1' in r.text

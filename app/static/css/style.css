@@ -1127,3 +1127,70 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
   border-bottom: 1px solid var(--border);
 }
 .verify-banner .link-button { color: var(--accent); text-decoration: underline; font-size: 0.85rem; }
+
+/* Haftalık özet + kata hızlı kayıt */
+.week-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.week-stats .stat-number { font-size: 2rem; }
+.stat-number--text { font-size: 1.2rem !important; line-height: 2.4rem; }
+.week-compare { margin-top: 0.75rem; font-size: 0.85rem; }
+
+.kata-log-card { margin-top: 1.5rem; }
+.kata-log-form { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.kata-log-form label { font-size: 0.85rem; color: var(--ink-dim); }
+.kata-log-form input {
+  display: block; width: 90px; margin-top: 0.3rem;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+  padding: 0.55rem 0.7rem; color: var(--ink); font-size: 1rem;
+}
+.kata-log-form button {
+  background: var(--accent); color: #0b0c0d; border: none; border-radius: 4px;
+  padding: 0.65rem 1.2rem; font-weight: 600; cursor: pointer;
+}
+
+/* ---- Branş rehberi ---- */
+
+.guide-page { max-width: 760px; margin: 0 auto; }
+.guide-breadcrumb { font-size: 0.85rem; margin-bottom: 0.5rem; }
+.guide-intro { color: var(--ink-dim); margin: 0.75rem 0 1.5rem; line-height: 1.65; }
+.guide-section-title {
+  font-size: 1.4rem;
+  margin: 2.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.guide-item__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.guide-item__head h3 { margin-bottom: 0.25rem; }
+.guide-jp { color: var(--ink-dim); font-size: 0.9rem; font-weight: 400; margin-left: 0.3rem; }
+.guide-item__body { display: flex; gap: 1.25rem; align-items: flex-start; }
+.guide-item__text { flex: 1; }
+.guide-item__text p { color: var(--ink-dim); font-size: 0.95rem; }
+.guide-diagram {
+  width: 130px;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.guide-steps { margin-top: 0.75rem; }
+.guide-steps summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+.guide-steps ol { margin: 0.75rem 0 0 1.25rem; color: var(--ink-dim); font-size: 0.92rem; }
+.guide-steps li { margin-bottom: 0.35rem; }
+.guide-techlist dt { color: var(--ink); font-weight: 600; font-size: 0.95rem; margin-top: 0.9rem; }
+.guide-techlist dd { color: var(--ink-dim); font-size: 0.92rem; margin: 0.2rem 0 0 0; }
+.guide-cta { text-align: center; margin-top: 2rem; }
+.guide-cta p { color: var(--ink-dim); margin-bottom: 1rem; }
+
+@media (max-width: 540px) {
+  .guide-item__body { flex-direction: column; }
+  .guide-diagram { width: 160px; align-self: center; }
+}

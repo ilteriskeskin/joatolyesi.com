@@ -14,7 +14,7 @@ from app.models import Enrollment, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import compute_badges, compute_belts
 from app.render import render
-from app.stats import build_heatmap, compute_streak, practice_stats, total_practice_days
+from app.stats import build_heatmap, compute_streak, practice_stats, total_practice_days, weekly_summary
 
 router = APIRouter()
 
@@ -25,6 +25,7 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
     stats = await practice_stats(db, user.id)
     belts = compute_belts(practice_days)
     badges = compute_badges(stats["total_sessions"])
+    week = await weekly_summary(db, user.id)
     heatmap = await build_heatmap(db, user.id)
     recent = await db.execute(
         select(PracticeLog)
@@ -47,6 +48,7 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         "streak": streak,
         "belts": belts,
         "badges": badges,
+        "week": week,
         "heatmap": heatmap,
         "recent_logs": list(recent.scalars().all()),
         "enrollment": enrollment,

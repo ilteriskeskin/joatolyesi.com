@@ -92,13 +92,20 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
 - [ ] **6. Takip + basit akış.** Toplulukta kişileri takip et; "bugün kim
       ne çalıştı" akışı. Sosyal baskı = düzenlilik. (Yorum/beğeni değil,
       sadece görünürlük — basit tut.)
-- [ ] **7. Kata çalışma modu.** Kata sayfasında video + tekrar sayacı +
-      "bugün bunu çalıştım" tek tuş kaydı. Kütüphaneyi pasif arşivden
-      aktif antrenman aracına çevirir.
-- [ ] **8. Haftalık özet e-postası.** "Bu hafta 5 seans, 140 dk, en çok
-      aiki-jo." Geri getirme (retention) klasiği.
-- [ ] **9. PWA kısayolu ile hızlı kayıt.** Manifest shortcut: ana ekran
-      ikonuna basılı tut → "Pratik kaydet". Sürtünmeyi azaltır.
+- [x] **7. Kata çalışma modu (v1).** Kata sayfasında "Bugün bunu çalıştım"
+      + dakika alanı: tek tuşla pratik kaydı, not olarak kata adı düşer.
+      Kalan: tekrar sayacı.
+- [x] **8. Haftalık özet (v1 — dashboard kartı).** "Bu hafta: X gün, Y dk,
+      odak branş" + geçen haftayla kıyas. E-posta versiyonu sonra.
+- [x] **9. PWA kısayolu.** Manifest shortcuts: "Pratik kaydet" (/app) ve
+      "Kata" (/kata).
+- [x] **11. Branş rehberi (/guide).** 10 branş için kata + teknik/vuruş
+      sınıflandırması; TR detaylı, EN özet; embusen/happo/seviye SVG
+      diyagramları. Halka açık (SEO + üyelik öncesi değer). Kata'sı olmayan
+      branşlarda (aikido, kenjutsu kısmen) yalnız teknikler. İçerik
+      `app/guide_content.py` — düzeltme/ekleme oradan.
+- [ ] **12. Rehber EN derinleştirme.** Rehberin adım listeleri şimdilik
+      yalnız TR; EN kullanıcılar TR listeyi görüyor.
 - [ ] **10. TR yerel fiyatlandırma.** Billing'de ₺59/ay yazıyor ama Lemon
       Squeezy'de TR fiyatlı ayrı varyant tanımlanmalı.
 

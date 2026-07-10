@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ t.guide_title }} — Joryu{% endblock %}
+{% block content %}
+<h1>{{ t.guide_title }}</h1>
+<p class="muted">{{ t.guide_hint }}</p>
+
+<div class="card-grid guide-grid">
+  {% for d in disciplines %}
+  <a class="card" href="/guide/{{ d }}">
+    <h3>{{ t["discipline_" ~ d] }}</h3>
+    <p class="muted">
+      {% if guide[d].kata %}{{ guide[d].kata | length }} {{ t.guide_kata_count }} · {% endif %}
+      {{ guide[d].techniques | map(attribute="items") | map("length") | sum }} {{ t.guide_technique_count }}
+    </p>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}
