@@ -69,11 +69,13 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
 - [ ] **4. Seri dondurma hakkı.** Ayda 1-2 "donma" hakkı (hastalık, seyahat).
       Seriyi kaybetmek bırakmanın en büyük sebebi; affetme mekanizması
       elde tutmayı ciddi artırır (Duolingo etkisi).
-- [x] **5. Kilometre taşı rozetleri.** Yapıldı: `app/badges.py` — seri
-      (7/30/90/180/365, tüm zamanların en uzun serisine bakar) + seans
-      sayısı (1/25/100/300) rozetleri; dashboard'da tümü (kilitliler soluk),
+- [x] **5. Kilometre taşı rozetleri → kuşak sistemi.** Yapıldı:
+      `app/badges.py` — seriye bağlı 7 kuşak (beyaz 7g → siyah 365g, tüm
+      zamanların en uzun serisine bakar, SVG + hover/tooltip) + seans
+      rozetleri (1/25/100/300). Dashboard'da tümü (kilitliler silüet),
       herkese açık profilde sadece kazanılanlar. Anlık hesaplanır, tablo yok.
-      Kalan: paylaşım kartına işlenmesi (madde 2 ile birlikte).
+      Kalan: siyah kuşak sonrası **dan dereceleri** (1-10. dan; landing'de
+      vaat edildi) + kuşakların paylaşım kartına işlenmesi (madde 2 ile).
 - [ ] **6. Takip + basit akış.** Toplulukta kişileri takip et; "bugün kim
       ne çalıştı" akışı. Sosyal baskı = düzenlilik. (Yorum/beğeni değil,
       sadece görünürlük — basit tut.)

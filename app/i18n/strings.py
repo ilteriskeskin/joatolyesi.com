@@ -30,8 +30,11 @@ STRINGS = {
         "problem_3_title": "You can't see your progress",
         "problem_3_body": "There's no record of what you practiced or how consistent you were.",
         "solution_title": "What Joryu gives you",
-        "feature_1_title": "Daily practice log & streak",
-        "feature_1_body": "Log every session, grow your streak, keep your rhythm.",
+        "feature_1_title": "Streaks that earn you belts",
+        "feature_1_body": (
+            "Log every session and grow your streak — from white belt at 7 days "
+            "all the way to black belt at 365. Then the dan ranks begin."
+        ),
         "feature_2_title": "Kata & suburi video library",
         "feature_2_body": "Reference videos for the forms you're trying to remember.",
         "feature_3_title": "30-day structured programs",
@@ -149,12 +152,23 @@ STRINGS = {
         "community_search_placeholder": "Search by username or name",
         "community_search_button": "Search",
         "community_empty": "No one found.",
-        # Badges
+        # Belts & badges
+        "belts_title": "Belts",
+        "belts_hint": "Belts are earned with unbroken practice streaks. The black belt takes 365 days.",
+        "belt_white": "White Belt",
+        "belt_yellow": "Yellow Belt",
+        "belt_orange": "Orange Belt",
+        "belt_green": "Green Belt",
+        "belt_blue": "Blue Belt",
+        "belt_brown": "Brown Belt",
+        "belt_black": "Black Belt",
+        "belt_tip_earned_fmt": "{n}-day streak — earned",
+        "belt_tip_locked_fmt": "Unlocks at a {n}-day streak",
         "badges_title": "Badges",
         "badge_first_session": "First Session",
-        "badge_streak_fmt": "{n}-Day Streak",
         "badge_sessions_fmt": "{n} Sessions",
-        "badges_empty": "Badges are earned through practice. The first one comes with your first session.",
+        "badge_tip_earned_fmt": "{n} sessions — earned",
+        "badge_tip_locked_fmt": "Unlocks at {n} sessions",
     },
     "tr": {
         "html_lang": "tr",
@@ -187,8 +201,11 @@ STRINGS = {
         "problem_3_title": "İlerlemeni göremiyorsun",
         "problem_3_body": "Neyi ne kadar çalıştığını gösteren bir kayıt yok.",
         "solution_title": "Joryu sana ne sunuyor",
-        "feature_1_title": "Günlük pratik kaydı ve seri",
-        "feature_1_body": "Her seansı kaydet, serini büyüt, düzenini koru.",
+        "feature_1_title": "Kuşak kazandıran seriler",
+        "feature_1_body": (
+            "Her seansı kaydet, serini büyüt — 7 günde beyaz kuşaktan 365 günde "
+            "siyah kuşağa. Sonrası dan dereceleri."
+        ),
         "feature_2_title": "Kata ve suburi video kütüphanesi",
         "feature_2_body": "Hatırlamaya çalıştığın formlar için referans videolar.",
         "feature_3_title": "30 günlük yapılandırılmış programlar",
@@ -306,12 +323,23 @@ STRINGS = {
         "community_search_placeholder": "Kullanıcı adı veya isim ara",
         "community_search_button": "Ara",
         "community_empty": "Kimse bulunamadı.",
-        # Badges
+        # Kuşaklar ve rozetler
+        "belts_title": "Kuşaklar",
+        "belts_hint": "Kuşaklar kesintisiz pratik serisiyle kazanılır. Siyah kuşak 365 gün ister.",
+        "belt_white": "Beyaz Kuşak",
+        "belt_yellow": "Sarı Kuşak",
+        "belt_orange": "Turuncu Kuşak",
+        "belt_green": "Yeşil Kuşak",
+        "belt_blue": "Mavi Kuşak",
+        "belt_brown": "Kahverengi Kuşak",
+        "belt_black": "Siyah Kuşak",
+        "belt_tip_earned_fmt": "{n} gün seri — kazanıldı",
+        "belt_tip_locked_fmt": "{n} gün seriye ulaşınca açılır",
         "badges_title": "Rozetler",
         "badge_first_session": "İlk Seans",
-        "badge_streak_fmt": "{n} Gün Seri",
         "badge_sessions_fmt": "{n} Seans",
-        "badges_empty": "Rozetler pratikle kazanılır. İlki, ilk seansınla gelir.",
+        "badge_tip_earned_fmt": "{n} seans — kazanıldı",
+        "badge_tip_locked_fmt": "{n} seansta açılır",
     },
 }
 

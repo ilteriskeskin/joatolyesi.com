@@ -945,3 +945,127 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
   border: 1px solid var(--border);
   color: var(--ink-dim);
 }
+
+/* ---- Kuşaklar ---- */
+
+.belt-hint { margin-bottom: 1rem; }
+
+.belt-rack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.belt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: default;
+  outline: none;
+  transition: transform 0.25s ease;
+}
+
+.belt svg {
+  width: 64px;
+  height: 40px;
+  overflow: visible;
+}
+
+.belt__band, .belt__knot, .belt__strap {
+  stroke: #000;
+  stroke-width: 1;
+  transition: filter 0.25s ease;
+}
+
+.belt__label {
+  font-size: 0.72rem;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+/* Kuşak renkleri */
+.belt--white  .belt__band, .belt--white  .belt__knot, .belt--white  .belt__strap { fill: #ede9df; }
+.belt--yellow .belt__band, .belt--yellow .belt__knot, .belt--yellow .belt__strap { fill: #dcb63f; }
+.belt--orange .belt__band, .belt--orange .belt__knot, .belt--orange .belt__strap { fill: #cd7c36; }
+.belt--green  .belt__band, .belt--green  .belt__knot, .belt--green  .belt__strap { fill: #5c8a55; }
+.belt--blue   .belt__band, .belt--blue   .belt__knot, .belt--blue   .belt__strap { fill: #47679c; }
+.belt--brown  .belt__band, .belt--brown  .belt__knot, .belt--brown  .belt__strap { fill: #6f4a2a; }
+.belt--black  .belt__band, .belt--black  .belt__knot, .belt--black  .belt__strap { fill: #191a1c; stroke: #3a3d42; }
+
+/* Düğüm bandın önünde dursun diye hafif koyulaştır */
+.belt__knot { filter: brightness(0.82); }
+
+/* Kilitli kuşak: silüet */
+.belt--locked .belt__band, .belt--locked .belt__knot, .belt--locked .belt__strap {
+  fill: transparent;
+  stroke: var(--border);
+  stroke-dasharray: 3 2;
+}
+.belt--locked .belt__label { opacity: 0.5; }
+
+/* Hover / focus: kalk, parla */
+.belt:hover, .belt:focus-visible {
+  transform: translateY(-6px);
+}
+.belt:hover svg, .belt:focus-visible svg { animation: belt-sway 0.5s ease; }
+.belt:hover .belt__label, .belt:focus-visible .belt__label { color: var(--ink); }
+
+@keyframes belt-sway {
+  0%   { transform: rotate(0deg); }
+  30%  { transform: rotate(-4deg); }
+  60%  { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Kazanılmış siyah kuşak: altın ışıltı — hedefin kendisi */
+.belt--black:not(.belt--locked) svg {
+  filter: drop-shadow(0 0 6px rgba(184, 146, 90, 0.55));
+}
+
+/* ---- Tooltip (kuşak + rozet ortak) ---- */
+
+[data-tip] { position: relative; }
+
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--bg-raised);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--ink);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  padding: 0.35rem 0.6rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+[data-tip]:hover::after, [data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Rozet çipleri de hover'da tepki versin */
+.achievement {
+  cursor: default;
+  outline: none;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.achievement:hover, .achievement:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .belt, .achievement, [data-tip]::after { transition: none; }
+  .belt:hover svg { animation: none; }
+}
