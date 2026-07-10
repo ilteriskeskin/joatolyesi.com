@@ -3,16 +3,18 @@ STRINGS = {
         "html_lang": "en",
         "meta_title": "Joryu — Train every day. Even when the dojo is closed.",
         "meta_description": (
-            "Joryu is the practice companion for jo, bokken and kata — daily "
-            "tracking, structured programs, and a video library built by a "
-            "practitioner who trained 290 days straight."
+            "Joryu is the solo practice companion for aikido, iaido, jodo and "
+            "kobudo practitioners — log your jo, bokken and kata sessions, keep "
+            "your streak, and follow structured programs between dojo days."
         ),
         "hero_h1": "Train every day. Even when the dojo is closed.",
         "hero_sub": (
-            "Joryu is the practice companion for jo, bokken and kata — daily "
-            "tracking, structured programs, and a video library built by a "
+            "For aikido, iaido, jodo and kobudo practitioners who train alone "
+            "between dojo days: log your jo, bokken and kata practice, keep "
+            "your streak, and follow ready-made programs — built by a "
             "practitioner who trained 290 days straight."
         ),
+        "hero_disciplines": "Aikido · Iaido · Jodo · Kenjutsu · Kobudo",
         "cta_button": "Join the waitlist",
         "email_placeholder": "you@example.com",
         "form_success": "You're in. First invites go out soon.",
@@ -33,6 +35,15 @@ STRINGS = {
         "feature_2_body": "Reference videos for the forms you're trying to remember.",
         "feature_3_title": "30-day structured programs",
         "feature_3_body": "A ready plan for every session.",
+        "devices_title": "In your pocket at the dojo, on your desk at home",
+        "devices_body": (
+            "Joryu runs in the browser — no app store. Log a session from "
+            "your phone right after practice; review your progress and "
+            "programs on the big screen at home."
+        ),
+        "devices_phone_label": "Log a session — on your phone",
+        "devices_desktop_label": "Progress & programs — on your computer",
+        "devices_note": "Installable: add it to your home screen and use it like a native app.",
         "social_proof": "Born from 290+ days of uninterrupted jo practice.",
         "social_link_label": "Follow the practice on Instagram",
         "cta2_title": "Be first in line",
@@ -142,16 +153,18 @@ STRINGS = {
         "html_lang": "tr",
         "meta_title": "Joryu — Her gün çalış. Dojo kapalıyken bile.",
         "meta_description": (
-            "Joryu, jo, bokken ve kata çalışanlar için bir pratik yoldaşı: "
-            "günlük takip, yapılandırılmış programlar ve 290 gün aralıksız "
-            "çalışmış bir pratisyenin hazırladığı video kütüphanesi."
+            "Joryu, aikido, iaido, jodo ve kobudo çalışanlar için solo pratik "
+            "yoldaşı: dojo dışındaki günlerde jo, bokken ve kata seanslarını "
+            "kaydet, serini koru, hazır programlarla çalış."
         ),
         "hero_h1": "Her gün çalış. Dojo kapalıyken bile.",
         "hero_sub": (
-            "Joryu, jo, bokken ve kata çalışanlar için bir pratik yoldaşı: "
-            "günlük takip, yapılandırılmış programlar ve 290 gün aralıksız "
-            "çalışmış bir pratisyenin hazırladığı video kütüphanesi."
+            "Dojo günleri arasında tek başına çalışan aikido, iaido, jodo ve "
+            "kobudo pratisyenleri için: jo, bokken ve kata seanslarını kaydet, "
+            "serini koru, hazır programlarla ilerle — 290 gün aralıksız "
+            "çalışmış bir pratisyenden."
         ),
+        "hero_disciplines": "Aikido · Iaido · Jodo · Kenjutsu · Kobudo",
         "cta_button": "Bekleme listesine katıl",
         "email_placeholder": "sen@ornek.com",
         "form_success": "Listedesin. İlk davetler yakında gelecek.",
@@ -172,6 +185,15 @@ STRINGS = {
         "feature_2_body": "Hatırlamaya çalıştığın formlar için referans videolar.",
         "feature_3_title": "30 günlük yapılandırılmış programlar",
         "feature_3_body": "Her seans için hazır bir plan.",
+        "devices_title": "Dojoda cebinde, evde masanda",
+        "devices_body": (
+            "Joryu tarayıcıda çalışır — uygulama mağazası yok. Pratikten hemen "
+            "sonra telefonundan seansını kaydet; evde ilerlemeni ve programını "
+            "büyük ekrandan incele."
+        ),
+        "devices_phone_label": "Seans kaydı — telefonda",
+        "devices_desktop_label": "İlerleme ve programlar — bilgisayarda",
+        "devices_note": "Yüklenebilir: ana ekranına ekle, normal bir uygulama gibi kullan.",
         "social_proof": "290+ gün kesintisiz jo pratiğinden doğdu.",
         "social_link_label": "Pratiği Instagram'da takip et",
         "cta2_title": "İlk sırada yer al",

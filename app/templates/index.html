@@ -61,6 +61,7 @@
   <div class="hero__content">
     <h1>{{ t.hero_h1 }}</h1>
     <p class="hero__sub">{{ t.hero_sub }}</p>
+    <p class="hero__disciplines">{{ t.hero_disciplines }}</p>
 
     <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
       <input type="hidden" name="lang" value="{{ lang }}">
@@ -137,6 +138,50 @@
       <p>{{ t.feature_3_body }}</p>
     </div>
   </div>
+</section>
+
+<section class="devices">
+  <h2>{{ t.devices_title }}</h2>
+  <p class="devices__sub">{{ t.devices_body }}</p>
+
+  <div class="devices__stage">
+    <figure class="device device--laptop">
+      <div class="device__screen">
+        <div class="mock-ui">
+          <div class="mock-ui__topbar"><span class="mock-ui__brand">joryu</span></div>
+          <div class="mock-ui__streak">
+            <span class="mock-ui__streak-num">37</span>
+            <span class="mock-ui__streak-label">{{ t.dash_streak_label }}</span>
+          </div>
+          <div class="mock-ui__heatmap mock-ui__heatmap--wide" aria-hidden="true">
+            {% for _ in range(64) %}<i></i>{% endfor %}
+          </div>
+          <div class="mock-ui__rows" aria-hidden="true"><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <div class="device--laptop__base"></div>
+      <figcaption class="device__label">{{ t.devices_desktop_label }}</figcaption>
+    </figure>
+
+    <figure class="device device--phone">
+      <div class="device__screen">
+        <div class="mock-ui">
+          <div class="mock-ui__topbar"><span class="mock-ui__brand">joryu</span></div>
+          <div class="mock-ui__streak">
+            <span class="mock-ui__streak-num">37</span>
+            <span class="mock-ui__streak-label">{{ t.dash_streak_label }}</span>
+          </div>
+          <div class="mock-ui__heatmap" aria-hidden="true">
+            {% for _ in range(28) %}<i></i>{% endfor %}
+          </div>
+          <div class="mock-ui__button">{{ t.dash_log_button }}</div>
+        </div>
+      </div>
+      <figcaption class="device__label">{{ t.devices_phone_label }}</figcaption>
+    </figure>
+  </div>
+
+  <p class="devices__note">{{ t.devices_note }}</p>
 </section>
 
 <section class="social-proof">

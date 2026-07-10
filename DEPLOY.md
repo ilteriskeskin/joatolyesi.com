@@ -69,16 +69,32 @@ cd ~/joryu && git pull && docker compose up -d --build
 
 ## 6. Bakım cron'ları
 
+Script repoda hazır: `scripts/backup.sh` (pg_dump → gzip → tarihli dosya,
+son 14 yedek tutulur, `/root/backups/joryu/` altına yazar).
+
+Sunucuda root olarak `crontab -e` deyip şunları ekle:
+
 ```cron
 # Günlük Postgres yedeği (03:00) — waitlist + kullanıcı verisi tek değerli varlık
-0 3 * * * /home/<user>/joryu/scripts/backup.sh
+0 3 * * * /root/joryu/scripts/backup.sh >> /var/log/joryu-backup.log 2>&1
 
-# Haftalık eski Docker imajı temizliği (Pazar 04:00) — disk dolmasın
-0 4 * * 0 docker image prune -af
+# Haftalık eski Docker imajı temizliği (Pazar 04:00) — 10GB disk dolmasın
+0 4 * * 0 /usr/bin/docker image prune -af >> /var/log/joryu-prune.log 2>&1
 ```
 
-backup.sh gereksinimleri: pg_dump → gzip → tarihli dosya →
-son 14 yedeği tut, eskisini sil. (Claude Code script'i yazar.)
+Kurulumdan sonra bir kez elle çalıştırıp doğrula:
+
+```bash
+/root/joryu/scripts/backup.sh
+ls -lh /root/backups/joryu/
+# dump gerçekten okunuyor mu:
+zcat /root/backups/joryu/joryu_*.sql.gz | head -20
+```
+
+Not: sertifika yenileme cron'u EKLEME — certbot bunu kendi systemd
+timer'ıyla zaten yapıyor (`systemctl list-timers | grep certbot`).
+Yedekler sunucuyla birlikte kaybolmasın diye ayda bir `scp` ile
+yerel makinene bir kopya almak iyi fikir.
 
 ## 7. Ödeme
 
