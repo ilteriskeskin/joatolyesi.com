@@ -61,6 +61,16 @@
   </div>
 </header>
 
+{% if user and not user.email_verified_at %}
+<div class="verify-banner">
+  <span>{{ t.verify_banner }}</span>
+  <form method="post" action="/verify/resend" class="inline-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button type="submit" class="link-button">{{ t.verify_resend }}</button>
+  </form>
+</div>
+{% endif %}
+
 <main class="app-main">
 {% block content %}{% endblock %}
 </main>

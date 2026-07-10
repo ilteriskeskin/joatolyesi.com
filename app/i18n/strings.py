@@ -95,7 +95,16 @@ STRINGS = {
         "delete_hint": "Your account and all practice records are permanently deleted. This cannot be undone.",
         "delete_confirm": "Your account and all your data will be permanently deleted. Are you sure?",
         "delete_button": "Delete my account permanently",
+        # Email verification
+        "verify_banner": "Verify your email address — we sent you a link.",
+        "verify_resend": "Resend the link",
         # Mails
+        "mail_verify_subject": "Joryu — verify your email",
+        "mail_verify_body": (
+            "<p>Welcome to Joryu.</p>"
+            '<p><a href="{link}">Verify your email address</a> (valid for 7 days).</p>'
+            "<p>If you didn't create this account, you can ignore this email.</p>"
+        ),
         "mail_reset_subject": "Joryu — password reset",
         "mail_reset_body": (
             "<p>A password reset was requested for your Joryu account.</p>"
@@ -297,7 +306,16 @@ STRINGS = {
         "delete_hint": "Hesabın ve tüm pratik kayıtların kalıcı olarak silinir. Bu işlem geri alınamaz.",
         "delete_confirm": "Hesabın ve tüm verilerin kalıcı olarak silinecek. Emin misin?",
         "delete_button": "Hesabımı kalıcı olarak sil",
+        # E-posta doğrulama
+        "verify_banner": "E-posta adresini doğrula — sana bir bağlantı gönderdik.",
+        "verify_resend": "Bağlantıyı tekrar gönder",
         # Mailler
+        "mail_verify_subject": "Joryu — e-postanı doğrula",
+        "mail_verify_body": (
+            "<p>Joryu'ya hoş geldin.</p>"
+            '<p><a href="{link}">E-posta adresini doğrula</a> (7 gün geçerli).</p>'
+            "<p>Bu hesabı sen açmadıysan bu e-postayı yok sayabilirsin.</p>"
+        ),
         "mail_reset_subject": "Joryu — şifre sıfırlama",
         "mail_reset_body": (
             "<p>Joryu hesabın için şifre sıfırlama talebi alındı.</p>"

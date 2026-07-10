@@ -6,6 +6,11 @@ from slowapi.errors import RateLimitExceeded
 
 from app.config import settings
 from app.deps import AuthRequired, ProRequired
+
+if settings.sentry_dsn:
+    import sentry_sdk
+
+    sentry_sdk.init(dsn=settings.sentry_dsn, environment=settings.env, traces_sample_rate=0)
 from app.rate_limit import limiter
 from app.routers import admin, auth, billing, kata, landing, practice, profile, programs
 from app.seed import seed_content

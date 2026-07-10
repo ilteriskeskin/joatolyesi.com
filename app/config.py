@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     database_url: str
     admin_token: str
     secret_key: str
+    # Hata izleme — boşsa Sentry devre dışı
+    sentry_dsn: str = ""
     # E-posta (Resend) — boşsa mail gönderilmez, sadece loglanır (dev)
     resend_api_key: str = ""
     mail_from: str = "Joryu <noreply@joatolyesi.com>"

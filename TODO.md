@@ -11,12 +11,13 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
 - [x] **E-posta altyapısı.** Resend entegre (`app/mail.py`, BackgroundTasks
       ile async). KALAN: joatolyesi.com domain'i Resend panelinde doğrulanmalı
       (DNS: SPF + DKIM kayıtları) — doğrulanana dek mailler 403 alır.
-- [ ] **Waitlist davetleri.** Phase 0'da toplanan e-postalara "uygulama
-      açıldı" daveti gönderilmeli. Bu, ilk kullanıcı dalgasının kaynağı.
-      (Altyapı hazır; davet şablonu + gönderim scripti kaldı.)
-- [ ] **Yumuşak e-posta doğrulama.** Kayıtta doğrulama maili (girişi
-      engellemez, banner gösterir). users tablosuna email_verified_at
-      migration'ı gerekir.
+- [x] **Waitlist davetleri.** `scripts/send_invites.py` hazır: önce dry-run,
+      `--yes` ile gönderir; invited_at ile çift gönderim engelli, kesintide
+      kaldığı yerden devam eder. Lansman günü çalıştırılacak:
+      `docker compose exec app python scripts/send_invites.py --yes`
+- [x] **Yumuşak e-posta doğrulama.** Kayıtta doğrulama maili (7 gün geçerli
+      token); giriş engellenmez, doğrulanana dek banner + "tekrar gönder".
+      Migration 0004 (users.email_verified_at, waitlist.invited_at).
 - [ ] **Prod deploy.** VPS + Caddy/Traefik (otomatik HTTPS), compose prod
       ayarları (`ENV=production` → secure cookie), joatolyesi.com DNS.
       Lemon Squeezy webhook URL'i prod domain'e tanımlanmalı, gerçek
@@ -33,10 +34,13 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
 
 ## 2. Lansman sonrası ilk ay 🟡
 
-- [ ] **Test altyapısı.** Hiç otomatik test yok. Öncelik: auth akışı,
-      streak hesabı, webhook imza doğrulama, Pro kapıları (pytest +
-      httpx AsyncClient + test DB).
-- [ ] **Hata izleme.** Sentry (veya benzeri) — prod'da 500'leri görmek için.
+- [x] **Test altyapısı.** pytest kuruldu (20 test): token/kuşak/i18n saf
+      testleri + auth, CSRF, reset, oturum düşürme, doğrulama, hesap silme,
+      streak, waitlist uçtan uca akışları. Çalıştırma: tests/conftest.py
+      başındaki komutla test Postgres'i aç, `pytest`. Eksik: Pro kapıları
+      ve webhook uçtan uca testi.
+- [x] **Hata izleme.** Sentry entegre — SENTRY_DSN boşsa devre dışı.
+      KALAN: sentry.io'da proje aç, DSN'i prod .env'e ekle.
 - [ ] **Program günlerine video ekleme.** Admin ekranı şimdilik sadece
       kata videoları; program günleri için aynı ekran genişletilmeli.
 - [ ] **İkinci program.** Tek program var (30 gün jo suburi). Bokken

@@ -1112,3 +1112,18 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
 .legal-page h2 { font-size: 1.15rem; margin: 1.75rem 0 0.5rem; }
 .legal-page p, .legal-page li { color: var(--ink-dim); font-size: 0.95rem; }
 .legal-page ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+
+/* E-posta doğrulama banner'ı */
+.verify-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: #2b2214;
+  color: var(--accent);
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.verify-banner .link-button { color: var(--accent); text-decoration: underline; font-size: 0.85rem; }

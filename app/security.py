@@ -83,6 +83,30 @@ def read_reset_token(token: str) -> tuple[uuid.UUID, str] | None:
         return None
 
 
+VERIFY_MAX_AGE = 60 * 60 * 24 * 7  # 7 gün
+
+
+def create_verify_token(user_id: uuid.UUID) -> str:
+    payload = f"ev.{user_id}.{int(time.time()) + VERIFY_MAX_AGE}"
+    return f"{payload}.{_sign(payload)}"
+
+
+def read_verify_token(token: str) -> uuid.UUID | None:
+    parts = token.rsplit(".", 1)
+    if len(parts) != 2:
+        return None
+    payload, sig = parts
+    if not hmac.compare_digest(sig, _sign(payload)):
+        return None
+    try:
+        prefix, user_id_str, expires_str = payload.split(".")
+        if prefix != "ev" or int(expires_str) < time.time():
+            return None
+        return uuid.UUID(user_id_str)
+    except ValueError:
+        return None
+
+
 def verify_ls_signature(raw_body: bytes, signature: str) -> bool:
     if not settings.ls_webhook_secret:
         return False

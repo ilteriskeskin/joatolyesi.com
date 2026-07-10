@@ -1,4 +1,5 @@
 import re
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Form, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -19,9 +20,11 @@ from app.security import (
     SESSION_MAX_AGE,
     create_reset_token,
     create_session_token,
+    create_verify_token,
     hash_password,
     password_fingerprint,
     read_reset_token,
+    read_verify_token,
     verify_password,
 )
 
@@ -51,10 +54,22 @@ async def register_page(request: Request, user: User | None = Depends(get_curren
     return render(request, "register.html", error=None, disciplines=DISCIPLINES)
 
 
+def _send_verification(background: BackgroundTasks, user: User) -> None:
+    strings = get_strings(user.lang or "tr")
+    link = f"{settings.base_url}/verify?token={create_verify_token(user.id)}"
+    background.add_task(
+        send_email,
+        user.email,
+        strings["mail_verify_subject"],
+        strings["mail_verify_body"].format(link=link),
+    )
+
+
 @router.post("/register", dependencies=[Depends(csrf_protect)])
 @limiter.limit("10/minute")
 async def register(
     request: Request,
+    background: BackgroundTasks,
     email: str = Form(...),
     password: str = Form(...),
     username: str = Form(...),
@@ -88,6 +103,7 @@ async def register(
     )
     db.add(user)
     await db.commit()
+    _send_verification(background, user)
     return _session_response(user)
 
 
@@ -190,6 +206,34 @@ async def _user_from_reset_token(db: AsyncSession, token: str) -> User | None:
     if user is None or fingerprint != password_fingerprint(user.password_hash):
         return None
     return user
+
+
+# --- E-posta doğrulama (yumuşak: giriş engellenmez) ---
+
+
+@router.get("/verify")
+async def verify_email(token: str = Query(""), db: AsyncSession = Depends(get_db)):
+    user_id = read_verify_token(token)
+    if user_id is not None:
+        result = await db.execute(select(User).where(User.id == user_id))
+        user = result.scalar_one_or_none()
+        if user is not None and user.email_verified_at is None:
+            user.email_verified_at = datetime.now(UTC)
+            await db.commit()
+    # Geçersiz token'da da app'e döner; banner durumu gerçeği yansıtır
+    return RedirectResponse("/app", status_code=303)
+
+
+@router.post("/verify/resend", dependencies=[Depends(csrf_protect)])
+@limiter.limit("3/minute")
+async def resend_verification(
+    request: Request,
+    background: BackgroundTasks,
+    user: User = Depends(require_user),
+):
+    if user.email_verified_at is None:
+        _send_verification(background, user)
+    return RedirectResponse(request.headers.get("referer") or "/app", status_code=303)
 
 
 # --- Parola değiştirme (girişliyken) ---
