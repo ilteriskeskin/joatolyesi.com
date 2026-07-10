@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.db import get_db
-from app.deps import require_pro, require_user
+from app.deps import csrf_protect, require_pro, require_user
 from app.models import Enrollment, EnrollmentDay, Program, ProgramDay, User
 from app.render import render
 
@@ -57,7 +57,7 @@ async def program_detail(
     )
 
 
-@router.post("/programs/{slug}/enroll")
+@router.post("/programs/{slug}/enroll", dependencies=[Depends(csrf_protect)])
 async def enroll(slug: str, request: Request, user: User = Depends(require_pro), db: AsyncSession = Depends(get_db)):
     program = await _get_program(db, slug)
     if program is None:
@@ -101,7 +101,7 @@ async def program_day(
     )
 
 
-@router.post("/programs/{slug}/day/{day_number}/complete")
+@router.post("/programs/{slug}/day/{day_number}/complete", dependencies=[Depends(csrf_protect)])
 async def complete_day(
     slug: str,
     day_number: int,

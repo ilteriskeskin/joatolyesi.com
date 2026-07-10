@@ -1,13 +1,14 @@
+import hmac
 from datetime import UTC, datetime
 
-from fastapi import Depends, Request
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.db import get_db
 from app.models import Subscription, User
-from app.security import SESSION_COOKIE, read_session_token
+from app.security import SESSION_COOKIE, password_fingerprint, read_session_token
 
 PRO_STATUSES = {"on_trial", "active", "past_due", "cancelled"}
 
@@ -36,19 +37,39 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
     token = request.cookies.get(SESSION_COOKIE)
     if not token:
         return None
-    user_id = read_session_token(token)
-    if user_id is None:
+    parsed = read_session_token(token)
+    if parsed is None:
         return None
+    user_id, fingerprint = parsed
     result = await db.execute(
         select(User).options(selectinload(User.subscription)).where(User.id == user_id)
     )
-    return result.scalar_one_or_none()
+    user = result.scalar_one_or_none()
+    # Parola değiştiyse eski oturumlar düşer
+    if user is not None and fingerprint != password_fingerprint(user.password_hash):
+        return None
+    return user
 
 
 async def require_user(user: User | None = Depends(get_current_user)) -> User:
     if user is None:
         raise AuthRequired()
     return user
+
+
+CSRF_COOKIE = "csrf"
+
+
+async def csrf_protect(request: Request) -> None:
+    """Double-submit cookie: formdaki csrf_token (veya X-CSRF-Token header'ı)
+    cookie ile eşleşmeli. Cookie render() içinde her sayfada set edilir."""
+    cookie = request.cookies.get(CSRF_COOKIE, "")
+    token = request.headers.get("x-csrf-token", "")
+    if not token:
+        form = await request.form()
+        token = str(form.get("csrf_token", ""))
+    if not cookie or not token or not hmac.compare_digest(cookie, token):
+        raise HTTPException(status_code=403, detail="CSRF verification failed")
 
 
 async def require_pro(user: User = Depends(require_user)) -> User:

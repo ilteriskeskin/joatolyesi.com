@@ -14,6 +14,7 @@
   </a>
   {% else %}
   <form method="post" action="/programs/{{ program.slug }}/enroll">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button type="submit">{{ t.program_enroll }}</button>
   </form>
   {% endif %}

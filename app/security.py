@@ -28,12 +28,20 @@ def _sign(payload: str) -> str:
     return base64.urlsafe_b64encode(sig).decode().rstrip("=")
 
 
-def create_session_token(user_id: uuid.UUID) -> str:
-    payload = f"{user_id}.{int(time.time()) + SESSION_MAX_AGE}"
+def password_fingerprint(password_hash: str) -> str:
+    """Parola hash'inin kısa parmak izi. Oturum ve reset token'larına gömülür;
+    parola değişince eski token'lar geçersizleşir (sunucu tarafı tablo gerekmez)."""
+    return hashlib.sha256(password_hash.encode()).hexdigest()[:12]
+
+
+def create_session_token(user_id: uuid.UUID, password_hash: str) -> str:
+    payload = f"{user_id}.{int(time.time()) + SESSION_MAX_AGE}.{password_fingerprint(password_hash)}"
     return f"{payload}.{_sign(payload)}"
 
 
-def read_session_token(token: str) -> uuid.UUID | None:
+def read_session_token(token: str) -> tuple[uuid.UUID, str] | None:
+    """Geçerliyse (user_id, parola parmak izi) döner. Parmak izi, kullanıcının
+    güncel hash'iyle deps.get_current_user içinde karşılaştırılır."""
     parts = token.rsplit(".", 1)
     if len(parts) != 2:
         return None
@@ -41,10 +49,36 @@ def read_session_token(token: str) -> uuid.UUID | None:
     if not hmac.compare_digest(sig, _sign(payload)):
         return None
     try:
-        user_id_str, expires_str = payload.split(".")
+        user_id_str, expires_str, fingerprint = payload.split(".")
         if int(expires_str) < time.time():
             return None
-        return uuid.UUID(user_id_str)
+        return uuid.UUID(user_id_str), fingerprint
+    except ValueError:
+        return None
+
+
+RESET_MAX_AGE = 60 * 60  # 1 saat
+
+
+def create_reset_token(user_id: uuid.UUID, password_hash: str) -> str:
+    payload = f"pr.{user_id}.{int(time.time()) + RESET_MAX_AGE}.{password_fingerprint(password_hash)}"
+    return f"{payload}.{_sign(payload)}"
+
+
+def read_reset_token(token: str) -> tuple[uuid.UUID, str] | None:
+    """Geçerliyse (user_id, parola parmak izi) döner. Parmak izi eski hash'e
+    bağlı olduğundan parola değişir değişmez token tek kullanımlık olur."""
+    parts = token.rsplit(".", 1)
+    if len(parts) != 2:
+        return None
+    payload, sig = parts
+    if not hmac.compare_digest(sig, _sign(payload)):
+        return None
+    try:
+        prefix, user_id_str, expires_str, fingerprint = payload.split(".")
+        if prefix != "pr" or int(expires_str) < time.time():
+            return None
+        return uuid.UUID(user_id_str), fingerprint
     except ValueError:
         return None
 

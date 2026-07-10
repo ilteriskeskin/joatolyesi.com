@@ -5,22 +5,28 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
 
 ## 1. Lansman engelleri (bunlar bitmeden gerçek kullanıcı alma) 🔴
 
-- [ ] **Şifre sıfırlama yok.** Şifresini unutan kullanıcının hesabına dönüş
-      yolu yok. E-posta gönderimi gerektirir (aşağıdaki maddeyle birlikte).
-- [ ] **E-posta altyapısı yok.** Resend/Postmark/SES gibi bir sağlayıcı
-      seçilmeli. İlk ihtiyaçlar: şifre sıfırlama + waitlist davetleri.
-      (Async kural: e-posta gönderimi route içinde senkron yapılmamalı —
-      arka plan task'i veya httpx async.)
+- [x] **Şifre sıfırlama.** /forgot + /reset akışı: imzalı, 1 saat geçerli,
+      tek kullanımlık token (parola parmak izine bağlı — tablo yok).
+      Hesap var/yok bilgisi sızdırılmaz.
+- [x] **E-posta altyapısı.** Resend entegre (`app/mail.py`, BackgroundTasks
+      ile async). KALAN: joatolyesi.com domain'i Resend panelinde doğrulanmalı
+      (DNS: SPF + DKIM kayıtları) — doğrulanana dek mailler 403 alır.
 - [ ] **Waitlist davetleri.** Phase 0'da toplanan e-postalara "uygulama
       açıldı" daveti gönderilmeli. Bu, ilk kullanıcı dalgasının kaynağı.
+      (Altyapı hazır; davet şablonu + gönderim scripti kaldı.)
+- [ ] **Yumuşak e-posta doğrulama.** Kayıtta doğrulama maili (girişi
+      engellemez, banner gösterir). users tablosuna email_verified_at
+      migration'ı gerekir.
 - [ ] **Prod deploy.** VPS + Caddy/Traefik (otomatik HTTPS), compose prod
       ayarları (`ENV=production` → secure cookie), joatolyesi.com DNS.
       Lemon Squeezy webhook URL'i prod domain'e tanımlanmalı, gerçek
       checkout URL'leri + webhook secret .env'e girilmeli.
 - [x] **Postgres yedekleme.** `scripts/backup.sh` yazıldı (günlük cron,
       son 14 yedek); offsite kopya hâlâ manuel (ayda bir scp).
-- [ ] **CSRF koruması.** Formlar cookie auth ile korunmasız (SameSite=lax
-      kısmen koruyor ama POST'lara token eklenmeli).
+- [x] **CSRF koruması.** Double-submit cookie: tüm POST formlarında gizli
+      csrf_token + `csrf_protect` dependency (webhook ve token'lı admin muaf).
+- [x] **Hukuki sayfalar.** /privacy (gizlilik + KVKK aydınlatma) ve /terms,
+      TR/EN, footer'lardan linkli. Waitlist modunda da erişilebilir.
 - [ ] **Kata videoları.** Katalog hazır ama videolar boş. En azından
       aiki-jo + bokken setleri (senin çekimlerin) lansmanla gelmeli;
       `/admin/katas?token=...` ekranından ekleniyor.
@@ -37,9 +43,12 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
       (nana suburi) programı doğal ikinci ürün; kendo/iaido sonra.
 - [ ] **Kullanıcı saat dilimi.** Streak UTC+1 gün toleransıyla çalışıyor;
       doğrusu kayıtta/profilde timezone saklamak.
-- [ ] **Session iptali.** Şifre değişince/logout-all için sunucu tarafı
-      session tablosu (şu an imzalı cookie, iptal edilemiyor).
-- [ ] **Hesap silme.** KVKK/GDPR için gerekli; basit "hesabımı sil" butonu.
+- [x] **Session iptali + parola değiştirme.** Oturum token'ı parola parmak
+      izi taşıyor: şifre değişince (reset dahil) diğer cihazlardaki oturumlar
+      otomatik düşer. Profil sayfasında "Şifre değiştir" bölümü var.
+      NOT: deploy edildiğinde mevcut tüm oturumlar bir kez düşer (format değişti).
+- [x] **Hesap silme.** Profil sayfasında şifre onaylı "Hesabı sil" (danger
+      zone); tüm veriler cascade ile silinir, KVKK metninde belirtildi.
 - [ ] **Admin ekranlarını birleştir.** /admin/waitlist (CSV) + /admin/katas
       tek panel altında; token yerine admin hesabı düşünülebilir.
 - [ ] **Performans.** Google Fonts + unpkg CDN render-blocking; font ve

@@ -64,6 +64,7 @@
     <p class="hero__disciplines">{{ t.hero_disciplines }}</p>
 
     <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       <input type="hidden" name="lang" value="{{ lang }}">
       <input type="hidden" name="source" value="{{ source }}">
       <div class="waitlist-form__row">
@@ -194,6 +195,7 @@
 <section class="cta2">
   <h2>{{ t.cta2_title }}</h2>
   <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <input type="hidden" name="lang" value="{{ lang }}">
     <input type="hidden" name="source" value="{{ source }}">
     <div class="waitlist-form__row">
@@ -209,6 +211,8 @@
   <div class="footer-links">
     <a href="https://instagram.com/joryu.art" target="_blank" rel="noopener">Instagram — @joryu.art</a>
     <a href="https://youtube.com/@ilteriskeskin" target="_blank" rel="noopener">YouTube — @ilteriskeskin</a>
+    <a href="/privacy">{{ t.footer_privacy }}</a>
+    <a href="/terms">{{ t.footer_terms }}</a>
   </div>
   <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}">
     {{ other_lang|upper }}

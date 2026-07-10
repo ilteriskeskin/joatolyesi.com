@@ -9,7 +9,7 @@ from sqlalchemy.orm import selectinload
 
 from app.constants import DISCIPLINES
 from app.db import get_db
-from app.deps import require_user
+from app.deps import csrf_protect, require_user
 from app.models import Enrollment, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import compute_badges, compute_belts
@@ -63,7 +63,7 @@ async def dashboard(request: Request, user: User = Depends(require_user), db: As
     return render(request, "dashboard.html", user=user, **ctx)
 
 
-@router.post("/app/practice", response_class=HTMLResponse)
+@router.post("/app/practice", response_class=HTMLResponse, dependencies=[Depends(csrf_protect)])
 @limiter.limit("30/minute")
 async def log_practice(
     request: Request,

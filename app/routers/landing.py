@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.db import get_db
-from app.deps import get_current_user
+from app.deps import csrf_protect, get_current_user
 from app.i18n.strings import DEFAULT_LANG, SUPPORTED_LANGS, get_strings
 from app.models import User, Waitlist
 from app.rate_limit import limiter
@@ -31,7 +31,17 @@ async def index(
     return render(request, "index.html", user=user, source=src if src and SOURCE_RE.match(src) else "")
 
 
-@router.post("/waitlist", response_class=HTMLResponse)
+@router.get("/privacy", response_class=HTMLResponse)
+async def privacy(request: Request, user: User | None = Depends(get_current_user)):
+    return render(request, "privacy.html", user=user)
+
+
+@router.get("/terms", response_class=HTMLResponse)
+async def terms(request: Request, user: User | None = Depends(get_current_user)):
+    return render(request, "terms.html", user=user)
+
+
+@router.post("/waitlist", response_class=HTMLResponse, dependencies=[Depends(csrf_protect)])
 @limiter.limit("5/minute")
 async def join_waitlist(request: Request, db: AsyncSession = Depends(get_db)):
     form = await request.form()

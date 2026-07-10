@@ -75,6 +75,36 @@ STRINGS = {
         "auth_error_exists": "That email is already registered.",
         "auth_error_invalid": "Email or password is incorrect.",
         "auth_error_password_short": "Password must be at least 8 characters.",
+        # Password reset / change / account
+        "forgot_link": "Forgot your password?",
+        "forgot_title": "Password reset",
+        "forgot_hint": "Enter your email; if it's registered, we'll send a reset link. The link is valid for 1 hour.",
+        "forgot_submit": "Send reset link",
+        "forgot_sent": "If that email is registered, a reset link is on its way. Check your inbox.",
+        "reset_title": "Set a new password",
+        "reset_new_password": "New password",
+        "reset_submit": "Change password and log in",
+        "reset_invalid": "This link is invalid or expired. Request a new one.",
+        "pw_change_title": "Change password",
+        "pw_current": "Current password",
+        "pw_new": "New password",
+        "pw_change_hint": "After the change, sessions on your other devices are logged out.",
+        "pw_change_button": "Change password",
+        "pw_wrong_current": "Your current password is incorrect.",
+        "delete_title": "Delete account",
+        "delete_hint": "Your account and all practice records are permanently deleted. This cannot be undone.",
+        "delete_confirm": "Your account and all your data will be permanently deleted. Are you sure?",
+        "delete_button": "Delete my account permanently",
+        # Mails
+        "mail_reset_subject": "Joryu — password reset",
+        "mail_reset_body": (
+            "<p>A password reset was requested for your Joryu account.</p>"
+            '<p><a href="{link}">Set a new password</a> (valid for 1 hour).</p>'
+            "<p>If this wasn't you, you can ignore this email.</p>"
+        ),
+        # Footer / legal
+        "footer_privacy": "Privacy & Data Policy",
+        "footer_terms": "Terms of Use",
         # Dashboard
         "dash_title": "Practice",
         "dash_streak_label": "day streak",
@@ -247,6 +277,36 @@ STRINGS = {
         "auth_error_exists": "Bu e-posta zaten kayıtlı.",
         "auth_error_invalid": "E-posta veya şifre hatalı.",
         "auth_error_password_short": "Şifre en az 8 karakter olmalı.",
+        # Şifre sıfırlama / değiştirme / hesap
+        "forgot_link": "Şifreni mi unuttun?",
+        "forgot_title": "Şifre sıfırlama",
+        "forgot_hint": "E-postanı gir; kayıtlıysa sıfırlama bağlantısı göndereceğiz. Bağlantı 1 saat geçerlidir.",
+        "forgot_submit": "Sıfırlama bağlantısı gönder",
+        "forgot_sent": "Bu e-posta kayıtlıysa sıfırlama bağlantısı yolda. Gelen kutunu kontrol et.",
+        "reset_title": "Yeni şifre belirle",
+        "reset_new_password": "Yeni şifre",
+        "reset_submit": "Şifreyi değiştir ve giriş yap",
+        "reset_invalid": "Bu bağlantı geçersiz veya süresi dolmuş. Yeni bir bağlantı iste.",
+        "pw_change_title": "Şifre değiştir",
+        "pw_current": "Mevcut şifre",
+        "pw_new": "Yeni şifre",
+        "pw_change_hint": "Değişiklikten sonra diğer cihazlardaki oturumların kapatılır.",
+        "pw_change_button": "Şifreyi değiştir",
+        "pw_wrong_current": "Mevcut şifren hatalı.",
+        "delete_title": "Hesabı sil",
+        "delete_hint": "Hesabın ve tüm pratik kayıtların kalıcı olarak silinir. Bu işlem geri alınamaz.",
+        "delete_confirm": "Hesabın ve tüm verilerin kalıcı olarak silinecek. Emin misin?",
+        "delete_button": "Hesabımı kalıcı olarak sil",
+        # Mailler
+        "mail_reset_subject": "Joryu — şifre sıfırlama",
+        "mail_reset_body": (
+            "<p>Joryu hesabın için şifre sıfırlama talebi alındı.</p>"
+            '<p><a href="{link}">Yeni şifre belirle</a> (1 saat geçerli).</p>'
+            "<p>Bu talebi sen yapmadıysan bu e-postayı yok sayabilirsin.</p>"
+        ),
+        # Footer / hukuki
+        "footer_privacy": "Gizlilik ve KVKK",
+        "footer_terms": "Kullanım Koşulları",
         # Dashboard
         "dash_title": "Pratik",
         "dash_streak_label": "günlük seri",

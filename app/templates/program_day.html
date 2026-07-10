@@ -19,6 +19,7 @@
   <p class="form-message form-message--success">{{ t.program_completed }}</p>
   {% else %}
   <form method="post" action="/programs/{{ program.slug }}/day/{{ day.day_number }}/complete">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button type="submit">{{ t.program_complete_button }}</button>
   </form>
   {% endif %}

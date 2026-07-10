@@ -1,6 +1,6 @@
 import re
 
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Form, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,11 +8,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from app.constants import DISCIPLINES
 from app.db import get_db
-from app.deps import get_current_user
+from app.deps import csrf_protect, get_current_user, require_user
+from app.i18n.strings import get_strings
+from app.mail import send_email
 from app.models import User
 from app.rate_limit import limiter
 from app.render import render, resolve_lang
-from app.security import SESSION_COOKIE, SESSION_MAX_AGE, create_session_token, hash_password, verify_password
+from app.security import (
+    SESSION_COOKIE,
+    SESSION_MAX_AGE,
+    create_reset_token,
+    create_session_token,
+    hash_password,
+    password_fingerprint,
+    read_reset_token,
+    verify_password,
+)
 
 router = APIRouter()
 
@@ -24,7 +35,7 @@ def _session_response(user: User) -> RedirectResponse:
     response = RedirectResponse("/app", status_code=303)
     response.set_cookie(
         SESSION_COOKIE,
-        create_session_token(user.id),
+        create_session_token(user.id, user.password_hash),
         max_age=SESSION_MAX_AGE,
         httponly=True,
         samesite="lax",
@@ -40,7 +51,7 @@ async def register_page(request: Request, user: User | None = Depends(get_curren
     return render(request, "register.html", error=None, disciplines=DISCIPLINES)
 
 
-@router.post("/register")
+@router.post("/register", dependencies=[Depends(csrf_protect)])
 @limiter.limit("10/minute")
 async def register(
     request: Request,
@@ -87,7 +98,7 @@ async def login_page(request: Request, user: User | None = Depends(get_current_u
     return render(request, "login.html", error=None)
 
 
-@router.post("/login")
+@router.post("/login", dependencies=[Depends(csrf_protect)])
 @limiter.limit("10/minute")
 async def login(
     request: Request,
@@ -103,8 +114,124 @@ async def login(
     return _session_response(user)
 
 
-@router.post("/logout")
+@router.post("/logout", dependencies=[Depends(csrf_protect)])
 async def logout():
+    response = RedirectResponse("/", status_code=303)
+    response.delete_cookie(SESSION_COOKIE)
+    return response
+
+
+# --- Şifremi unuttum / sıfırlama ---
+
+
+@router.get("/forgot", response_class=HTMLResponse)
+async def forgot_page(request: Request):
+    return render(request, "forgot.html", sent=False)
+
+
+@router.post("/forgot", dependencies=[Depends(csrf_protect)])
+@limiter.limit("5/minute")
+async def forgot(
+    request: Request,
+    background: BackgroundTasks,
+    email: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+):
+    email = email.strip().lower()
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+    # Hesap var/yok bilgisi sızdırılmaz: her durumda aynı ekran
+    if user is not None:
+        strings = get_strings(user.lang or resolve_lang(request))
+        token = create_reset_token(user.id, user.password_hash)
+        link = f"{settings.base_url}/reset?token={token}"
+        background.add_task(
+            send_email,
+            user.email,
+            strings["mail_reset_subject"],
+            strings["mail_reset_body"].format(link=link),
+        )
+    return render(request, "forgot.html", sent=True)
+
+
+@router.get("/reset", response_class=HTMLResponse)
+async def reset_page(request: Request, token: str = Query(""), db: AsyncSession = Depends(get_db)):
+    user = await _user_from_reset_token(db, token)
+    return render(request, "reset.html", token=token, invalid=user is None, error=None)
+
+
+@router.post("/reset", dependencies=[Depends(csrf_protect)])
+@limiter.limit("5/minute")
+async def reset(
+    request: Request,
+    token: str = Form(...),
+    password: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+):
+    user = await _user_from_reset_token(db, token)
+    if user is None:
+        return render(request, "reset.html", token=token, invalid=True, error=None)
+    if len(password) < 8:
+        return render(request, "reset.html", token=token, invalid=False, error="auth_error_password_short")
+    user.password_hash = await hash_password(password)
+    await db.commit()
+    # Yeni parolayla otomatik giriş — eski oturumlar parmak izi değiştiği için düştü
+    return _session_response(user)
+
+
+async def _user_from_reset_token(db: AsyncSession, token: str) -> User | None:
+    parsed = read_reset_token(token)
+    if parsed is None:
+        return None
+    user_id, fingerprint = parsed
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    # Parmak izi eski hash'e bağlı: parola değiştiyse token tek kullanımlıktı
+    if user is None or fingerprint != password_fingerprint(user.password_hash):
+        return None
+    return user
+
+
+# --- Parola değiştirme (girişliyken) ---
+
+
+@router.post("/password", dependencies=[Depends(csrf_protect)])
+@limiter.limit("10/minute")
+async def change_password(
+    request: Request,
+    current_password: str = Form(...),
+    new_password: str = Form(...),
+    user: User = Depends(require_user),
+    db: AsyncSession = Depends(get_db),
+):
+    if not await verify_password(current_password, user.password_hash):
+        return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+                      error="pw_wrong_current", saved=False)
+    if len(new_password) < 8:
+        return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+                      error="auth_error_password_short", saved=False)
+    user.password_hash = await hash_password(new_password)
+    await db.commit()
+    # Diğer cihazlardaki oturumlar düşer; bu cihaza yeni cookie verilir
+    return _session_response(user)
+
+
+# --- Hesap silme ---
+
+
+@router.post("/account/delete", dependencies=[Depends(csrf_protect)])
+@limiter.limit("5/minute")
+async def delete_account(
+    request: Request,
+    password: str = Form(...),
+    user: User = Depends(require_user),
+    db: AsyncSession = Depends(get_db),
+):
+    if not await verify_password(password, user.password_hash):
+        return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+                      error="pw_wrong_current", saved=False)
+    await db.delete(user)  # practice_logs, enrollments, subscription cascade ile silinir
+    await db.commit()
     response = RedirectResponse("/", status_code=303)
     response.delete_cookie(SESSION_COOKIE)
     return response

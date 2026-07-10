@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ t.reset_title }} — Joryu{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>{{ t.reset_title }}</h1>
+  {% if invalid %}
+  <p class="form-message form-message--error">{{ t.reset_invalid }}</p>
+  <p class="auth-alt"><a href="/forgot">{{ t.forgot_title }}</a></p>
+  {% else %}
+  {% if error %}<p class="form-message form-message--error">{{ t[error] }}</p>{% endif %}
+  <form method="post" action="/reset">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="token" value="{{ token }}">
+    <label>{{ t.reset_new_password }}
+      <input type="password" name="password" required minlength="8" autocomplete="new-password">
+    </label>
+    <button type="submit">{{ t.reset_submit }}</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

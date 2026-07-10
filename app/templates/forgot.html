@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ t.forgot_title }} — Joryu{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>{{ t.forgot_title }}</h1>
+  {% if sent %}
+  <p class="form-message form-message--success">{{ t.forgot_sent }}</p>
+  {% else %}
+  <p class="muted">{{ t.forgot_hint }}</p>
+  <form method="post" action="/forgot">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>{{ t.auth_email }}
+      <input type="email" name="email" required autocomplete="email">
+    </label>
+    <button type="submit">{{ t.forgot_submit }}</button>
+  </form>
+  {% endif %}
+  <p class="auth-alt"><a href="/login">{{ t.nav_login }}</a></p>
+</div>
+{% endblock %}

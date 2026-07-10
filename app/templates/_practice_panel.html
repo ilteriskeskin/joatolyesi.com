@@ -17,6 +17,7 @@
 <div class="card">
   <h2>{{ t.dash_log_title }}</h2>
   <form hx-post="/app/practice" hx-target="#practice-panel" hx-swap="innerHTML" class="practice-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <div class="practice-form__row">
       <label>{{ t.dash_date }}
         <input type="date" name="practiced_on" value="{{ today }}" max="{{ today_max }}" required

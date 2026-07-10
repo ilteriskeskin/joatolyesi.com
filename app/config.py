@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     database_url: str
     admin_token: str
     secret_key: str
+    # E-posta (Resend) — boşsa mail gönderilmez, sadece loglanır (dev)
+    resend_api_key: str = ""
+    mail_from: str = "Joryu <noreply@joatolyesi.com>"
+    base_url: str = "http://localhost:8000"
     ls_webhook_secret: str = ""
     ls_checkout_url_monthly: str = ""
     ls_checkout_url_yearly: str = ""

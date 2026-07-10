@@ -41,6 +41,7 @@
     <a href="/profile">{{ t.nav_profile }}</a>
     <a href="/billing" {% if user_is_pro %}class="pro-active"{% endif %}>{{ t.nav_pro }}</a>
     <form method="post" action="/logout" class="inline-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       <button type="submit" class="link-button">{{ t.nav_logout }}</button>
     </form>
   </nav>
@@ -69,6 +70,8 @@
   <div class="footer-links">
     <a href="https://instagram.com/joryu.art" target="_blank" rel="noopener">Instagram — @joryu.art</a>
     <a href="https://youtube.com/@ilteriskeskin" target="_blank" rel="noopener">YouTube — @ilteriskeskin</a>
+    <a href="/privacy">{{ t.footer_privacy }}</a>
+    <a href="/terms">{{ t.footer_terms }}</a>
   </div>
 </footer>
 

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ t.footer_privacy }} — Joryu{% endblock %}
+{% block content %}
+<article class="legal-page">
+{% if lang == "tr" %}
+  <h1>Gizlilik Politikası ve KVKK Aydınlatma Metni</h1>
+  <p class="muted">Son güncelleme: 11 Temmuz 2026</p>
+
+  <h2>Veri sorumlusu</h2>
+  <p>joatolyesi.com (Joryu), Ali İlteriş Keskin tarafından işletilmektedir.
+  İletişim: <a href="mailto:aliilteriskeskin@gmail.com">aliilteriskeskin@gmail.com</a></p>
+
+  <h2>Hangi verileri topluyoruz?</h2>
+  <ul>
+    <li><strong>Bekleme listesi:</strong> e-posta adresi, dil tercihi, geliş kaynağı (ör. Instagram).</li>
+    <li><strong>Hesap:</strong> e-posta, şifre (geri döndürülemez şekilde hash'lenir; şifreni biz dahil kimse göremez), kullanıcı adı, branş, isteğe bağlı ad ve tanıtım yazısı.</li>
+    <li><strong>Kullanım:</strong> pratik kayıtların (tarih, branş, süre, notlar), program ilerlemen.</li>
+    <li><strong>Analitik:</strong> Google Analytics 4 ile anonimleştirilmiş ziyaret istatistikleri (çerez kullanır).</li>
+  </ul>
+
+  <h2>Verileri ne için kullanıyoruz?</h2>
+  <p>Hizmeti sunmak (pratik takibi, kuşaklar, profil), hesabınla ilgili zorunlu
+  e-postalar (şifre sıfırlama) ve bekleme listesine katıldıysan lansman duyurusu
+  göndermek için. Verilerini üçüncü taraflara satmayız, reklam amaçlı paylaşmayız.</p>
+
+  <h2>Verilerin nerede tutuluyor?</h2>
+  <p>Veriler kendi sunucumuzdaki veritabanında saklanır. E-posta gönderimi için
+  Resend, ödeme için Lemon Squeezy (kart bilgin bize hiç ulaşmaz), analitik için
+  Google Analytics hizmet sağlayıcı olarak kullanılır.</p>
+
+  <h2>Hakların (KVKK md. 11)</h2>
+  <p>Verilerine erişme, düzeltme, silme ve işlemeye itiraz hakkına sahipsin.
+  Hesabını profil sayfasındaki "Hesabı sil" bölümünden tek tıkla kalıcı olarak
+  silebilirsin; bekleme listesinden çıkmak veya diğer talepler için yukarıdaki
+  e-posta adresine yazman yeterli. Talepler 30 gün içinde yanıtlanır.</p>
+
+  <h2>Çerezler</h2>
+  <p>Oturum, dil tercihi ve güvenlik (CSRF) için zorunlu çerezler; Google
+  Analytics için analitik çerezleri kullanılır.</p>
+{% else %}
+  <h1>Privacy Policy</h1>
+  <p class="muted">Last updated: July 11, 2026</p>
+
+  <h2>Data controller</h2>
+  <p>joatolyesi.com (Joryu) is operated by Ali İlteriş Keskin.
+  Contact: <a href="mailto:aliilteriskeskin@gmail.com">aliilteriskeskin@gmail.com</a></p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>Waitlist:</strong> email address, language preference, referral source.</li>
+    <li><strong>Account:</strong> email, password (irreversibly hashed — nobody, including us, can see it), username, discipline, optional display name and bio.</li>
+    <li><strong>Usage:</strong> your practice logs (date, discipline, duration, notes) and program progress.</li>
+    <li><strong>Analytics:</strong> anonymized visit statistics via Google Analytics 4 (uses cookies).</li>
+  </ul>
+
+  <h2>How we use it</h2>
+  <p>To provide the service (practice tracking, belts, profiles), to send
+  essential account emails (password reset), and to announce the launch if you
+  joined the waitlist. We never sell your data or share it for advertising.</p>
+
+  <h2>Where it lives</h2>
+  <p>Data is stored in our own database on our own server. We use Resend for
+  email delivery, Lemon Squeezy for payments (your card details never reach us)
+  and Google Analytics for analytics.</p>
+
+  <h2>Your rights</h2>
+  <p>You may access, correct, delete, or object to the processing of your data.
+  You can permanently delete your account from the "Delete account" section of
+  your profile page; for waitlist removal or other requests, email us at the
+  address above. We respond within 30 days.</p>
+
+  <h2>Cookies</h2>
+  <p>Essential cookies for session, language and security (CSRF), plus Google
+  Analytics cookies for analytics.</p>
+{% endif %}
+</article>
+{% endblock %}

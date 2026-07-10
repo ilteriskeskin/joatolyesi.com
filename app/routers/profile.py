@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.constants import DISCIPLINES
 from app.db import get_db
-from app.deps import get_current_user, require_user
+from app.deps import csrf_protect, get_current_user, require_user
 from app.models import User
 from app.rate_limit import limiter
 from app.render import render
@@ -24,7 +24,7 @@ async def profile_edit(request: Request, user: User = Depends(require_user)):
     return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES, error=None, saved=False)
 
 
-@router.post("/profile", response_class=HTMLResponse)
+@router.post("/profile", response_class=HTMLResponse, dependencies=[Depends(csrf_protect)])
 async def profile_save(
     request: Request,
     username: str = Form(...),

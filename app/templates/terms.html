@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ t.footer_terms }} — Joryu{% endblock %}
+{% block content %}
+<article class="legal-page">
+{% if lang == "tr" %}
+  <h1>Kullanım Koşulları</h1>
+  <p class="muted">Son güncelleme: 11 Temmuz 2026</p>
+
+  <h2>Hizmet</h2>
+  <p>Joryu, dövüş sanatı çalışanlar için pratik takibi, kuşak/seri sistemi,
+  kata video kütüphanesi ve yapılandırılmış programlar sunan bir web
+  uygulamasıdır. Ücretsiz katman ve Pro aboneliği içerir.</p>
+
+  <h2>Hesap</h2>
+  <p>Hesabından ve şifrenin güvenliğinden sen sorumlusun. Hesabını istediğin an
+  profil sayfandan silebilirsin. Kötüye kullanım (spam, başkasının kimliğine
+  bürünme, hizmeti bozmaya çalışma) hesabın kapatılmasına yol açabilir.</p>
+
+  <h2>Pro abonelik ve ödemeler</h2>
+  <p>Ödemeler Lemon Squeezy üzerinden alınır; iptal ve iade süreçleri Lemon
+  Squeezy'nin makbuz e-postasındaki bağlantılardan yürütülür. Aboneliğini iptal
+  ettiğinde dönem sonuna kadar Pro erişimin devam eder.</p>
+
+  <h2>İçerik</h2>
+  <p>Video ve program içerikleri kişisel kullanımın içindir; izinsiz kopyalanamaz
+  ve yeniden dağıtılamaz. Kendi pratik kayıtların sana aittir.</p>
+
+  <h2>Sorumluluk</h2>
+  <p>Joryu bir antrenman günlüğüdür; sağlık veya spor hekimliği tavsiyesi vermez.
+  Fiziksel egzersiz kendi sorumluluğundadır. Hizmet "olduğu gibi" sunulur;
+  makul çabaya rağmen kesintiler yaşanabilir.</p>
+
+  <h2>Değişiklikler</h2>
+  <p>Bu koşullar güncellenebilir; önemli değişiklikler sitede duyurulur.
+  Sorular için: <a href="mailto:aliilteriskeskin@gmail.com">aliilteriskeskin@gmail.com</a></p>
+{% else %}
+  <h1>Terms of Use</h1>
+  <p class="muted">Last updated: July 11, 2026</p>
+
+  <h2>The service</h2>
+  <p>Joryu is a web application offering practice tracking, a belt/streak
+  system, a kata video library and structured programs for martial artists.
+  It has a free tier and a Pro subscription.</p>
+
+  <h2>Your account</h2>
+  <p>You are responsible for your account and password. You can delete your
+  account at any time from your profile page. Abuse (spam, impersonation,
+  attempts to disrupt the service) may lead to account termination.</p>
+
+  <h2>Pro subscription and payments</h2>
+  <p>Payments are processed by Lemon Squeezy; cancellations and refunds are
+  handled via the links in Lemon Squeezy's receipt email. When you cancel,
+  Pro access continues until the end of the paid period.</p>
+
+  <h2>Content</h2>
+  <p>Videos and program content are for your personal use and may not be copied
+  or redistributed. Your own practice records belong to you.</p>
+
+  <h2>Liability</h2>
+  <p>Joryu is a training journal; it does not provide medical or sports-medicine
+  advice. Physical exercise is at your own risk. The service is provided
+  "as is"; despite reasonable effort, interruptions may occur.</p>
+
+  <h2>Changes</h2>
+  <p>These terms may be updated; significant changes will be announced on the
+  site. Questions: <a href="mailto:aliilteriskeskin@gmail.com">aliilteriskeskin@gmail.com</a></p>
+{% endif %}
+</article>
+{% endblock %}
