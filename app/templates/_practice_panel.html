@@ -1,0 +1,53 @@
+<div class="streak-block">
+  <span class="streak-number">{{ streak }}</span>
+  <span class="streak-label">{{ t.dash_streak_label }}</span>
+</div>
+
+<div class="card">
+  <h2>{{ t.activity_title }}</h2>
+  {% include "_heatmap.html" %}
+</div>
+
+<div class="card">
+  <h2>{{ t.dash_log_title }}</h2>
+  <form hx-post="/app/practice" hx-target="#practice-panel" hx-swap="innerHTML" class="practice-form">
+    <div class="practice-form__row">
+      <label>{{ t.dash_date }}
+        <input type="date" name="practiced_on" value="{{ today }}" max="{{ today_max }}" required
+               x-data x-init="$el.value = new Date().toLocaleDateString('en-CA')">
+      </label>
+      <label>{{ t.dash_discipline }}
+        <select name="discipline">
+          {% for d in disciplines %}
+          <option value="{{ d }}">{{ t["discipline_" ~ d] }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>{{ t.dash_minutes }}
+        <input type="number" name="minutes" min="1" max="600" value="20" required>
+      </label>
+    </div>
+    <label>{{ t.dash_notes }}
+      <input type="text" name="notes" maxlength="2000">
+    </label>
+    <button type="submit">{{ t.dash_log_button }}</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>{{ t.dash_recent }}</h2>
+  {% if recent_logs %}
+  <ul class="log-list">
+    {% for log in recent_logs %}
+    <li>
+      <span class="log-date">{{ log.practiced_on.isoformat() }}</span>
+      <span class="log-discipline">{{ t["discipline_" ~ log.discipline] }}</span>
+      <span class="log-minutes">{{ log.minutes }} min</span>
+      {% if log.notes %}<span class="log-notes">{{ log.notes }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">{{ t.dash_empty }}</p>
+  {% endif %}
+</div>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="{{ t.html_lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ t.meta_title }}</title>
+  <meta name="description" content="{{ t.meta_description }}">
+  <meta name="theme-color" content="#0b0c0d">
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <link rel="icon" href="/static/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Joryu">
+  <link rel="canonical" href="https://joatolyesi.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://joatolyesi.com/">
+  <meta property="og:title" content="{{ t.meta_title }}">
+  <meta property="og:description" content="{{ t.meta_description }}">
+  <meta property="og:image" content="https://joatolyesi.com/static/img/icon-512.png">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-54NX2S2Z01"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-54NX2S2Z01');
+  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("/static/sw.js"));
+    }
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="brand">joryu</span>
+  <nav class="app-nav">
+    {% if user %}
+    <a href="/app">{{ t.nav_practice }}</a>
+    {% elif not waitlist_only %}
+    <a href="/login">{{ t.nav_login }}</a>
+    <a href="/register">{{ t.nav_register }}</a>
+    {% endif %}
+  </nav>
+  <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}">
+    {{ other_lang|upper }}
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero__overlay"></div>
+  <svg class="hero__enso" viewBox="0 0 400 400" aria-hidden="true">
+    <circle cx="200" cy="200" r="160" fill="none" stroke="#b8925a" stroke-width="11"
+            stroke-linecap="round" stroke-dasharray="880 130" transform="rotate(-60 200 200)"/>
+    <line x1="118" y1="292" x2="292" y2="112" stroke="#b8925a" stroke-width="7"
+          stroke-linecap="round" opacity="0.55"/>
+  </svg>
+  <div class="hero__content">
+    <h1>{{ t.hero_h1 }}</h1>
+    <p class="hero__sub">{{ t.hero_sub }}</p>
+
+    <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
+      <input type="hidden" name="lang" value="{{ lang }}">
+      <input type="hidden" name="source" value="{{ source }}">
+      <div class="waitlist-form__row">
+        <input type="email" name="email" placeholder="{{ t.email_placeholder }}" required autocomplete="email">
+        <button type="submit">{{ t.cta_button }}</button>
+      </div>
+      <div class="form-message-slot"></div>
+    </form>
+  </div>
+</section>
+
+<section class="problem">
+  <h2>{{ t.problem_title }}</h2>
+  <div class="problem__grid">
+    <div class="problem__card">
+      <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M2.5 5.5c6-2 13-2 19 0M5 9h14M6.5 5.8V20M17.5 5.8V20"/>
+      </svg>
+      <h3>{{ t.problem_1_title }}</h3>
+      <p>{{ t.problem_1_body }}</p>
+    </div>
+    <div class="problem__card">
+      <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="6" y="3" width="12" height="18" rx="2"/>
+        <path d="M9.5 8h5M9.5 12h5M9.5 16h3"/>
+      </svg>
+      <h3>{{ t.problem_2_title }}</h3>
+      <p>{{ t.problem_2_body }}</p>
+    </div>
+    <div class="problem__card">
+      <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 20h18M6 16l4-5 3 3 5-7"/>
+      </svg>
+      <h3>{{ t.problem_3_title }}</h3>
+      <p>{{ t.problem_3_body }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="solution">
+  <h2>{{ t.solution_title }}</h2>
+  <div class="solution__grid">
+    <div class="feature-card">
+      <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="3" width="5" height="5" rx="1" fill="currentColor" stroke="none" opacity="0.35"/>
+        <rect x="9.5" y="3" width="5" height="5" rx="1" fill="currentColor" stroke="none" opacity="0.6"/>
+        <rect x="16" y="3" width="5" height="5" rx="1" fill="currentColor" stroke="none"/>
+        <rect x="3" y="9.5" width="5" height="5" rx="1" fill="currentColor" stroke="none" opacity="0.6"/>
+        <rect x="9.5" y="9.5" width="5" height="5" rx="1" fill="currentColor" stroke="none"/>
+        <rect x="16" y="9.5" width="5" height="5" rx="1" fill="currentColor" stroke="none" opacity="0.35"/>
+        <rect x="3" y="16" width="5" height="5" rx="1" fill="currentColor" stroke="none"/>
+        <rect x="9.5" y="16" width="5" height="5" rx="1" fill="currentColor" stroke="none" opacity="0.35"/>
+        <rect x="16" y="16" width="5" height="5" rx="1" fill="currentColor" stroke="none" opacity="0.6"/>
+      </svg>
+      <h3>{{ t.feature_1_title }}</h3>
+      <p>{{ t.feature_1_body }}</p>
+    </div>
+    <div class="feature-card">
+      <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M10 8.5v7l6-3.5z"/>
+      </svg>
+      <h3>{{ t.feature_2_title }}</h3>
+      <p>{{ t.feature_2_body }}</p>
+    </div>
+    <div class="feature-card">
+      <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M3 9.5h18M8 3v4M16 3v4M8 13.5h2M14 13.5h2M8 17h2M14 17h2"/>
+      </svg>
+      <h3>{{ t.feature_3_title }}</h3>
+      <p>{{ t.feature_3_body }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="social-proof">
+  <p class="social-proof__line">{{ t.social_proof }}</p>
+  <a class="social-proof__link" href="https://instagram.com/joryu.art" target="_blank" rel="noopener">
+    {{ t.social_link_label }} — @joryu.art
+  </a>
+</section>
+
+<section class="cta2">
+  <h2>{{ t.cta2_title }}</h2>
+  <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
+    <input type="hidden" name="lang" value="{{ lang }}">
+    <input type="hidden" name="source" value="{{ source }}">
+    <div class="waitlist-form__row">
+      <input type="email" name="email" placeholder="{{ t.email_placeholder }}" required autocomplete="email">
+      <button type="submit">{{ t.cta_button }}</button>
+    </div>
+    <div class="form-message-slot"></div>
+  </form>
+</section>
+
+<footer class="site-footer">
+  <p>{{ t.footer_tagline }}</p>
+  <div class="footer-links">
+    <a href="https://instagram.com/joryu.art" target="_blank" rel="noopener">Instagram — @joryu.art</a>
+    <a href="https://youtube.com/@ilteriskeskin" target="_blank" rel="noopener">YouTube — @ilteriskeskin</a>
+  </div>
+  <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}">
+    {{ other_lang|upper }}
+  </a>
+</footer>
+
+</body>
+</html>

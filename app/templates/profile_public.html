@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ person.display_name or person.username }} — Joryu{% endblock %}
+{% block content %}
+<article class="profile-page">
+  {% if is_owner and not person.is_public %}
+  <p class="form-message form-message--error">{{ t.profile_private_own_notice }}</p>
+  {% endif %}
+
+  <header class="profile-header">
+    <h1>{{ person.display_name or person.username }}</h1>
+    <p class="muted">@{{ person.username }}</p>
+    <span class="badge badge--pro">{{ t["discipline_" ~ person.discipline] }}</span>
+    <span class="muted profile-joined">{{ t.profile_member_since }}: {{ person.created_at.date().isoformat() }}</span>
+  </header>
+
+  {% if person.bio %}<p class="profile-bio">{{ person.bio }}</p>{% endif %}
+
+  <div class="stats-row">
+    <div class="stat">
+      <span class="stat-number">{{ streak }}</span>
+      <span class="stat-label">{{ t.dash_streak_label }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">{{ total_sessions }}</span>
+      <span class="stat-label">{{ t.stats_sessions }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">{{ total_minutes }}</span>
+      <span class="stat-label">{{ t.stats_minutes }}</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>{{ t.activity_title }}</h2>
+    {% include "_heatmap.html" %}
+  </div>
+</article>
+{% endblock %}

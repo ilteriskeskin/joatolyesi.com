@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ t.billing_title }} — Joryu{% endblock %}
+{% block content %}
+<div class="auth-card billing-card">
+  <h1>{{ t.billing_title }}</h1>
+  <p class="muted">{{ t.billing_pitch }}</p>
+
+  {% if pro %}
+  <p class="form-message form-message--success">{{ t.billing_active }}</p>
+  {% if subscription.status == 'cancelled' and subscription.ends_at %}
+  <p>{{ t.billing_ends }}: {{ subscription.ends_at.date().isoformat() }}</p>
+  {% elif subscription.renews_at %}
+  <p>{{ t.billing_renews }}: {{ subscription.renews_at.date().isoformat() }}</p>
+  {% endif %}
+  <p class="muted">{{ t.billing_manage_hint }}</p>
+  {% else %}
+  {% if checkout_monthly or checkout_yearly %}
+  <div class="billing-buttons">
+    {% if checkout_monthly %}<a class="button" href="{{ checkout_monthly }}">{{ t.billing_monthly }}</a>{% endif %}
+    {% if checkout_yearly %}<a class="button button--outline" href="{{ checkout_yearly }}">{{ t.billing_yearly }}</a>{% endif %}
+  </div>
+  {% else %}
+  <p class="form-message form-message--error">{{ t.billing_not_configured }}</p>
+  {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

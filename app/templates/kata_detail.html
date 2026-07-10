@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ kata.title_en if lang == 'en' else kata.title_tr }} — Joryu{% endblock %}
+{% block content %}
+<article class="kata-detail">
+  <h1>{{ kata.title_en if lang == 'en' else kata.title_tr }}</h1>
+  <span class="kata-discipline">{{ t["discipline_" ~ kata.discipline] }}</span>
+  {% if kata.video_url %}
+  <div class="video-frame">
+    <iframe src="{{ kata.video_url }}" loading="lazy" allowfullscreen></iframe>
+  </div>
+  {% else %}
+  <div class="video-placeholder">{{ t.kata_video_soon }}</div>
+  {% endif %}
+  <p>{{ kata.description_en if lang == 'en' else kata.description_tr }}</p>
+</article>
+{% endblock %}

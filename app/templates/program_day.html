@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ t.program_day }} {{ day.day_number }} — Joryu{% endblock %}
+{% block content %}
+<article class="program-day">
+  <p class="muted"><a href="/programs/{{ program.slug }}">{{ program.title_en if lang == 'en' else program.title_tr }}</a></p>
+  <h1>{{ t.program_day }} {{ day.day_number }} — {{ day.title_en if lang == 'en' else day.title_tr }}</h1>
+
+  {% if is_locked %}
+  <p class="form-message form-message--error">{{ t.program_locked_day }}</p>
+  {% else %}
+  {% if day.video_url %}
+  <div class="video-frame">
+    <iframe src="{{ day.video_url }}" loading="lazy" allowfullscreen></iframe>
+  </div>
+  {% endif %}
+  <p class="day-content">{{ day.content_en if lang == 'en' else day.content_tr }}</p>
+
+  {% if is_completed %}
+  <p class="form-message form-message--success">{{ t.program_completed }}</p>
+  {% else %}
+  <form method="post" action="/programs/{{ program.slug }}/day/{{ day.day_number }}/complete">
+    <button type="submit">{{ t.program_complete_button }}</button>
+  </form>
+  {% endif %}
+  {% endif %}
+</article>
+{% endblock %}

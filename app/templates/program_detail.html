@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ program.title_en if lang == 'en' else program.title_tr }} — Joryu{% endblock %}
+{% block content %}
+<article>
+  <h1>{{ program.title_en if lang == 'en' else program.title_tr }}</h1>
+  <p class="muted">{{ program.description_en if lang == 'en' else program.description_tr }}</p>
+
+  {% if finished %}
+  <p class="form-message form-message--success">{{ t.program_finished }}</p>
+  {% elif enrollment %}
+  <p><strong>{{ t.program_enrolled.format(current=current_day, total=program.duration_days) }}</strong></p>
+  <a class="button" href="/programs/{{ program.slug }}/day/{{ current_day }}">
+    {{ t.dash_continue_day.format(day=current_day) }}
+  </a>
+  {% else %}
+  <form method="post" action="/programs/{{ program.slug }}/enroll">
+    <button type="submit">{{ t.program_enroll }}</button>
+  </form>
+  {% endif %}
+
+  {% if enrollment %}
+  <div class="day-grid">
+    {% for day in program.days %}
+    {% set state = 'done' if day.day_number in completed else ('current' if day.day_number == current_day and not finished else 'locked') %}
+    {% if state != 'locked' %}
+    <a class="day-cell day-cell--{{ state }}" href="/programs/{{ program.slug }}/day/{{ day.day_number }}">{{ day.day_number }}</a>
+    {% else %}
+    <span class="day-cell day-cell--locked">{{ day.day_number }}</span>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</article>
+{% endblock %}

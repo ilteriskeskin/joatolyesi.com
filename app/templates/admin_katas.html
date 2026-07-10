@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Admin — Kata videoları{% endblock %}
+{% block content %}
+<h1>Kata videoları</h1>
+<p class="muted">YouTube linkini yapıştır (watch, youtu.be, shorts olur) — kaydederken
+embed formatına çevrilir. Boş bırakıp kaydedersen video kaldırılır.</p>
+
+{% set grouped = katas | groupby("discipline") %}
+{% for discipline, items in grouped %}
+<h2 class="admin-section">{{ t["discipline_" ~ discipline] }}</h2>
+<div class="admin-list">
+  {% for kata in items %}
+  <form method="post" action="/admin/katas/{{ kata.slug }}" class="admin-row" id="{{ kata.slug }}">
+    <input type="hidden" name="token" value="{{ token }}">
+    <span class="admin-row__title">
+      {{ kata.title_tr }}
+      {% if kata.video_url %}<span class="badge badge--free">video var</span>
+      {% else %}<span class="badge badge--pro">video yok</span>{% endif %}
+      {% if saved == kata.slug %}<span class="badge badge--free">kaydedildi</span>{% endif %}
+    </span>
+    <input type="url" name="video_url" value="{{ kata.video_url or '' }}"
+           placeholder="https://youtu.be/...">
+    <button type="submit">Kaydet</button>
+  </form>
+  {% endfor %}
+</div>
+{% endfor %}
+{% endblock %}

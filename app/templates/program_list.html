@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ t.programs_title }} — Joryu{% endblock %}
+{% block content %}
+<h1>{{ t.programs_title }}</h1>
+{% if not user_is_pro %}
+<div class="card upsell">
+  <p>{{ t.program_pro_gate }}</p>
+  <a class="button" href="/billing">{{ t.kata_upgrade_cta }}</a>
+</div>
+{% endif %}
+<div class="card-grid">
+  {% for program in programs %}
+  <a class="card" href="/programs/{{ program.slug }}">
+    <span class="badge badge--pro">{{ t.kata_locked }}</span>
+    <h3>{{ program.title_en if lang == 'en' else program.title_tr }}</h3>
+    <p class="muted">{{ program.description_en if lang == 'en' else program.description_tr }}</p>
+    <span class="kata-discipline">{{ program.duration_days }} {{ t.program_days }}</span>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

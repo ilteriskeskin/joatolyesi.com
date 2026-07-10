@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ t.dash_title }} — Joryu{% endblock %}
+{% block content %}
+<div class="dash">
+
+  {% if enrollment %}
+  <div class="card program-banner">
+    <span class="card-label">{{ t.dash_active_program }}</span>
+    <h2>{{ enrollment.program.title_en if lang == 'en' else enrollment.program.title_tr }}</h2>
+    <a class="button" href="/programs/{{ enrollment.program.slug }}/day/{{ current_day }}">
+      {{ t.dash_continue_day.format(day=current_day) }}
+    </a>
+  </div>
+  {% endif %}
+
+  <div id="practice-panel">
+    {% include "_practice_panel.html" %}
+  </div>
+
+</div>
+{% endblock %}

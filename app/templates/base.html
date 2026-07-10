@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="{{ t.html_lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Joryu{% endblock %}</title>
+  <meta name="theme-color" content="#0b0c0d">
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <link rel="icon" href="/static/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Joryu">
+  <link rel="canonical" href="https://joatolyesi.com{{ request.url.path }}">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
+  <script src="https://unpkg.com/alpinejs@3.14.3" defer></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-54NX2S2Z01"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-54NX2S2Z01');
+  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("/static/sw.js"));
+    }
+  </script>
+</head>
+<body>
+
+<header class="site-header" x-data="{ open: false }">
+  <a class="brand" href="{{ '/app' if user else '/' }}">joryu</a>
+  {% if user %}
+  <nav class="app-nav" :class="open && 'app-nav--open'">
+    <a href="/app">{{ t.nav_practice }}</a>
+    <a href="/kata">{{ t.nav_kata }}</a>
+    <a href="/programs">{{ t.nav_programs }}</a>
+    <a href="/practitioners">{{ t.nav_community }}</a>
+    <a href="/profile">{{ t.nav_profile }}</a>
+    <a href="/billing" {% if user_is_pro %}class="pro-active"{% endif %}>{{ t.nav_pro }}</a>
+    <form method="post" action="/logout" class="inline-form">
+      <button type="submit" class="link-button">{{ t.nav_logout }}</button>
+    </form>
+  </nav>
+  {% else %}
+  <nav class="app-nav" :class="open && 'app-nav--open'">
+    <a href="/practitioners">{{ t.nav_community }}</a>
+    <a href="/login">{{ t.nav_login }}</a>
+    <a href="/register">{{ t.nav_register }}</a>
+  </nav>
+  {% endif %}
+  <div class="header-right">
+    <a class="lang-switch" href="?lang={{ other_lang }}">{{ other_lang|upper }}</a>
+    <button type="button" class="nav-toggle" @click="open = !open"
+            :aria-expanded="open" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main class="app-main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <p>{{ t.footer_tagline }}</p>
+  <div class="footer-links">
+    <a href="https://instagram.com/joryu.art" target="_blank" rel="noopener">Instagram — @joryu.art</a>
+    <a href="https://youtube.com/@ilteriskeskin" target="_blank" rel="noopener">YouTube — @ilteriskeskin</a>
+  </div>
+</footer>
+
+</body>
+</html>

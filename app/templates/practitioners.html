@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ t.community_title }} — Joryu{% endblock %}
+{% block content %}
+<h1>{{ t.community_title }}</h1>
+<p class="muted">{{ t.community_hint }}</p>
+
+<form method="get" action="/practitioners" class="search-form">
+  <input type="search" name="q" value="{{ q }}" placeholder="{{ t.community_search_placeholder }}" maxlength="80">
+  <button type="submit">{{ t.community_search_button }}</button>
+</form>
+
+{% if people %}
+<div class="card-grid">
+  {% for person in people %}
+  <a class="card person-card" href="/u/{{ person.username }}">
+    <h3>{{ person.display_name or person.username }}</h3>
+    <p class="muted">@{{ person.username }}</p>
+    <span class="badge badge--pro">{{ t["discipline_" ~ person.discipline] }}</span>
+    {% if person.bio %}<p class="muted person-bio">{{ person.bio[:120] }}{% if person.bio|length > 120 %}…{% endif %}</p>{% endif %}
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="muted">{{ t.community_empty }}</p>
+{% endif %}
+{% endblock %}

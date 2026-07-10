@@ -1,2 +1,0 @@
-# joatolyesi.com
-joatolyesi.com

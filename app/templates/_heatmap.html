@@ -1,0 +1,16 @@
+<div class="heatmap">
+  {% for week in heatmap %}
+  <div class="hm-week">
+    {% for day in week %}
+    {% if day.level is none %}
+    <span class="hm-cell hm-future"></span>
+    {% elif day.level > 0 %}
+    <span class="hm-cell hm-{{ day.level }}" tabindex="0"
+          data-tip="{{ day.date }} · {% for d in day.disciplines %}{{ t['discipline_' ~ d] }}{% if not loop.last %}, {% endif %}{% endfor %} · {{ day.minutes }} {{ t.minutes_short }}"></span>
+    {% else %}
+    <span class="hm-cell hm-0" data-tip="{{ day.date }}"></span>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ t.kata_title }} — Joryu{% endblock %}
+{% block content %}
+<h1>{{ t.kata_title }}</h1>
+<div class="tabs">
+  <a class="tab {{ 'tab--active' if not selected }}" href="/kata?d=all">{{ t.kata_all }}</a>
+  {% for d in available %}
+  <a class="tab {{ 'tab--active' if selected == d }}" href="/kata?d={{ d }}">{{ t["discipline_" ~ d] }}</a>
+  {% endfor %}
+</div>
+<div class="card-grid">
+  {% for kata in katas %}
+  <a class="card kata-card" href="/kata/{{ kata.slug }}">
+    <span class="badge {{ 'badge--free' if kata.is_free else 'badge--pro' }}">
+      {{ t.kata_free if kata.is_free else t.kata_locked }}
+    </span>
+    <h3>{{ kata.title_en if lang == 'en' else kata.title_tr }}</h3>
+    <p class="muted">{{ kata.description_en if lang == 'en' else kata.description_tr }}</p>
+    <span class="kata-discipline">{{ t["discipline_" ~ kata.discipline] }}</span>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}
