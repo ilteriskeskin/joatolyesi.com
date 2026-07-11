@@ -38,12 +38,14 @@
 <header class="site-header">
   <span class="brand">joryu</span>
   <nav class="app-nav">
+    {% if not waitlist_only %}
     <a href="/guide">{{ t.nav_guide }}</a>
     {% if user %}
     <a href="/app">{{ t.nav_practice }}</a>
-    {% elif not waitlist_only %}
+    {% else %}
     <a href="/login">{{ t.nav_login }}</a>
     <a href="/register">{{ t.nav_register }}</a>
+    {% endif %}
     {% endif %}
   </nav>
   <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}">

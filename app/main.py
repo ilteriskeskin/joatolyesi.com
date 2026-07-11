@@ -21,8 +21,8 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(landing.router)
-app.include_router(guide.router)  # rehber halka açık: SEO + üyelik öncesi değer
 if not settings.waitlist_only:
+    app.include_router(guide.router)  # rehber halka açık (giriş istemez) ama lansmanla gelir
     app.include_router(auth.router)
     app.include_router(practice.router)
     app.include_router(kata.router)
