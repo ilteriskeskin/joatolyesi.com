@@ -106,6 +106,23 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       `app/guide_content.py` — düzeltme/ekleme oradan.
 - [ ] **12. Rehber EN derinleştirme.** Rehberin adım listeleri şimdilik
       yalnız TR; EN kullanıcılar TR listeyi görüyor.
+
+## 3b. Rehber araştırma listesi (İlteriş doğrulayıp ekleyecek) 📋
+
+Doğruluk kuralı gereği emin olunmayan içerik rehbere YAZILMADI; sayfada
+"doğrulanıyor" notu görünüyor. Doğrulanınca `app/guide_content.py`'ye
+eklenecekler:
+
+- [ ] **13 no jo kata — adım adım liste.** Iwama saito çizgisindeki
+      standart 13 hareketin sırası ve adları.
+- [ ] **31 no jo kata — bölüm dökümü.** Hangi hareketler hangi bölümde;
+      yaygın öğretimdeki bölüm sınırları.
+- [ ] **Aiki-ken 2-7. suburi tanımları.** Her birinin kesin tarifi
+      (şu an sadece ichi no suburi detaylı, kalanı videoya yönlendiriyor).
+- [ ] **Taegeuk hareket sayıları.** Kaynaklar çelişiyor; Kukkiwon resmi
+      sayıları teyit edilirse geri eklenebilir.
+- [ ] Genel: her branşın tekniklerini o branştan bir hocaya okutup
+      onay almak (özellikle kendo/iaido/karate bölümleri).
 - [ ] **10. TR yerel fiyatlandırma.** Billing'de ₺59/ay yazıyor ama Lemon
       Squeezy'de TR fiyatlı ayrı varyant tanımlanmalı.
 

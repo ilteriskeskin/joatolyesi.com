@@ -32,6 +32,8 @@ test = [
 packages = ["app"]
 
 [tool.pytest.ini_options]
+# Editable kuruluma bağımlı kalma: app her zaman repo kökünden import edilir
+pythonpath = ["."]
 asyncio_mode = "auto"
 # Tek event loop: async engine tüm testlerde aynı loop'u kullanmalı
 asyncio_default_fixture_loop_scope = "session"

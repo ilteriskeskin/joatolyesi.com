@@ -3,6 +3,12 @@
 Statik, veritabanı gerektirmez. TR birincil ve detaylı; EN özet.
 "steps" alanı yalnızca TR ise şablon TR listesini gösterir.
 "diagram" -> /static/img/guide/{diagram}.svg
+"program" -> branş sayfasının başındaki "başlangıç programı" kutusu.
+
+DOĞRULUK KURALI: Buraya yalnız kaynaklarla doğrulanabilen bilgi yazılır
+(standart kata listeleri, teknik adları, yaygın öğretim sırası). Emin
+olunmayan adım listeleri YAZILMAZ; TODO.md'deki "Rehber araştırma
+listesi"ne eklenir ve içerik sahibi (İlteriş) doğrulayıp ekler.
 """
 
 GUIDE: dict = {
@@ -37,33 +43,18 @@ GUIDE: dict = {
                 "diagram": "happo",
                 "summary": {
                     "tr": (
-                        "13 hareketlik giriş katası. Tsuki, gedan gaeshi, men uchi ve "
-                        "hasso gaeshi'yi tek akışta birleştirir; yön değişimleri happo "
-                        "(8 yön) mantığıyla yapılır. Günde 5 tekrar, iki hafta içinde "
-                        "ezbere oturur."
+                        "13 hareketlik giriş katası: tsuki, gedan gaeshi, men uchi ve "
+                        "hasso gaeshi tek akışta birleşir. Suburi gruplarını oturttuysan "
+                        "yeni hareket yok demektir — kata sadece sıralamadır. Videodan, "
+                        "5'erli bloklar halinde ezberle; günde 5 tekrar iki haftada oturtur."
                     ),
                     "en": (
                         "The 13-count introductory kata combining tsuki, gedan gaeshi, "
                         "men uchi and hasso gaeshi in one flow with happo-style turns."
                     ),
                 },
-                "steps": {
-                    "tr": [
-                        "Choku tsuki — öndeki hedefe düz dürtüş",
-                        "Kaeshi tsuki — jo'yu çevirerek ikinci dürtüş",
-                        "Ushiro tsuki — arkaya dürtüş (başını çevirip bak)",
-                        "Tsuki gedan gaeshi — dürtüşten alçak seviye süpürme",
-                        "Men uchi — tepeden baş vuruşu",
-                        "Soto men uchi — dışarıdan diyagonal baş vuruşu",
-                        "Ushiro tsuki — geriye dürtüş",
-                        "Gedan gaeshi — diz seviyesine süpürme",
-                        "Toma katate uchi — tek elle uzun menzilli vuruş",
-                        "90° dönüş + men uchi",
-                        "Hasso gaeshi — jo'yu omuz hizasına çevir (hasso duruşu)",
-                        "Hasso'dan men uchi",
-                        "Son tsuki ile bitiş — kamae'ye dön",
-                    ],
-                },
+                "todo_note": True,
+            
             },
             {
                 "name": "31 no jo kata",
@@ -72,10 +63,11 @@ GUIDE: dict = {
                 "diagram": "happo",
                 "summary": {
                     "tr": (
-                        "Iwama müfredatının bel kemiği: 31 hareketlik uzun kata. En "
-                        "verimli öğrenme yolu 6 bölümde ezberlemektir; her bölüm "
-                        "kendi içinde mantıklı bir savunma-karşılık senaryosudur. "
-                        "Bölümleri ayrı ayrı 10'ar kez, sonra baştan sona 3 kez çalış."
+                        "Iwama müfredatının bel kemiği: 31 hareketlik uzun kata. "
+                        "Bütün olarak değil, kısa bölümler halinde ezberlenir; her bölümü "
+                        "ayrı ayrı 10'ar kez, sonra baştan sona 3 kez çalış. 13'lü kata "
+                        "rahat akmadan başlama — aynı kelimelerle yazılmış daha uzun bir "
+                        "cümledir."
                     ),
                     "en": (
                         "The backbone of the Iwama curriculum: a 31-count kata, best "
@@ -83,16 +75,8 @@ GUIDE: dict = {
                         "scenario."
                     ),
                 },
-                "steps": {
-                    "tr": [
-                        "Bölüm 1 (1-5): tsuki ile açılış, ushiro tsuki, gedan gaeshi ve men uchi — merkez hattı kurar",
-                        "Bölüm 2 (6-10): kaeshi tsuki + jodan gaeshi kombinasyonu, geri çekilerek savunma",
-                        "Bölüm 3 (11-15): gedan gaeshi'den katate uchi'ye geçiş, yan adımla açı alma",
-                        "Bölüm 4 (16-22): hasso gaeshi serisi — jo omuzda döner, ushiro uchi ve ushiro tsuki",
-                        "Bölüm 5 (23-27): nagare gaeshi (akan çevirme) ile yön değiştirip çift men uchi",
-                        "Bölüm 6 (28-31): son tsuki-uchi kombinasyonu, kamae'ye dönüş ve zanshin",
-                    ],
-                },
+                "todo_note": True,
+            
             },
             {
                 "name": "Happo giri",
@@ -247,26 +231,11 @@ GUIDE: dict = {
                 "group": {"tr": "7 Suburi", "en": "The 7 suburi"},
                 "items": [
                     {"name": "Ichi no suburi", "detail": {
-                        "tr": "Tam shomen kesişi: kılıç başın üstünde tam açılır, kesiş göbek hizasında biter. Diz-kalça-omuz aynı anda düşer; kol gücüyle kesme.",
-                        "en": "Full overhead cut finishing at belly height; body drops with the cut."}},
-                    {"name": "Ni no suburi", "detail": {
-                        "tr": "Geri adımla savunma pozisyonundan öne adımla kesiş. Geri çekilirken kılıç jodan'a kalkar.",
-                        "en": "Step back to jodan, step in and cut."}},
-                    {"name": "San no suburi", "detail": {
-                        "tr": "Alt savuşturma (gedan) sonrası kesiş: kılıç önce aşağı süpürür, sonra tepeden iner.",
-                        "en": "Low sweep then overhead cut."}},
-                    {"name": "Yon no suburi", "detail": {
-                        "tr": "Ardışık kesiş yürüyüşü: her adımda bir shomen, dojo boyunca. Nefesle eşle: adım-kes-nefes.",
-                        "en": "Walking continuous shomen cuts, one per step."}},
-                    {"name": "Go no suburi", "detail": {
-                        "tr": "Yan savuşturma + kesiş: kılıç yana açılıp merkeze döner. Bileklerin çizdiği yay küçük olmalı.",
-                        "en": "Side deflection returning to a centre cut."}},
-                    {"name": "Roku no suburi", "detail": {
-                        "tr": "Savuşturma + tsuki: kesiş yerine dürtüşle biter. Tsuki'de arka ayak topuğu yerden kalkmaz.",
-                        "en": "Deflection finishing with a thrust."}},
-                    {"name": "Nana no suburi", "detail": {
-                        "tr": "Serinin birleşimi: savuşturma, kesiş ve tsuki tek akışta. Yedisi art arda = tam bir mini kata.",
-                        "en": "Combines deflection, cut and thrust — the series in one flow."}},
+                        "tr": "Tam shomen kesişi: kılıç başın üstünde tam açılır, kesiş chudan hizasında durur. Diz-kalça-omuz aynı anda düşer; kol gücüyle kesme. Diğer altı suburi bunun üstüne kurulur — ilk ay sadece bunu çalışmak meşrudur.",
+                        "en": "The full overhead cut; the other six build on it. Spending the first month on this alone is legitimate."}},
+                    {"name": "Ni — Nana no suburi", "detail": {
+                        "tr": "2-7. suburi, ichi'nin üzerine geri çekilme, savuşturma, ardışık kesiş ve tsuki katmanlarını ekler. Her birinin kesin tanımı Iwama çizgisinde videoyla/öğretmenle öğrenilir — kütüphanedeki videolardan takip et; yazılı tarif yanlış alışkanlık oturtur.",
+                        "en": "Suburi 2-7 add stepping, deflection, continuous cuts and thrusts on top of ichi. Learn their exact definitions from the videos in the library — written descriptions build bad habits."}},
                 ],
             },
             {
@@ -697,11 +666,11 @@ GUIDE: dict = {
             {"name": "Heian Nidan", "jp": "平安二段", "level": {"tr": "Başlangıç (8-7. kyu)", "en": "Beginner"},
              "summary": {"tr": "26 hareket: haiwan uke, yoko geri + uraken kombinasyonu, mae geri ve nukite. Yan tekme dengesi bu katada kurulur.", "en": "26 moves introducing side kick + backfist and nukite."}},
             {"name": "Heian Sandan", "jp": "平安三段", "level": {"tr": "Orta (7-6. kyu)", "en": "Intermediate"},
-             "summary": {"tr": "20 hareket: uchi uke çiftleri, kiba dachi'de dirsekler ve meşhur yavaş dönüşlü fumikomi bölümü.", "en": "20 moves: paired uchi uke, elbows in kiba dachi."}},
+             "summary": {"tr": "uchi uke çiftleri, kiba dachi'de dirsekler ve meşhur yavaş dönüşlü fumikomi bölümü.", "en": "20 moves: paired uchi uke, elbows in kiba dachi."}},
             {"name": "Heian Yondan", "jp": "平安四段", "level": {"tr": "Orta (6-5. kyu)", "en": "Intermediate"},
              "summary": {"tr": "27 hareket: kakiwake uke, mae geri-uraken hızlı kombinasyonu, hiza geri (diz). Serinin en atletik katası.", "en": "27 moves — the most athletic of the series."}},
             {"name": "Heian Godan", "jp": "平安五段", "level": {"tr": "Orta (5-4. kyu)", "en": "Intermediate"},
-             "summary": {"tr": "23 hareket: mizu nagare kamae, sıçrama (tobi) ve zemin geçişi. Heian serisinin finali.", "en": "23 moves with the jump — the series finale."}},
+             "summary": {"tr": "mizu nagare kamae, sıçrama (tobi) ve zemin geçişi. Heian serisinin finali.", "en": "23 moves with the jump — the series finale."}},
             {"name": "Tekki Shodan", "jp": "鉄騎初段", "level": {"tr": "Orta-ileri (4-3. kyu)", "en": "Intermediate-advanced"},
              "diagram": "embusen-i",
              "summary": {"tr": "29 hareket, tamamı kiba dachi'de ve tek çizgi üzerinde (I embusen). Kalça gücü ve alt beden dayanıklılığı katası; dar alanda bile çalışılır.", "en": "29 moves entirely in horse stance on a single line — ideal for small spaces."}},
@@ -765,23 +734,23 @@ GUIDE: dict = {
             ),
         },
         "kata": [
-            {"name": "Taegeuk 1 — Il Jang", "jp": "태극 1장", "level": {"tr": "8. gup", "en": "8th gup"},
+            {"name": "Taegeuk 1 — Il Jang", "jp": "태극 1장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
              "diagram": "embusen-i",
-             "summary": {"tr": "18 hareket: arae makki, momtong jireugi, ap chagi. Yürüyüş duruşu (ap seogi) ağırlıklı — poomsae alfabesi.", "en": "18 moves: low block, middle punch, front kick."}},
-            {"name": "Taegeuk 2 — I Jang", "jp": "태극 2장", "level": {"tr": "7. gup", "en": "7th gup"},
-             "summary": {"tr": "18 hareket: olgul (yüz) seviye teknikleri ve daha çok ap chagi eklenir.", "en": "Adds face-level techniques and more front kicks."}},
-            {"name": "Taegeuk 3 — Sam Jang", "jp": "태극 3장", "level": {"tr": "6. gup", "en": "6th gup"},
-             "summary": {"tr": "20 hareket: sonnal (el kılıcı) blok/vuruş ve ardışık tekme-yumruk kombinasyonları.", "en": "Knife-hand techniques and kick-punch combos."}},
-            {"name": "Taegeuk 4 — Sa Jang", "jp": "태극 4장", "level": {"tr": "5. gup", "en": "5th gup"},
-             "summary": {"tr": "20 hareket: yop chagi (yan tekme) ve dwit kubi (geri duruş) ağırlığı; zorluk sıçraması burada.", "en": "Side kicks and back stance — the difficulty jump."}},
-            {"name": "Taegeuk 5 — O Jang", "jp": "태극 5장", "level": {"tr": "4. gup", "en": "4th gup"},
-             "summary": {"tr": "20 hareket: me jumeok (çekiç yumruk), palkup (dirsek) ve sıçramalı geçişler.", "en": "Hammer fist, elbows and jumping transitions."}},
-            {"name": "Taegeuk 6 — Yuk Jang", "jp": "태극 6장", "level": {"tr": "3. gup", "en": "3rd gup"},
-             "summary": {"tr": "23 hareket: dollyo chagi poomsae'ye girer; batangson (avuç dibi) bloklar.", "en": "Roundhouse kick enters the form."}},
-            {"name": "Taegeuk 7 — Chil Jang", "jp": "태극 7장", "level": {"tr": "2. gup", "en": "2nd gup"},
-             "summary": {"tr": "25 hareket: juchum seogi (binici duruş), mureup chigi (diz) ve makas blokları.", "en": "Horse stance, knee strike, scissor blocks."}},
-            {"name": "Taegeuk 8 — Pal Jang", "jp": "태극 8장", "level": {"tr": "1. gup", "en": "1st gup"},
-             "summary": {"tr": "24 hareket: sıçramalı çift ap chagi (dubal dangsong). Siyah kuşak sınavının katası.", "en": "The black-belt exam form with the jumping double front kick."}},
+             "summary": {"tr": "arae makki, momtong jireugi, ap chagi. Yürüyüş duruşu (ap seogi) ağırlıklı — poomsae alfabesi.", "en": "18 moves: low block, middle punch, front kick."}},
+            {"name": "Taegeuk 2 — I Jang", "jp": "태극 2장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
+             "summary": {"tr": "olgul (yüz) seviye teknikleri ve daha çok ap chagi eklenir.", "en": "Adds face-level techniques and more front kicks."}},
+            {"name": "Taegeuk 3 — Sam Jang", "jp": "태극 3장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
+             "summary": {"tr": "sonnal (el kılıcı) blok/vuruş ve ardışık tekme-yumruk kombinasyonları.", "en": "Knife-hand techniques and kick-punch combos."}},
+            {"name": "Taegeuk 4 — Sa Jang", "jp": "태극 4장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
+             "summary": {"tr": "yop chagi (yan tekme) ve dwit kubi (geri duruş) ağırlığı; zorluk sıçraması burada.", "en": "Side kicks and back stance — the difficulty jump."}},
+            {"name": "Taegeuk 5 — O Jang", "jp": "태극 5장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
+             "summary": {"tr": "me jumeok (çekiç yumruk), palkup (dirsek) ve sıçramalı geçişler.", "en": "Hammer fist, elbows and jumping transitions."}},
+            {"name": "Taegeuk 6 — Yuk Jang", "jp": "태극 6장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
+             "summary": {"tr": "dollyo chagi poomsae'ye girer; batangson (avuç dibi) bloklar.", "en": "Roundhouse kick enters the form."}},
+            {"name": "Taegeuk 7 — Chil Jang", "jp": "태극 7장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
+             "summary": {"tr": "juchum seogi (binici duruş), mureup chigi (diz) ve makas blokları.", "en": "Horse stance, knee strike, scissor blocks."}},
+            {"name": "Taegeuk 8 — Pal Jang", "jp": "태극 8장", "level": {"tr": "Renk kuşağı", "en": "Colour belt"},
+             "summary": {"tr": "sıçramalı çift ap chagi (dubal dangsong). Siyah kuşak sınavının katası.", "en": "The black-belt exam form with the jumping double front kick."}},
             {"name": "Koryo ve ötesi", "jp": "고려", "level": {"tr": "1. dan+", "en": "1st dan+"},
              "summary": {"tr": "Siyah kuşak poomsae'leri: Koryo, Keumgang, Taebaek... Her dan derecesinin kendi formu vardır.", "en": "Black-belt poomsae: Koryo, Keumgang, Taebaek and beyond."}},
         ],
@@ -830,3 +799,146 @@ GUIDE: dict = {
 
 def get_guide(discipline: str) -> dict | None:
     return GUIDE.get(discipline)
+
+
+# Haftalık başlangıç programları — sayfanın başındaki "sıfırdan başla" kutusu.
+# Program tasarımı bize ait (pedagojik öneri); teknik içerik değildir.
+PROGRAMS: dict = {
+    "aikijo": {
+        "tr": [
+            "1-2. hafta: Tsuki serisi (suburi 1-5), her birinden 10 tekrar — günde 15 dk",
+            "3-4. hafta: + Uchikomi serisi (6-10); tsuki artık ısınman",
+            "5-6. hafta: + Katate serisi (11-13) ve 2 tur happo giri",
+            "7-8. hafta: + Hasso gaeshi serisi (14-18); videodan 13'lü kataya başla",
+            "9. hafta ve sonrası: 10 dk karışık suburi + 13'lü kata ×5; 31'liyi bölüm bölüm ekle",
+            "Her seansın son 2 dakikası: serbest akış (jo spin / freestyle) — oyun kısmı, motivasyonu taşır",
+        ],
+        "en": [
+            "Weeks 1-2: tsuki series (suburi 1-5), 10 reps each — 15 min daily",
+            "Weeks 3-4: add the uchikomi series (6-10)",
+            "Weeks 5-6: add the katate series (11-13) and happo giri",
+            "Weeks 7-8: add hasso gaeshi (14-18); start the 13 kata from video",
+            "Week 9+: 10 min mixed suburi + 13 kata ×5; add the 31 section by section",
+        ],
+    },
+    "bokken": {
+        "tr": [
+            "1-4. hafta: sadece ichi no suburi — günde 30 kesiş, ayna karşısında",
+            "5-8. hafta: videodan 2-4. suburi; her yeni suburi öncesi 10 ichi",
+            "9-12. hafta: 5-7. suburi + 2 tur happo giri",
+            "Sürekli: haftada bir gün sadece kamae çalış (5 duruş × 1'er dk sabit)",
+        ],
+        "en": [
+            "Weeks 1-4: only ichi no suburi — 30 cuts daily, in front of a mirror",
+            "Weeks 5-8: suburi 2-4 from video",
+            "Weeks 9-12: suburi 5-7 plus happo giri",
+            "Ongoing: one day a week only kamae (hold each stance 1 min)",
+        ],
+    },
+    "aikido": {
+        "tr": [
+            "Her gün: 5 dk irimi-tenkan turu (20 dönüş) + 5 dk shikko",
+            "Gün aşırı: 10 mae + 10 ushiro ukemi (yumuşak zeminde)",
+            "Haftada 2: bokken/jo suburi (kılıç mekaniği aikido tekniklerinin temelidir)",
+            "Haftada 1: ayna karşısında shomen/yokomen/tsuki formu — 10'ar tekrar",
+        ],
+        "en": [
+            "Daily: 5 min irimi-tenkan (20 pivots) + 5 min shikko",
+            "Every other day: 10 forward + 10 backward ukemi on soft ground",
+            "Twice a week: bokken/jo suburi — sword mechanics feed the techniques",
+        ],
+    },
+    "jodo": {
+        "tr": [
+            "1-4. hafta: honte uchi, gyakute uchi, hiki otoshi — 10'ar tekrar, günde 15 dk",
+            "5-8. hafta: 12 kihonun tamamını sırayla 5'er tekrar",
+            "9. haftadan sonra: kihon 10 dk + bildiğin kataların jo tarafı 2'şer kez (tandoku)",
+            "Kural: yeni kata eklemeden önce içindeki kihonlar tek tek rahat çıkmalı",
+        ],
+        "en": [
+            "Weeks 1-4: honte uchi, gyakute uchi, hiki otoshi — 10 reps each",
+            "Weeks 5-8: all 12 kihon in order, 5 reps each",
+            "Week 9+: 10 min kihon + the jo side of known kata twice each (tandoku)",
+        ],
+    },
+    "jojutsu": {
+        "tr": [
+            "Temel program Jodo ile aynıdır: 12 kihonu kusursuzlaştır",
+            "Koryu kataları öğretmensiz ÇALIŞMA; isimlerini ve senaryolarını öğren, video izle",
+            "Haftada 1: Omote setinden bir katayı videodan analiz et (henüz yapmadan)",
+        ],
+        "en": [
+            "The base program equals Jodo: perfect the 12 kihon",
+            "Do not self-teach koryu kata; learn their names and watch, analyse one Omote kata weekly",
+        ],
+    },
+    "kenjutsu": {
+        "tr": [
+            "Her gün: kiri oroshi 30, kesa giri 20+20 (iki taraf), tsuki 20",
+            "Haftada 2: do giri 10+10 ve 5 kamae'de 1'er dk sabit duruş",
+            "Haftada 1: ayna/videoyla form kontrolü — kesişin hattı düz mü?",
+            "Okula bağlanana kadar okul katası taklit etme; kesiş kalitesine yatır",
+        ],
+        "en": [
+            "Daily: 30 vertical cuts, 20+20 diagonal, 20 thrusts",
+            "Twice a week: horizontal cuts and 1-min holds in the five kamae",
+            "Weekly: check your line in a mirror or on video",
+        ],
+    },
+    "kendo": {
+        "tr": [
+            "Her gün: 10 dk ashi sabaki (4 yöne suriashi turları)",
+            "Her gün: 100 suburi — 30 joge, 30 shomen, 20 sayu men, 20 haya suburi",
+            "Haftada 2: Nihon Kendo Kata'dan bildiğin formların iki tarafını da yavaş çalış",
+            "Haftada 1: solo kirikaeshi (nefes + ritim) 5 set",
+        ],
+        "en": [
+            "Daily: 10 min footwork + 100 suburi (30 joge, 30 shomen, 20 sayu men, 20 haya)",
+            "Twice a week: both sides of the kata you know, slowly",
+            "Weekly: five sets of solo kirikaeshi",
+        ],
+    },
+    "iaido": {
+        "tr": [
+            "1-8. hafta: sadece Mae — her seans 10 tekrar, dört fazı ayrı ayrı da çalış",
+            "9-16. hafta: + Ushiro ve Uke Nagashi; Mae hâlâ her seansın ilk katası",
+            "Sonrası: her seans 3 kata × 5 tekrar; ayda bir 12'sini sırayla geç",
+            "Her seans önce: 10 seiza kalkışı + 20 kirioroshi (bokken ile olur)",
+        ],
+        "en": [
+            "Weeks 1-8: only Mae — 10 reps per session, drill the four phases separately",
+            "Weeks 9-16: add Ushiro and Uke Nagashi; Mae still opens every session",
+            "Later: 3 kata × 5 reps per session; run all 12 monthly",
+        ],
+    },
+    "karate": {
+        "tr": [
+            "Her gün 15 dk kihon: zenkutsu'da oi/gyaku tsuki 20'şer, age/soto/gedan blok 10'ar, mae geri 20",
+            "1-4. hafta: Taikyoku Shodan'ı say-adımla ezberle (aşağıdaki adımlar)",
+            "5. haftadan sonra: her ay bir Heian katası; eskiler haftada bir tekrar",
+            "Haftada 1: kiba dachi sabit duruş (1 dk hedef) + esneklik 10 dk",
+        ],
+        "en": [
+            "Daily 15 min kihon: punches, blocks and front kicks in stance",
+            "Weeks 1-4: memorise Taikyoku Shodan step by step",
+            "Week 5+: one Heian kata per month, older ones weekly",
+        ],
+    },
+    "taekwondo": {
+        "tr": [
+            "Her gün: 10 dk dinamik esneme + denge (tek ayak, gözler kapalı 30 sn)",
+            "Her gün: ap chagi 20+20, dollyo 15+15, yop 10+10 (iki bacak)",
+            "1-6. hafta: Taegeuk 1 — aynada, duruş yüksekliği sabit",
+            "Sonrası: her 6-8 haftada bir sonraki Taegeuk; eskiler haftada bir",
+        ],
+        "en": [
+            "Daily: 10 min dynamic stretching + balance work",
+            "Daily kicks both legs: 20 front, 15 roundhouse, 10 side",
+            "Weeks 1-6: Taegeuk 1 in the mirror at constant stance height",
+            "Then: the next Taegeuk every 6-8 weeks, older ones weekly",
+        ],
+    },
+}
+
+for _d, _p in PROGRAMS.items():
+    GUIDE[_d]["program"] = _p

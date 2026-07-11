@@ -6,8 +6,25 @@
   <h1>{{ t["discipline_" ~ d] }}</h1>
   <p class="guide-intro">{{ g.intro[lang] if lang in g.intro else g.intro.tr }}</p>
 
+  <nav class="guide-toc">
+    {% if g.program %}<a href="#program">{{ t.guide_program_title }}</a>{% endif %}
+    {% if g.kata %}<a href="#kata">{{ t.guide_kata_title }}</a>{% endif %}
+    <a href="#teknikler">{{ t.guide_techniques_title }}</a>
+  </nav>
+
+  {% if g.program %}
+  <div class="card guide-program" id="program">
+    <h2>{{ t.guide_program_title }}</h2>
+    <ol>
+      {% for step in (g.program[lang] if lang in g.program else g.program.tr) %}
+      <li>{{ step }}</li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
   {% if g.kata %}
-  <h2 class="guide-section-title">{{ t.guide_kata_title }}</h2>
+  <h2 class="guide-section-title" id="kata">{{ t.guide_kata_title }}</h2>
   {% for k in g.kata %}
   <div class="card guide-item" id="{{ k.name | lower | replace(' ', '-') }}">
     <div class="guide-item__head">
@@ -26,6 +43,8 @@
             {% endfor %}
           </ol>
         </details>
+        {% elif k.todo_note %}
+        <p class="guide-todo-note">{{ t.guide_todo_note }}</p>
         {% endif %}
       </div>
       {% if k.diagram %}
@@ -36,7 +55,7 @@
   {% endfor %}
   {% endif %}
 
-  <h2 class="guide-section-title">{{ t.guide_techniques_title }}</h2>
+  <h2 class="guide-section-title" id="teknikler">{{ t.guide_techniques_title }}</h2>
   {% for group in g.techniques %}
   <div class="card guide-item">
     <h3>{{ group.group[lang] if lang in group.group else group.group.tr }}</h3>
