@@ -72,7 +72,15 @@ STRINGS = {
         "blog_edit_link": "Edit",
         "blog_form_title_label": "Title",
         "blog_form_body_label": "Your story",
-        "blog_form_hint": "Plain text; separate paragraphs with a blank line. Min 100 characters.",
+        "blog_form_hint": "Markdown supported: **bold**, *italic*, ## heading, - list, > quote, [link](url). Min 100 characters.",
+        "blog_body_placeholder": "Where are you in your journey? What worked, what hurt, what did you learn?",
+        "blog_toolbar_label": "Formatting",
+        "md_bold": "Bold",
+        "md_italic": "Italic",
+        "md_heading": "Heading",
+        "md_list": "List",
+        "md_quote": "Quote",
+        "md_link": "Link",
         "blog_form_submit": "Publish",
         "blog_error_short": "Title must be at least 5 and the body at least 100 characters.",
         "blog_delete_button": "Delete post",
@@ -237,6 +245,22 @@ STRINGS = {
         "followers_label": "followers",
         "feed_title": "People you follow",
         "feed_empty": "Follow practitioners in the community — their practice shows up here and keeps you honest.",
+        # Streak freeze
+        "freeze_left": "Freeze rights this month: {left}/{total}",
+        "freeze_tip": "Life happens: up to 2 single-day gaps per month are bridged automatically and your streak survives.",
+        # Weekly leaders
+        "leaders_title": "This week's leaders",
+        "leaders_hint": "The practitioner with the most minutes in each discipline this week.",
+        # Reminders
+        "reminders_label": "Send me a daily practice reminder email",
+        "reminders_hint": "One short email in the evening if you haven't logged practice that day. Turn it off anytime.",
+        "mail_reminder_subject": "Today's practice is waiting — Joryu",
+        "mail_reminder_body": (
+            "<p>You haven't logged practice today.</p>"
+            "<p>Your streak is at <strong>{streak}</strong> days — 15 minutes is enough to keep it alive.</p>"
+            '<p><a href="{link}">Log today\'s practice</a></p>'
+            "<p style=\"color:#888\">You get this because reminders are on in your profile settings.</p>"
+        ),
         # Belts & badges
         "belts_title": "Belts",
         "belts_hint": "Everyone starts with the white belt. Belts advance with total practice days — 365 days of practice earns the black belt.",
@@ -328,7 +352,15 @@ STRINGS = {
         "blog_edit_link": "Düzenle",
         "blog_form_title_label": "Başlık",
         "blog_form_body_label": "Hikâyen",
-        "blog_form_hint": "Düz metin; paragrafları boş satırla ayır. En az 100 karakter.",
+        "blog_form_hint": "Markdown desteklenir: **kalın**, *italik*, ## başlık, - liste, > alıntı, [link](adres). En az 100 karakter.",
+        "blog_body_placeholder": "Yolculuğunun neresindesin? Ne işe yaradı, neresi zorladı, ne öğrendin?",
+        "blog_toolbar_label": "Biçimlendirme",
+        "md_bold": "Kalın",
+        "md_italic": "İtalik",
+        "md_heading": "Başlık",
+        "md_list": "Liste",
+        "md_quote": "Alıntı",
+        "md_link": "Bağlantı",
         "blog_form_submit": "Yayınla",
         "blog_error_short": "Başlık en az 5, metin en az 100 karakter olmalı.",
         "blog_delete_button": "Yazıyı sil",
@@ -493,6 +525,22 @@ STRINGS = {
         "followers_label": "takipçi",
         "feed_title": "Takip ettiklerin",
         "feed_empty": "Topluluktan pratisyenleri takip et — pratikleri burada görünür, seni de diri tutar.",
+        # Seri dondurma
+        "freeze_left": "Bu ayki donma hakkın: {left}/{total}",
+        "freeze_tip": "Hayat araya girer: ayda 2 defaya kadar tek günlük boşluk otomatik köprülenir, serin bozulmaz.",
+        # Haftanın enleri
+        "leaders_title": "Haftanın enleri",
+        "leaders_hint": "Bu hafta branşında en çok dakika yapan pratisyen.",
+        # Hatırlatmalar
+        "reminders_label": "Bana günlük pratik hatırlatması gönder (e-posta)",
+        "reminders_hint": "O gün pratik kaydetmediysen akşam kısa bir e-posta. İstediğin an kapatabilirsin.",
+        "mail_reminder_subject": "Bugünün pratiği seni bekliyor — Joryu",
+        "mail_reminder_body": (
+            "<p>Bugün henüz pratik kaydetmedin.</p>"
+            "<p>Serin <strong>{streak}</strong> günde — canlı tutmak için 15 dakika yeter.</p>"
+            '<p><a href="{link}">Bugünün pratiğini kaydet</a></p>'
+            "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun.</p>"
+        ),
         # Kuşaklar ve rozetler
         "belts_title": "Kuşaklar",
         "belts_hint": "Herkes beyaz kuşakla başlar. Kuşaklar toplam pratik gününle ilerler — 365 pratik gününü dolduran siyah kuşak olur.",

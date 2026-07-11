@@ -31,6 +31,11 @@
       <span>{{ t.profile_public_label }}</span>
     </label>
     <p class="field-hint">{{ t.profile_public_hint }}</p>
+    <label class="checkbox-label">
+      <input type="checkbox" name="reminders_enabled" {% if user.reminders_enabled %}checked{% endif %}>
+      <span>{{ t.reminders_label }}</span>
+    </label>
+    <p class="field-hint">{{ t.reminders_hint }}</p>
     <button type="submit">{{ t.profile_save }}</button>
   </form>
 

@@ -3,7 +3,7 @@
 {% block og %}
   <meta property="og:type" content="article">
   <meta property="og:title" content="{{ post.title }} — Joryu">
-  <meta property="og:description" content="{{ post.body[:150] }}">
+  <meta property="og:description" content="{{ excerpt }}">
 {% endblock %}
 {% block content %}
 <article class="blog-post">
@@ -16,11 +16,7 @@
     {% if post.updated_at %}· <span class="muted">{{ t.blog_updated }}: {{ post.updated_at.date().isoformat() }}</span>{% endif %}
   </p>
 
-  <div class="post-body">
-    {% for para in post.body.split("\n\n") %}
-    {% if para.strip() %}<p>{{ para | trim }}</p>{% endif %}
-    {% endfor %}
-  </div>
+  <div class="post-body">{{ body_html | safe }}</div>
 
   {% if is_owner %}
   <div class="post-actions">

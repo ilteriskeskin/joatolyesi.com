@@ -34,6 +34,8 @@ class User(Base):
     is_public: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     # Yumuşak doğrulama: None = doğrulanmamış (giriş engellenmez, banner gösterilir)
     email_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Günlük hatırlatma e-postası (opt-in; scripts/send_reminders.py)
+    reminders_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     subscription: Mapped["Subscription | None"] = relationship(back_populates="user", uselist=False)

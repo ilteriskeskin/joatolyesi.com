@@ -65,10 +65,11 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
 
 Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
 
-- [ ] **1. Günlük hatırlatma (push/e-posta).** Streak ürünün çekirdeği ama
-      hatırlatma olmadan streak ölür. PWA push (VAPID, ücretsiz) veya
-      günlük e-posta: "Serin 12 günde — bugün 15 dakika yeter." Alışkanlık
-      uygulamalarında elde tutmanın 1 numaralı kaldıracı bu.
+- [x] **1. Günlük hatırlatma (e-posta).** Yapıldı: `scripts/send_reminders.py`
+      — o gün pratik kaydetmemiş, hatırlatmayı profilinde açmış kullanıcılara
+      akşam kısa mail (seri + tek tuş link). Opt-in (varsayılan kapalı),
+      migration 0007 (users.reminders_enabled). Cron: DEPLOY.md §6 (18:00 UTC).
+      PWA push sonraki adım (VAPID gerektirir, e-posta daha hızlı teslim edildi).
 - [x] **2. Paylaşılabilir profil kartı (OG görseli).** Yapıldı:
       `/u/<kullanıcı>/card.png` — Pillow ile sunucuda çizilen 1200×630 PNG
       (isim, branş, seri, toplam gün, kuşak bandı, 12 haftalık ısı haritası).
@@ -78,9 +79,10 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       ücretsiz kata sayfaları artık login'siz açılıyor (Pro içerik girişsizde
       login'e yönlenir); girişsiz ziyaretçiye kayıt CTA'sı gösterilir.
       KALAN: video açıklamalarına linkleri koymak (senin işin, lansmanla).
-- [ ] **4. Seri dondurma hakkı.** Ayda 1-2 "donma" hakkı (hastalık, seyahat).
-      Seriyi kaybetmek bırakmanın en büyük sebebi; affetme mekanizması
-      elde tutmayı ciddi artırır (Duolingo etkisi).
+- [x] **4. Seri dondurma hakkı.** Yapıldı: ayda 2 tek-günlük boşluk otomatik
+      köprülenir (`app/stats.py::_streak_with_freezes`), tablo gerekmez —
+      hesap tamamen deterministik. Dashboard'da "Bu ayki donma hakkın: X/2"
+      göstergesi + tooltip.
 - [x] **5. Kilometre taşı rozetleri → kuşak sistemi.** Yapıldı:
       `app/badges.py` — seriye bağlı 7 kuşak (beyaz 7g → siyah 365g, tüm
       zamanların en uzun serisine bakar, SVG + hover/tooltip) + seans
@@ -107,8 +109,16 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       `app/guide_content.py` — düzeltme/ekleme oradan.
 - [x] **13. Topluluk blogu.** Yapıldı: yazma girişli (/blog/yeni), okuma
       ve keşfet (/blog) herkese açık; başlık+metin araması, branş filtresi,
-      düzenleme/silme (sadece sahibi), yazar → profil linki, og meta.
-      Düz metin (paragraf ayrımlı); markdown ileride. Migration 0006.
+      düzenleme/silme (sadece sahibi), yazar → profil linki, og meta
+      (sanitize edilmiş özetten). **Markdown editörü**: araç çubuğu
+      (kalın/italik/başlık/liste/alıntı/link, Ctrl+B/I kısayolları),
+      gövde `markdown` + `nh3` ile render + XSS temizliği. Migration 0006.
+      Başlangıç içeriği: `scripts/seed_blog.py` (3 örnek kullanıcı, "Jo
+      Nedir?" ve "Dachi Pozisyonları" yazıları — idempotent, tekrar
+      çalıştırılabilir).
+- [x] **14. Haftanın enleri.** `/practitioners` sayfasında branş başına bu
+      hafta en çok dakika yapan (herkese açık profil) — `weekly_leaders()`,
+      tablo gerekmez, haftalık pencere pazartesi başlangıçlı hesaplanır.
 - [x] **12. Rehber EN derinleştirme.** Kalan tek TR-only adım listesi
       (Taikyoku Shodan) İngilizce'ye çevrildi; rehberde EN açığı kalmadı.
       (Araştırma listesinden gelecek yeni içerikler iki dilde eklenmeli.)

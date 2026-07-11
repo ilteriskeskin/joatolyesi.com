@@ -23,22 +23,57 @@ async def _practice_dates(db: AsyncSession, user_id: uuid.UUID) -> list:
     return list(result.scalars().all())
 
 
-async def compute_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
-    dates = await _practice_dates(db, user_id)
+# Seri dondurma: takvim ayı başına bu kadar tek günlük boşluk affedilir
+# (hastalık/seyahat affı — Duolingo etkisi). Tablo yok: hesap deterministik.
+FREEZES_PER_MONTH = 2
+
+
+def _streak_with_freezes(dates: list, today) -> tuple[int, int]:
+    """(seri, bu ay kullanılan donma) döner. Yalnız 1 günlük boşluklar,
+    boşluğun düştüğü ayın bütçesinden harcanarak köprülenir."""
     if not dates:
-        return 0
-    today = datetime.now(UTC).date()
-    # Seri canlı sayılır: son kayıt dünden eski değil.
-    # (UTC'nin önündeki dilimler "yarın" tarihli kayıt atabilir, o da canlı.)
+        return 0, 0
+    used: dict = {}
+
+    def try_freeze(day) -> bool:
+        key = (day.year, day.month)
+        if used.get(key, 0) < FREEZES_PER_MONTH:
+            used[key] = used.get(key, 0) + 1
+            return True
+        return False
+
+    # Canlılık: son kayıt dün/bugün (+ UTC önü yarın) ya da dünü dondurabiliyoruz
     if dates[0] < today - timedelta(days=1):
-        return 0
+        if dates[0] == today - timedelta(days=2) and try_freeze(today - timedelta(days=1)):
+            pass
+        else:
+            return 0, 0
     streak = 1
     for prev, curr in zip(dates, dates[1:]):
-        if prev - curr == timedelta(days=1):
+        gap = (prev - curr).days
+        if gap == 1:
+            streak += 1
+        elif gap == 2 and try_freeze(prev - timedelta(days=1)):
             streak += 1
         else:
             break
+    this_month = used.get((today.year, today.month), 0)
+    return streak, this_month
+
+
+async def compute_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
+    dates = await _practice_dates(db, user_id)
+    today = datetime.now(UTC).date()
+    streak, _ = _streak_with_freezes(dates, today)
     return streak
+
+
+async def streak_info(db: AsyncSession, user_id: uuid.UUID) -> dict:
+    """Dashboard için: seri + bu ay kalan donma hakkı."""
+    dates = await _practice_dates(db, user_id)
+    today = datetime.now(UTC).date()
+    streak, used_this_month = _streak_with_freezes(dates, today)
+    return {"streak": streak, "freezes_left": max(0, FREEZES_PER_MONTH - used_this_month)}
 
 
 async def compute_longest_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
@@ -164,3 +199,23 @@ async def build_heatmap(db: AsyncSession, user_id: uuid.UUID) -> list[list[dict]
         weeks.append(week)
         week_start += timedelta(days=7)
     return weeks
+
+
+async def weekly_leaders(db: AsyncSession) -> list[dict]:
+    """Haftanın enleri: bu hafta branşında en çok dakika yapan (açık profil)."""
+    from app.models import User
+
+    today = datetime.now(UTC).date()
+    week_start = today - timedelta(days=today.weekday())
+    result = await db.execute(
+        select(PracticeLog.discipline, User, func.sum(PracticeLog.minutes).label("m"))
+        .join(User, PracticeLog.user_id == User.id)
+        .where(PracticeLog.practiced_on >= week_start, User.is_public, User.username.is_not(None))
+        .group_by(PracticeLog.discipline, User.id)
+        .order_by(func.sum(PracticeLog.minutes).desc())
+    )
+    leaders: dict[str, dict] = {}
+    for discipline, person, minutes in result.all():
+        if discipline not in leaders:
+            leaders[discipline] = {"discipline": discipline, "person": person, "minutes": minutes}
+    return sorted(leaders.values(), key=lambda x: -x["minutes"])

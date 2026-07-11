@@ -18,11 +18,23 @@
         {% endfor %}
       </select>
     </label>
-    <label>{{ t.blog_form_body_label }}
-      <textarea name="body" rows="16" required minlength="100" maxlength="20000">{{ post.body if post else draft_body|default('') }}</textarea>
-    </label>
+
+    <div class="md-editor">
+      <span class="editor-label">{{ t.blog_form_body_label }}</span>
+      <div class="md-toolbar" role="toolbar" aria-label="{{ t.blog_toolbar_label }}">
+        <button type="button" data-md="bold" title="{{ t.md_bold }} (Ctrl+B)"><strong>B</strong></button>
+        <button type="button" data-md="italic" title="{{ t.md_italic }} (Ctrl+I)"><em>I</em></button>
+        <button type="button" data-md="h2" title="{{ t.md_heading }}">H</button>
+        <button type="button" data-md="list" title="{{ t.md_list }}">•—</button>
+        <button type="button" data-md="quote" title="{{ t.md_quote }}">&raquo;</button>
+        <button type="button" data-md="link" title="{{ t.md_link }}">&#128279;&#65038;</button>
+      </div>
+      <textarea name="body" rows="16" required minlength="100" maxlength="20000"
+                placeholder="{{ t.blog_body_placeholder }}">{{ post.body if post else draft_body|default('') }}</textarea>
+    </div>
     <p class="field-hint">{{ t.blog_form_hint }}</p>
     <button type="submit">{{ t.blog_form_submit }}</button>
   </form>
 </div>
+<script src="/static/js/editor.js" defer></script>
 {% endblock %}

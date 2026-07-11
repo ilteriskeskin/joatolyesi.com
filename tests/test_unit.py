@@ -98,3 +98,18 @@ class TestI18n:
 
     def test_unknown_lang_falls_back(self):
         assert get_strings("de") == STRINGS["tr"]
+
+
+class TestStreakFreeze:
+    def test_freeze_bridges_single_gaps(self):
+        from datetime import date, timedelta
+        from app.stats import _streak_with_freezes
+        t = date(2026, 7, 11)
+        days = lambda *offs: [t - timedelta(days=o) for o in offs]
+        assert _streak_with_freezes(days(0, 1, 2, 3, 4), t) == (5, 0)
+        assert _streak_with_freezes(days(0, 2, 3), t) == (3, 1)           # 1 boşluk köprülendi
+        s, used = _streak_with_freezes(days(0, 2, 4, 6, 7), t)           # 3. boşluk affedilmez
+        assert s == 3 and used == 2
+        assert _streak_with_freezes(days(2, 3), t) == (2, 1)             # dün kaçtı ama donma var
+        assert _streak_with_freezes(days(0, 3), t)[0] == 1               # 2+ gün boşluk affedilmez
+        assert _streak_with_freezes([], t) == (0, 0)

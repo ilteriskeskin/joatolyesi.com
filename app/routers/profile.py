@@ -14,7 +14,7 @@ from app.render import render
 from app.badges import compute_badges, compute_belts, current_belt
 from app.card import render_profile_card
 from app.i18n.strings import get_strings
-from app.stats import build_heatmap, compute_streak, practice_day_counts, practice_stats, total_practice_days
+from app.stats import build_heatmap, compute_streak, practice_day_counts, practice_stats, total_practice_days, weekly_leaders
 
 router = APIRouter()
 
@@ -34,6 +34,7 @@ async def profile_save(
     bio: str = Form(""),
     discipline: str = Form("jo"),
     is_public: str = Form(""),
+    reminders_enabled: str = Form(""),
     user: User = Depends(require_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -56,6 +57,7 @@ async def profile_save(
     user.bio = bio.strip()[:500] or None
     user.discipline = discipline if discipline in DISCIPLINES else user.discipline
     user.is_public = is_public == "on"
+    user.reminders_enabled = reminders_enabled == "on"
     await db.commit()
     return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES, error=None, saved=True)
 
@@ -77,7 +79,9 @@ async def practitioners(
     people = list(result.scalars().all())
     day_counts = await practice_day_counts(db, [p.id for p in people])
     belts = {p.id: current_belt(day_counts.get(p.id, 0)) for p in people}
-    return render(request, "practitioners.html", user=user, people=people, belts=belts, q=q)
+    leaders = await weekly_leaders(db)
+    return render(request, "practitioners.html", user=user, people=people, belts=belts,
+                  leaders=leaders, q=q)
 
 
 @router.get("/u/{username}", response_class=HTMLResponse)

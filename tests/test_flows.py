@@ -305,3 +305,34 @@ async def test_kata_pages_public(client):
     async with _httpx.AsyncClient(transport=tr, base_url="http://test") as anon:
         r = await anon.get("/kata")
         assert r.status_code == 200  # liste login istemiyor
+
+
+async def test_blog_markdown_rendering(client):
+    email, username = f"{unique('md')}@test.com", unique("mdwriter")
+    await register(client, email, username)
+    csrf = await get_csrf(client, "/blog/yeni")
+    body_md = (
+        "## Alt başlık\n\n**kalın metin** ve *italik metin*.\n\n"
+        "- madde bir\n- madde iki\n\n"
+        "> bir alıntı\n\n"
+        "<script>alert(1)</script>\n\n" + ("dolgu metni. " * 10)
+    )
+    r = await client.post("/blog/yeni", data={
+        "title": "Markdown testi başlığı", "body": body_md,
+        "discipline": "aikijo", "csrf_token": csrf,
+    })
+    assert r.status_code == 303
+    slug = r.headers["location"].split("/blog/")[1]
+    r = await client.get(f"/blog/{slug}")
+    assert "<h2>Alt başlık</h2>" in r.text
+    assert "<strong>kalın metin</strong>" in r.text
+    assert "<em>italik metin</em>" in r.text
+    assert "<li>madde bir</li>" in r.text
+    assert "<blockquote>" in r.text
+    post_body_html = r.text.split('class="post-body"')[1].split("</article>")[0]
+    assert "alert(1)" not in post_body_html  # XSS payload gövdeden tamamen temizlendi
+    assert "alert(1)" not in r.text.split("<meta property=\"og:description\"")[1].split(">")[0]  # meta de temiz
+    # keşfet sayfasında özet düz metin (etiketsiz)
+    r = await client.get("/blog")
+    assert "Markdown testi başlığı" in r.text
+    assert "<h2>Alt başlık</h2>" not in r.text  # excerpt duz metin, HTML degil

@@ -1,6 +1,7 @@
 <div class="streak-block">
   <span class="streak-number">{{ streak }}</span>
   <span class="streak-label">{{ t.dash_streak_label }}</span>
+  <span class="freeze-note" data-tip="{{ t.freeze_tip }}">{{ t.freeze_left.format(left=freezes_left, total=freezes_total) }}</span>
 </div>
 
 <div class="card week-card">

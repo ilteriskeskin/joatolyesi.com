@@ -1485,3 +1485,87 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   /* App tarafı da genişlesin */
   .app-main { max-width: 840px; }
 }
+
+/* Markdown editör + biçimli gövde */
+.md-editor { margin-bottom: 0.9rem; }
+.editor-label { display: block; font-size: 0.85rem; color: var(--ink-dim); margin-bottom: 0.4rem; }
+.md-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 0.35rem;
+}
+.md-toolbar button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--ink-dim);
+  min-width: 2rem;
+  padding: 0.25rem 0.45rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.md-toolbar button:hover { color: var(--accent); border-color: var(--border); background: var(--bg-raised); }
+.md-editor textarea {
+  display: block; width: 100%;
+  border-radius: 0 0 4px 4px !important;
+  margin-top: 0 !important;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 0.75rem 0.9rem;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-family: var(--font-sans);
+}
+
+.post-body h2 { font-size: 1.4rem; margin: 1.75rem 0 0.6rem; }
+.post-body h3 { font-size: 1.15rem; margin: 1.4rem 0 0.5rem; }
+.post-body ul, .post-body ol { margin: 0 0 1.1rem 1.4rem; color: var(--ink); }
+.post-body li { margin-bottom: 0.4rem; line-height: 1.65; }
+.post-body blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.35rem 0 0.35rem 1rem;
+  margin: 0 0 1.1rem;
+  color: var(--ink-dim);
+  font-style: italic;
+}
+.post-body code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.9em;
+}
+.post-body hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+/* Donma hakkı + haftanın enleri */
+.freeze-note {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  cursor: default;
+}
+.leaders-card { border-left: 3px solid var(--accent); }
+.leaders-list { list-style: none; }
+.leaders-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.leaders-list li:last-child { border-bottom: none; }
+.leaders-discipline {
+  min-width: 9rem;
+  color: var(--accent);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.leaders-minutes { margin-left: auto; color: var(--ink-dim); font-size: 0.85rem; }

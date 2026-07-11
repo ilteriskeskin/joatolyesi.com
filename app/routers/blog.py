@@ -14,6 +14,7 @@ from sqlalchemy.orm import selectinload
 from app.constants import DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user
+from app.markdown_utils import markdown_excerpt, render_markdown
 from app.models import Post, User
 from app.rate_limit import limiter
 from app.render import render
@@ -48,9 +49,11 @@ async def blog_list(
     if selected:
         stmt = stmt.where(Post.discipline == selected)
     result = await db.execute(stmt)
+    posts = list(result.scalars().all())
+    excerpts = {p.id: markdown_excerpt(p.body) for p in posts}
     return render(
         request, "blog_list.html", user=user,
-        posts=list(result.scalars().all()), q=q, selected=selected, disciplines=DISCIPLINES,
+        posts=posts, excerpts=excerpts, q=q, selected=selected, disciplines=DISCIPLINES,
     )
 
 
@@ -98,7 +101,9 @@ async def blog_read(
     if post is None:
         return render(request, "404.html", user=user)
     is_owner = user is not None and user.id == post.user_id
-    return render(request, "blog_post.html", user=user, post=post, is_owner=is_owner)
+    return render(request, "blog_post.html", user=user, post=post,
+                  body_html=render_markdown(post.body),
+                  excerpt=markdown_excerpt(post.body, 150), is_owner=is_owner)
 
 
 @router.get("/blog/{slug}/duzenle", response_class=HTMLResponse)

@@ -4,6 +4,22 @@
 <h1>{{ t.community_title }}</h1>
 <p class="muted">{{ t.community_hint }}</p>
 
+{% if leaders %}
+<div class="card leaders-card">
+  <h2>{{ t.leaders_title }}</h2>
+  <p class="muted">{{ t.leaders_hint }}</p>
+  <ul class="leaders-list">
+    {% for l in leaders %}
+    <li>
+      <span class="leaders-discipline">{{ t["discipline_" ~ l.discipline] }}</span>
+      <a href="/u/{{ l.person.username }}">{{ l.person.display_name or l.person.username }}</a>
+      <span class="leaders-minutes">{{ l.minutes }} {{ t.minutes_short }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
 <form method="get" action="/practitioners" class="search-form">
   <input type="search" name="q" value="{{ q }}" placeholder="{{ t.community_search_placeholder }}" maxlength="80">
   <button type="submit">{{ t.community_search_button }}</button>

@@ -82,6 +82,9 @@ Sunucuda root olarak `crontab -e` deyip şunları ekle:
 
 # Haftalık eski Docker imajı temizliği (Pazar 04:00) — 10GB disk dolmasın
 0 4 * * 0 /usr/bin/docker image prune -af >> /var/log/joryu-prune.log 2>&1
+
+# Günlük pratik hatırlatması (18:00 UTC = 21:00 TR) — opt-in kullanıcılara
+0 18 * * * /usr/bin/docker compose --project-directory /root/joryu exec -T app python scripts/send_reminders.py >> /var/log/joryu-reminders.log 2>&1
 ```
 
 Kurulumdan sonra bir kez elle çalıştırıp doğrula:

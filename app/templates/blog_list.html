@@ -29,7 +29,7 @@
   {% for post in posts %}
   <a class="card post-card" href="/blog/{{ post.slug }}">
     <h3>{{ post.title }}</h3>
-    <p class="muted post-excerpt">{{ post.body[:220] }}{% if post.body|length > 220 %}…{% endif %}</p>
+    <p class="muted post-excerpt">{{ excerpts[post.id] }}</p>
     <p class="post-meta">
       <span>{{ post.author.display_name or post.author.username }}</span>
       · <span>{{ post.created_at.date().isoformat() }}</span>
