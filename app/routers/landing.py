@@ -31,6 +31,26 @@ async def index(
     return render(request, "index.html", user=user, source=src if src and SOURCE_RE.match(src) else "")
 
 
+@router.get("/robots.txt")
+async def robots():
+    return Response(
+        f"User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: {settings.base_url}/sitemap.xml\n",
+        media_type="text/plain",
+    )
+
+
+@router.get("/sitemap.xml")
+async def sitemap():
+    paths = ["/", "/privacy", "/terms"]
+    if not settings.waitlist_only:
+        from app.guide_content import GUIDE
+
+        paths += ["/guide"] + [f"/guide/{d}" for d in GUIDE]
+    urls = "".join(f"<url><loc>{settings.base_url}{p}</loc></url>" for p in paths)
+    xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
+    return Response(xml, media_type="application/xml")
+
+
 @router.get("/privacy", response_class=HTMLResponse)
 async def privacy(request: Request, user: User | None = Depends(get_current_user)):
     return render(request, "privacy.html", user=user)

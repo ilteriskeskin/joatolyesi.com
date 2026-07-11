@@ -62,10 +62,12 @@ cp .env.example .env   # değerleri doldur
 docker compose up -d --build
 ```
 
-Güncelleme:
+Güncelleme (CI imajıyla — sunucuda build yok):
 ```bash
-cd ~/joryu && git pull && docker compose up -d --build
+cd ~/joryu && git pull
+docker compose pull app && docker compose up -d
 ```
+Detay ve GHCR erişimi: aşağıda "4) Güncelleme akışı".
 
 ## 6. Bakım cron'ları
 
@@ -256,9 +258,26 @@ Tarayıcıdan da bak: sayfada login/register linki OLMAMALI, waitlist formu
 
 ### 4) Güncelleme akışı (sonraki deploylar)
 
+Tercih edilen yol — CI imajı (GitHub Actions her main push'unda
+`ghcr.io/ilteriskeskin/joryu:latest` yayınlar, sunucuda build gerekmez;
+512MB droplet için önemli):
+
+```bash
+cd ~/joryu && git pull                # compose.yml + scripts güncellensin
+docker compose pull app && docker compose up -d
+# migration'lar container açılışında otomatik çalışır
+```
+
+İlk seferde GHCR erişimi: paket public ise gerek yok; private ise
+GitHub'da read:packages izinli bir PAT üret ve bir kez
+`docker login ghcr.io -u ilteriskeskin` ile gir.
+(Paketi public yapmak için: github.com → Packages → joryu → settings →
+Change visibility.)
+
+Yedek yol — sunucuda build:
+
 ```bash
 cd ~/joryu && git pull && docker compose up -d --build
-docker compose exec app alembic upgrade head   # yeni migration varsa
 ```
 
 ### 5) App lansmanı günü (Phase 1'e geçiş)

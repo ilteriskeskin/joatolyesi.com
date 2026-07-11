@@ -15,6 +15,10 @@ services:
       retries: 10
 
   app:
+    # CI (GitHub Actions) her main push'unda bu imajı yayınlar.
+    # Sunucuda deploy: docker compose pull app && docker compose up -d
+    # Lokal geliştirme: docker compose up -d --build (build: fallback'i kullanır)
+    image: ghcr.io/ilteriskeskin/joryu:latest
     build: .
     restart: unless-stopped
     env_file: .env
