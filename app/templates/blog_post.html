@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — Joryu{% endblock %}
+{% block og %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="{{ post.title }} — Joryu">
+  <meta property="og:description" content="{{ post.body[:150] }}">
+{% endblock %}
+{% block content %}
+<article class="blog-post">
+  <p class="guide-breadcrumb"><a href="/blog">{{ t.blog_title }}</a></p>
+  <h1>{{ post.title }}</h1>
+  <p class="post-meta">
+    <a href="/u/{{ post.author.username }}">{{ post.author.display_name or post.author.username }}</a>
+    · <span>{{ post.created_at.date().isoformat() }}</span>
+    {% if post.discipline %}· <span class="post-discipline">{{ t["discipline_" ~ post.discipline] }}</span>{% endif %}
+    {% if post.updated_at %}· <span class="muted">{{ t.blog_updated }}: {{ post.updated_at.date().isoformat() }}</span>{% endif %}
+  </p>
+
+  <div class="post-body">
+    {% for para in post.body.split("\n\n") %}
+    {% if para.strip() %}<p>{{ para | trim }}</p>{% endif %}
+    {% endfor %}
+  </div>
+
+  {% if is_owner %}
+  <div class="post-actions">
+    <a class="button" href="/blog/{{ post.slug }}/duzenle">{{ t.blog_edit_link }}</a>
+    <form method="post" action="/blog/{{ post.slug }}/sil" class="inline-form"
+          x-data @submit.prevent="if (confirm('{{ t.blog_delete_confirm }}')) $el.submit()">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="danger-button">{{ t.blog_delete_button }}</button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if not user %}
+  <div class="card guide-cta">
+    <p>{{ t.blog_cta_text }}</p>
+    <a class="button" href="/register">{{ t.nav_register }}</a>
+  </div>
+  {% endif %}
+</article>
+{% endblock %}

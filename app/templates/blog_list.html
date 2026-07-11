@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ t.blog_title }} — Joryu{% endblock %}
+{% block content %}
+<div class="blog-head">
+  <div>
+    <h1>{{ t.blog_title }}</h1>
+    <p class="muted">{{ t.blog_hint }}</p>
+  </div>
+  {% if user %}
+  <a class="button" href="/blog/yeni">{{ t.blog_write_button }}</a>
+  {% endif %}
+</div>
+
+<form method="get" action="/blog" class="search-form">
+  <input type="search" name="q" value="{{ q }}" placeholder="{{ t.blog_search_placeholder }}" maxlength="80">
+  {% if selected %}<input type="hidden" name="d" value="{{ selected }}">{% endif %}
+  <button type="submit">{{ t.community_search_button }}</button>
+</form>
+
+<div class="guide-toc blog-filters">
+  <a href="/blog{% if q %}?q={{ q }}{% endif %}" {% if not selected %}class="blog-filter--active"{% endif %}>{{ t.kata_all }}</a>
+  {% for d in disciplines if d != "other" %}
+  <a href="/blog?d={{ d }}{% if q %}&q={{ q }}{% endif %}" {% if selected == d %}class="blog-filter--active"{% endif %}>{{ t["discipline_" ~ d] }}</a>
+  {% endfor %}
+</div>
+
+{% if posts %}
+<div class="post-list">
+  {% for post in posts %}
+  <a class="card post-card" href="/blog/{{ post.slug }}">
+    <h3>{{ post.title }}</h3>
+    <p class="muted post-excerpt">{{ post.body[:220] }}{% if post.body|length > 220 %}…{% endif %}</p>
+    <p class="post-meta">
+      <span>{{ post.author.display_name or post.author.username }}</span>
+      · <span>{{ post.created_at.date().isoformat() }}</span>
+      {% if post.discipline %}· <span class="post-discipline">{{ t["discipline_" ~ post.discipline] }}</span>{% endif %}
+    </p>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="muted">{{ t.blog_empty }}</p>
+{% endif %}
+{% endblock %}

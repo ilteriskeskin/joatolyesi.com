@@ -1405,3 +1405,83 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   .waitlist-form button::after, .button::after { display: none; }
   .form-message--success { animation: none; }
 }
+
+/* ---- Blog ---- */
+
+.blog-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.blog-head h1 { margin-bottom: 0.35rem; }
+
+.blog-filters { margin: 1rem 0 1.5rem; }
+.blog-filter--active { border-color: var(--accent) !important; color: var(--accent) !important; }
+
+.post-list { display: flex; flex-direction: column; gap: 1rem; }
+.post-card h3 { font-size: 1.3rem; margin-bottom: 0.4rem; }
+.post-excerpt { font-size: 0.95rem; }
+.post-meta { color: var(--ink-dim); font-size: 0.85rem; margin-top: 0.6rem; }
+.post-discipline { color: var(--accent); }
+
+.blog-post { max-width: 680px; margin: 0 auto; }
+.blog-post h1 { font-size: 2.2rem; line-height: 1.15; margin: 0.5rem 0; }
+.post-body { margin-top: 1.5rem; }
+.post-body p {
+  color: var(--ink);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 1.1rem;
+}
+.post-actions { display: flex; gap: 1rem; align-items: center; margin-top: 2rem; }
+.blog-form-card { max-width: 680px; }
+.blog-form-card textarea { font-size: 1rem; line-height: 1.6; }
+
+/* ---- Masaüstü: mobil kadar canlı ---- */
+.hero__vertical { display: none; }
+
+@media (min-width: 900px) {
+  /* Hero: dikeyde ortala, tipografiyi büyüt, nefes aç */
+  .hero { align-items: center; padding: 2rem 6vw 4rem; }
+  .hero h1 { font-size: clamp(3.4rem, 4.6vw, 5rem); }
+  .hero__sub { font-size: 1.2rem; max-width: 52ch; }
+  .hero__content { max-width: 720px; }
+  .hero__enso { right: 2%; opacity: 0.34; }
+
+  /* Dikey "keiko" yazısı — dojo tabelası hissi */
+  .hero__vertical {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 2.2vw;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    letter-spacing: 0.5em;
+    font-size: 0.85rem;
+    color: var(--accent);
+    opacity: 0.45;
+    border-left: 1px solid rgba(184, 146, 90, 0.25);
+    padding-left: 0.9rem;
+    pointer-events: none;
+  }
+
+  /* Bölümler geniş ekranda dar şerit gibi durmasın */
+  .problem, .solution, .devices, .social-proof, .cta2 { max-width: 1100px; padding: 5rem 2rem; }
+  .problem h2, .solution h2, .devices h2, .cta2 h2 { font-size: 2.2rem; }
+  .problem__grid, .solution__grid { gap: 2rem; }
+  .problem__card, .feature-card { padding: 2rem; }
+  .solution__kanji { font-size: 24rem; right: 0; }
+  .devices__stage { gap: 4rem; }
+  .device--laptop .device__screen { width: 520px; }
+  .device--phone .device__screen { width: 175px; }
+  .social-proof__line { font-size: 1.7rem; }
+
+  /* Korlar geniş ekranda biraz daha belirgin */
+  .hero__embers i { filter: blur(0.5px); }
+
+  /* App tarafı da genişlesin */
+  .app-main { max-width: 840px; }
+}

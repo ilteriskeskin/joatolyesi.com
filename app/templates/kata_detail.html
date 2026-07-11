@@ -13,6 +13,7 @@
   {% endif %}
   <p>{{ kata.description_en if lang == 'en' else kata.description_tr }}</p>
 
+  {% if user %}
   <div class="card kata-log-card">
     {% if logged %}
     <p class="form-message form-message--success">{{ t.kata_logged }}</p>
@@ -25,5 +26,11 @@
       <button type="submit">{{ t.kata_log_button }}</button>
     </form>
   </div>
+  {% else %}
+  <div class="card guide-cta">
+    <p>{{ t.blog_cta_text }}</p>
+    <a class="button" href="/register">{{ t.nav_register }}</a>
+  </div>
+  {% endif %}
 </article>
 {% endblock %}

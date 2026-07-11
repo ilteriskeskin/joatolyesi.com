@@ -12,7 +12,7 @@ if settings.sentry_dsn:
 
     sentry_sdk.init(dsn=settings.sentry_dsn, environment=settings.env, traces_sample_rate=0)
 from app.rate_limit import limiter
-from app.routers import admin, auth, billing, guide, kata, landing, practice, profile, programs
+from app.routers import admin, auth, billing, blog, guide, kata, landing, practice, profile, programs
 from app.seed import seed_content
 
 app = FastAPI(title="Joryu")
@@ -24,6 +24,7 @@ app.include_router(landing.router)
 if not settings.waitlist_only:
     app.include_router(guide.router)  # rehber halka açık (giriş istemez) ama lansmanla gelir
     app.include_router(auth.router)
+    app.include_router(blog.router)
     app.include_router(practice.router)
     app.include_router(kata.router)
     app.include_router(programs.router)

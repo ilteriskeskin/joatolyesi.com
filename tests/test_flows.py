@@ -245,3 +245,63 @@ async def test_follow_feed_and_card(client):
     # profil sayfasında og:image var
     r = await client.get(f"/u/{user_b}")
     assert f"/u/{user_b}/card.png" in r.text
+
+
+async def test_blog_write_read_search(client):
+    email, username = f"{unique('b')}@test.com", unique("blogger")
+    await register(client, email, username)
+
+    # yaz
+    csrf = await get_csrf(client, "/blog/yeni")
+    body_text = "Suburi çalışırken omuzlarım hep gergindi. " * 5
+    r = await client.post("/blog/yeni", data={
+        "title": "Omuz gerginliğiyle üç ayım", "body": body_text,
+        "discipline": "aikijo", "csrf_token": csrf,
+    })
+    assert r.status_code == 303
+    slug = r.headers["location"].split("/blog/")[1]
+
+    # login'siz oku (keşfet + yazı herkese açık)
+    from app.main import app as _app
+    import httpx as _httpx
+    tr = _httpx.ASGITransport(app=_app)
+    async with _httpx.AsyncClient(transport=tr, base_url="http://test") as anon:
+        r = await anon.get("/blog")
+        assert r.status_code == 200 and "Omuz gerginliğiyle" in r.text
+        r = await anon.get(f"/blog/{slug}")
+        assert r.status_code == 200 and "Suburi çalışırken" in r.text
+        # arama
+        r = await anon.get("/blog?q=omuz")
+        assert "Omuz gerginliğiyle" in r.text
+        r = await anon.get("/blog?q=boylebirsheyyok")
+        assert "Omuz gerginliğiyle" not in r.text
+        # branş filtresi
+        r = await anon.get("/blog?d=kendo")
+        assert "Omuz gerginliğiyle" not in r.text
+        # login'siz yazamaz
+        r = await anon.get("/blog/yeni")
+        assert r.status_code == 303
+
+    # sahibi düzenler, başkası düzenleyemez
+    csrf = await get_csrf(client, f"/blog/{slug}/duzenle")
+    r = await client.post(f"/blog/{slug}/duzenle", data={
+        "title": "Omuz gerginliği: çözüm", "body": body_text, "discipline": "aikijo", "csrf_token": csrf})
+    assert r.status_code == 303
+    r = await client.get(f"/blog/{slug}")
+    assert "çözüm" in r.text
+
+    # sil
+    csrf = await get_csrf(client, f"/blog/{slug}")
+    r = await client.post(f"/blog/{slug}/sil", data={"csrf_token": csrf})
+    assert r.status_code == 303
+    r = await client.get(f"/blog/{slug}")
+    assert "404" in r.text or "bulunamadı" in r.text.lower()
+
+
+async def test_kata_pages_public(client):
+    from app.main import app as _app
+    import httpx as _httpx
+    tr = _httpx.ASGITransport(app=_app)
+    async with _httpx.AsyncClient(transport=tr, base_url="http://test") as anon:
+        r = await anon.get("/kata")
+        assert r.status_code == 200  # liste login istemiyor

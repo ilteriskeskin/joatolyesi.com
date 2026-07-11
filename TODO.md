@@ -74,11 +74,10 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       (isim, branş, seri, toplam gün, kuşak bandı, 12 haftalık ısı haritası).
       Profil sayfasında og:image + twitter:card meta'ları; link WhatsApp/
       Twitter'a yapıştırılınca kart görünür. Sadece herkese açık profiller.
-- [ ] **3. YouTube → uygulama köprüsü.** Her videonun açıklamasına ilgili
-      kata sayfası linki (`joatolyesi.com/kata/...?src=yt`). Kata sayfaları
-      giriş istemeden önizlenebilir olmalı (şu an login istiyor — ücretsiz
-      içerik herkese açık olsun, SEO da kazanılır). Dönüşüm hunisinin
-      en ucuz parçası.
+- [x] **3. YouTube → uygulama köprüsü (teknik taraf).** Kata listesi ve
+      ücretsiz kata sayfaları artık login'siz açılıyor (Pro içerik girişsizde
+      login'e yönlenir); girişsiz ziyaretçiye kayıt CTA'sı gösterilir.
+      KALAN: video açıklamalarına linkleri koymak (senin işin, lansmanla).
 - [ ] **4. Seri dondurma hakkı.** Ayda 1-2 "donma" hakkı (hastalık, seyahat).
       Seriyi kaybetmek bırakmanın en büyük sebebi; affetme mekanizması
       elde tutmayı ciddi artırır (Duolingo etkisi).
@@ -106,6 +105,10 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       (lansmanla açılır). Kata'sı olmayan
       branşlarda (aikido, kenjutsu kısmen) yalnız teknikler. İçerik
       `app/guide_content.py` — düzeltme/ekleme oradan.
+- [x] **13. Topluluk blogu.** Yapıldı: yazma girişli (/blog/yeni), okuma
+      ve keşfet (/blog) herkese açık; başlık+metin araması, branş filtresi,
+      düzenleme/silme (sadece sahibi), yazar → profil linki, og meta.
+      Düz metin (paragraf ayrımlı); markdown ileride. Migration 0006.
 - [x] **12. Rehber EN derinleştirme.** Kalan tek TR-only adım listesi
       (Taikyoku Shodan) İngilizce'ye çevrildi; rehberde EN açığı kalmadı.
       (Araştırma listesinden gelecek yeni içerikler iki dilde eklenmeli.)

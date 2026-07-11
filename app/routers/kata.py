@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
-from app.deps import ProRequired, csrf_protect, is_pro, require_user
+from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, require_user
 from app.models import Kata, PracticeLog, User
 from app.rate_limit import limiter
 from app.render import render
@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.get("/kata", response_class=HTMLResponse)
-async def kata_list(request: Request, user: User = Depends(require_user), db: AsyncSession = Depends(get_db)):
+async def kata_list(request: Request, user: User | None = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     available_result = await db.execute(select(Kata.discipline).distinct())
     available = sorted(available_result.scalars().all())
 
@@ -26,7 +26,7 @@ async def kata_list(request: Request, user: User = Depends(require_user), db: As
     elif d in available:
         selected = d
     else:
-        selected = user.discipline if user.discipline in available else None
+        selected = user.discipline if user and user.discipline in available else None
 
     stmt = select(Kata).order_by(Kata.sort_order, Kata.title_en)
     if selected:
@@ -44,13 +44,15 @@ async def kata_list(request: Request, user: User = Depends(require_user), db: As
 
 @router.get("/kata/{slug}", response_class=HTMLResponse)
 async def kata_detail(
-    slug: str, request: Request, user: User = Depends(require_user), db: AsyncSession = Depends(get_db)
+    slug: str, request: Request, user: User | None = Depends(get_current_user), db: AsyncSession = Depends(get_db)
 ):
     result = await db.execute(select(Kata).where(Kata.slug == slug))
     kata = result.scalar_one_or_none()
     if kata is None:
         return render(request, "404.html", user=user)
     if not kata.is_free and not is_pro(user):
+        if user is None:
+            return RedirectResponse("/login", status_code=303)
         raise ProRequired()
     logged = request.query_params.get("logged") == "1"
     return render(request, "kata_detail.html", user=user, kata=kata, logged=logged)
