@@ -101,7 +101,8 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       "Kata" (/kata).
 - [x] **11. Branş rehberi (/guide).** 10 branş için kata + teknik/vuruş
       sınıflandırması; TR detaylı, EN özet; embusen/happo/seviye SVG
-      diyagramları. Halka açık (SEO + üyelik öncesi değer). Kata'sı olmayan
+      diyagramları. Giriş istemez ama WAITLIST_ONLY=true iken kapalıdır
+      (lansmanla açılır). Kata'sı olmayan
       branşlarda (aikido, kenjutsu kısmen) yalnız teknikler. İçerik
       `app/guide_content.py` — düzeltme/ekleme oradan.
 - [ ] **12. Rehber EN derinleştirme.** Rehberin adım listeleri şimdilik
