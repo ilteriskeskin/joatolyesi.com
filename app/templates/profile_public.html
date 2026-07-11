@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% block title %}{{ person.display_name or person.username }} — Joryu{% endblock %}
+{% block og %}
+{% if person.is_public %}
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="{{ person.display_name or person.username }} — Joryu">
+  <meta property="og:description" content="{{ t['discipline_' ~ person.discipline] }} · {{ streak }} {{ t.dash_streak_label }}">
+  <meta property="og:image" content="https://joatolyesi.com/u/{{ person.username }}/card.png">
+  <meta name="twitter:card" content="summary_large_image">
+{% endif %}
+{% endblock %}
 {% block content %}
 <article class="profile-page">
   {% if is_owner and not person.is_public %}
@@ -11,6 +20,16 @@
     <p class="muted">@{{ person.username }}</p>
     <span class="badge badge--pro">{{ t["discipline_" ~ person.discipline] }}</span>
     <span class="muted profile-joined">{{ t.profile_member_since }}: {{ person.created_at.date().isoformat() }}</span>
+    <span class="muted">· {{ follower_count }} {{ t.followers_label }}</span>
+
+    {% if user and not is_owner and person.is_public %}
+    <form method="post" action="/u/{{ person.username }}/follow" class="follow-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="{% if is_following %}follow-button follow-button--active{% else %}follow-button{% endif %}">
+        {{ t.unfollow_button if is_following else t.follow_button }}
+      </button>
+    </form>
+    {% endif %}
   </header>
 
   {% if person.bio %}<p class="profile-bio">{{ person.bio }}</p>{% endif %}

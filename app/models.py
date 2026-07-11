@@ -139,3 +139,14 @@ class EnrollmentDay(Base):
     completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     enrollment: Mapped[Enrollment] = relationship(back_populates="completed_days")
+
+
+class Follow(Base):
+    __tablename__ = "follows"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    follower_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    followee_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    __table_args__ = (UniqueConstraint("follower_id", "followee_id"),)

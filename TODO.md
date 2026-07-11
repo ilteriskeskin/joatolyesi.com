@@ -69,11 +69,11 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       hatırlatma olmadan streak ölür. PWA push (VAPID, ücretsiz) veya
       günlük e-posta: "Serin 12 günde — bugün 15 dakika yeter." Alışkanlık
       uygulamalarında elde tutmanın 1 numaralı kaldıracı bu.
-- [ ] **2. Paylaşılabilir profil kartı (OG görseli).** Profil sayfası için
-      otomatik üretilen görsel: isim + branş + seri + ısı haritası.
-      Instagram bio/story'de paylaşılınca organik büyüme sağlar — senin
-      dağıtım avantajın (138k izlenmeli videolar) ile birebir örtüşüyor.
-      "Dövüş sanatçısının GitHub profili" konumlandırmasının vitrini.
+- [x] **2. Paylaşılabilir profil kartı (OG görseli).** Yapıldı:
+      `/u/<kullanıcı>/card.png` — Pillow ile sunucuda çizilen 1200×630 PNG
+      (isim, branş, seri, toplam gün, kuşak bandı, 12 haftalık ısı haritası).
+      Profil sayfasında og:image + twitter:card meta'ları; link WhatsApp/
+      Twitter'a yapıştırılınca kart görünür. Sadece herkese açık profiller.
 - [ ] **3. YouTube → uygulama köprüsü.** Her videonun açıklamasına ilgili
       kata sayfası linki (`joatolyesi.com/kata/...?src=yt`). Kata sayfaları
       giriş istemeden önizlenebilir olmalı (şu an login istiyor — ücretsiz
@@ -89,9 +89,10 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       herkese açık profilde sadece kazanılanlar. Anlık hesaplanır, tablo yok.
       Kalan: siyah kuşak sonrası **dan dereceleri** (1-10. dan; landing'de
       vaat edildi) + kuşakların paylaşım kartına işlenmesi (madde 2 ile).
-- [ ] **6. Takip + basit akış.** Toplulukta kişileri takip et; "bugün kim
-      ne çalıştı" akışı. Sosyal baskı = düzenlilik. (Yorum/beğeni değil,
-      sadece görünürlük — basit tut.)
+- [x] **6. Takip + basit akış.** Yapıldı: herkese açık profillerde
+      "Takip et" butonu (toggle), takipçi sayısı; dashboard'da "Takip
+      ettiklerin" kartı son 15 pratiği gösterir. Yorum/beğeni bilinçli yok.
+      Migration 0005 (follows).
 - [x] **7. Kata çalışma modu (v1).** Kata sayfasında "Bugün bunu çalıştım"
       + dakika alanı: tek tuşla pratik kaydı, not olarak kata adı düşer.
       Kalan: tekrar sayacı.
@@ -105,8 +106,9 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       (lansmanla açılır). Kata'sı olmayan
       branşlarda (aikido, kenjutsu kısmen) yalnız teknikler. İçerik
       `app/guide_content.py` — düzeltme/ekleme oradan.
-- [ ] **12. Rehber EN derinleştirme.** Rehberin adım listeleri şimdilik
-      yalnız TR; EN kullanıcılar TR listeyi görüyor.
+- [x] **12. Rehber EN derinleştirme.** Kalan tek TR-only adım listesi
+      (Taikyoku Shodan) İngilizce'ye çevrildi; rehberde EN açığı kalmadı.
+      (Araştırma listesinden gelecek yeni içerikler iki dilde eklenmeli.)
 
 ## 3b. Rehber araştırma listesi (İlteriş doğrulayıp ekleyecek) 📋
 

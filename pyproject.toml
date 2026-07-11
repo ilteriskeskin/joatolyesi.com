@@ -20,6 +20,8 @@ dependencies = [
     "httpx>=0.27",
     # Prod hata izleme (SENTRY_DSN boşsa devre dışı)
     "sentry-sdk[fastapi]>=2.0",
+    # OG profil kartı (PNG) üretimi
+    "pillow>=10.0",
 ]
 
 [project.optional-dependencies]

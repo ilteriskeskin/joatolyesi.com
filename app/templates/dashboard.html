@@ -17,5 +17,23 @@
     {% include "_practice_panel.html" %}
   </div>
 
+  <div class="card feed-card">
+    <h2>{{ t.feed_title }}</h2>
+    {% if feed %}
+    <ul class="log-list">
+      {% for log, person in feed %}
+      <li>
+        <a href="/u/{{ person.username }}">{{ person.display_name or person.username }}</a>
+        <span class="log-date">{{ log.practiced_on.isoformat() }}</span>
+        <span class="log-discipline">{{ t["discipline_" ~ log.discipline] }}</span>
+        <span class="log-minutes">{{ log.minutes }} {{ t.minutes_short }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">{{ t.feed_empty }}</p>
+    {% endif %}
+  </div>
+
 </div>
 {% endblock %}

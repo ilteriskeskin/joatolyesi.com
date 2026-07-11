@@ -213,6 +213,11 @@ STRINGS = {
         "community_search_placeholder": "Search by username or name",
         "community_search_button": "Search",
         "community_empty": "No one found.",
+        "follow_button": "Follow",
+        "unfollow_button": "Following ✓",
+        "followers_label": "followers",
+        "feed_title": "People you follow",
+        "feed_empty": "Follow practitioners in the community — their practice shows up here and keeps you honest.",
         # Belts & badges
         "belts_title": "Belts",
         "belts_hint": "Everyone starts with the white belt. Belts advance with total practice days — 365 days of practice earns the black belt.",
@@ -445,6 +450,11 @@ STRINGS = {
         "community_search_placeholder": "Kullanıcı adı veya isim ara",
         "community_search_button": "Ara",
         "community_empty": "Kimse bulunamadı.",
+        "follow_button": "Takip et",
+        "unfollow_button": "Takiptesin ✓",
+        "followers_label": "takipçi",
+        "feed_title": "Takip ettiklerin",
+        "feed_empty": "Topluluktan pratisyenleri takip et — pratikleri burada görünür, seni de diri tutar.",
         # Kuşaklar ve rozetler
         "belts_title": "Kuşaklar",
         "belts_hint": "Herkes beyaz kuşakla başlar. Kuşaklar toplam pratik gününle ilerler — 365 pratik gününü dolduran siyah kuşak olur.",

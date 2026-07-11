@@ -10,7 +10,7 @@ from sqlalchemy.orm import selectinload
 from app.constants import DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, require_user
-from app.models import Enrollment, PracticeLog, User
+from app.models import Enrollment, Follow, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import compute_badges, compute_belts
 from app.render import render
@@ -44,7 +44,19 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
     current_day = None
     if enrollment:
         current_day = min(len(enrollment.completed_days) + 1, enrollment.program.duration_days)
+    # Takip edilenlerin son pratikleri (yalnız herkese açık profiller)
+    feed_result = await db.execute(
+        select(PracticeLog, User)
+        .join(User, PracticeLog.user_id == User.id)
+        .join(Follow, Follow.followee_id == User.id)
+        .where(Follow.follower_id == user.id, User.is_public)
+        .order_by(PracticeLog.practiced_on.desc(), PracticeLog.created_at.desc())
+        .limit(15)
+    )
+    feed = feed_result.all()
+
     return {
+        "feed": feed,
         "streak": streak,
         "belts": belts,
         "badges": badges,

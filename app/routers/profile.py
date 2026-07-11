@@ -1,17 +1,19 @@
 import re
 
 from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse
-from sqlalchemy import or_, select
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.constants import DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user
-from app.models import User
+from app.models import Follow, User
 from app.rate_limit import limiter
 from app.render import render
 from app.badges import compute_badges, compute_belts, current_belt
+from app.card import render_profile_card
+from app.i18n.strings import get_strings
 from app.stats import build_heatmap, compute_streak, practice_day_counts, practice_stats, total_practice_days
 
 router = APIRouter()
@@ -91,6 +93,16 @@ async def public_profile(
     if person is None or (not person.is_public and not is_owner):
         return render(request, "404.html", user=viewer)
 
+    is_following = False
+    if viewer is not None and not is_owner:
+        found = await db.execute(
+            select(Follow.id).where(Follow.follower_id == viewer.id, Follow.followee_id == person.id)
+        )
+        is_following = found.scalar_one_or_none() is not None
+    follower_count = (
+        await db.execute(select(func.count(Follow.id)).where(Follow.followee_id == person.id))
+    ).scalar_one()
+
     streak = await compute_streak(db, person.id)
     practice_days = await total_practice_days(db, person.id)
     stats = await practice_stats(db, person.id)
@@ -104,8 +116,69 @@ async def public_profile(
         person=person,
         is_owner=is_owner,
         streak=streak,
+        is_following=is_following,
+        follower_count=follower_count,
         belts=belts,
         badges=badges,
         heatmap=heatmap,
         **stats,
     )
+
+
+@router.post("/u/{username}/follow", dependencies=[Depends(csrf_protect)])
+@limiter.limit("30/minute")
+async def toggle_follow(
+    username: str,
+    request: Request,
+    viewer: User = Depends(require_user),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(select(User).where(User.username == username.lower()))
+    person = result.scalar_one_or_none()
+    if person is None or not person.is_public or person.id == viewer.id:
+        return RedirectResponse(f"/u/{username}", status_code=303)
+    existing = (
+        await db.execute(
+            select(Follow).where(Follow.follower_id == viewer.id, Follow.followee_id == person.id)
+        )
+    ).scalar_one_or_none()
+    if existing is not None:
+        await db.delete(existing)
+    else:
+        db.add(Follow(follower_id=viewer.id, followee_id=person.id))
+    await db.commit()
+    return RedirectResponse(f"/u/{username}", status_code=303)
+
+
+@router.get("/u/{username}/card.png")
+@limiter.limit("30/minute")
+async def profile_card(
+    username: str,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+):
+    """OG paylaşım kartı — profil herkese açıksa herkes görebilir."""
+    result = await db.execute(select(User).where(User.username == username.lower()))
+    person = result.scalar_one_or_none()
+    if person is None or not person.is_public:
+        return Response(status_code=404)
+
+    strings = get_strings(person.lang or "tr")
+    streak = await compute_streak(db, person.id)
+    practice_days = await total_practice_days(db, person.id)
+    belt = current_belt(practice_days)
+    heatmap = await build_heatmap(db, person.id)
+
+    png = render_profile_card(
+        name=person.display_name or person.username,
+        username=person.username,
+        discipline_label=strings[f"discipline_{person.discipline}"],
+        streak=streak,
+        streak_label=strings["dash_streak_label"],
+        total_days=practice_days,
+        days_label=strings["week_days_label"],
+        belt_id=belt.id,
+        belt_label=belt.label(strings),
+        heatmap=heatmap[-12:],
+    )
+    return Response(png, media_type="image/png", headers={"Cache-Control": "public, max-age=3600"})

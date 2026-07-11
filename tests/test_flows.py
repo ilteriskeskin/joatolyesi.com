@@ -201,3 +201,47 @@ async def test_kata_quick_log_and_weekly_card(client):
     assert "form-message--success" in r.text
     r = await client.get("/app")
     assert 'streak-number">1' in r.text
+
+
+async def test_follow_feed_and_card(client):
+    # iki kullanıcı: b herkese açık, a onu takip eder
+    email_a, user_a = f"{unique('fa')}@test.com", unique("follower")
+    email_b, user_b = f"{unique('fb')}@test.com", unique("followee")
+
+    from app.main import app as _app
+    import httpx as _httpx
+    tr = _httpx.ASGITransport(app=_app)
+    async with _httpx.AsyncClient(transport=tr, base_url="http://test") as cb:
+        await register(cb, email_b, user_b)
+        csrf = await get_csrf(cb, "/profile")
+        await cb.post("/profile", data={"username": user_b, "display_name": "B", "bio": "",
+                                        "discipline": "aikijo", "is_public": "on", "csrf_token": csrf})
+        token = await get_csrf(cb, "/app")
+        await cb.post("/app/practice", data={"practiced_on": date.today().isoformat(),
+                                             "discipline": "aikijo", "minutes": "30", "csrf_token": token})
+
+    await register(client, email_a, user_a)
+    # takip et
+    csrf = await get_csrf(client, f"/u/{user_b}")
+    r = await client.post(f"/u/{user_b}/follow", data={"csrf_token": csrf})
+    assert r.status_code == 303
+    r = await client.get(f"/u/{user_b}")
+    assert "Takiptesin" in r.text or "Following" in r.text
+    assert "1 takipçi" in r.text or "1 followers" in r.text
+    # akışta görünsün
+    r = await client.get("/app")
+    assert "feed-card" in r.text and user_b in r.text
+    # takibi bırak
+    csrf = await get_csrf(client, f"/u/{user_b}")
+    await client.post(f"/u/{user_b}/follow", data={"csrf_token": csrf})
+    r = await client.get(f"/u/{user_b}")
+    assert "0 takipçi" in r.text or "0 followers" in r.text
+
+    # OG kartı: herkese açık profil PNG döner, gizli profil 404
+    r = await client.get(f"/u/{user_b}/card.png")
+    assert r.status_code == 200 and r.content[:8] == b"\x89PNG\r\n\x1a\n"
+    r = await client.get(f"/u/{user_a}/card.png")
+    assert r.status_code == 404  # a profili gizli
+    # profil sayfasında og:image var
+    r = await client.get(f"/u/{user_b}")
+    assert f"/u/{user_b}/card.png" in r.text
