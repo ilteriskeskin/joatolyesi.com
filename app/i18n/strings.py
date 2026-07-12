@@ -181,7 +181,7 @@ STRINGS = {
         "discipline_taekwondo": "Taekwondo",
         "discipline_other": "Other",
         # Kata library
-        "kata_title": "Kata & suburi library",
+        "kata_title": "Kata & suburi video library",
         "kata_all": "All",
         "kata_locked": "Pro",
         "kata_free": "Free",
@@ -252,7 +252,7 @@ STRINGS = {
         "feed_title": "People you follow",
         "feed_empty": "Follow practitioners in the community — their practice shows up here and keeps you honest.",
         # Streak freeze
-        "freeze_left": "Freeze rights this month: {left}/{total}",
+        "freeze_left": "Streak freezes this month: {left}/{total}",
         "freeze_tip": "Life happens: up to 2 single-day gaps per month are bridged automatically and your streak survives.",
         # Weekly leaders
         "leaders_title": "This week's leaders",
@@ -375,7 +375,7 @@ STRINGS = {
         "blog_cta_text": "Bu yazı, pratiğini Joryu'da takip eden bir pratisyenden. Katıl, sen de yolculuğunu paylaş.",
         # Rehber
         "guide_title": "Branş Rehberi",
-        "guide_hint": "Branş branş kata ve teknik referansı — sıfırdan kendi çalışma programını kurabileceğin detayda.",
+        "guide_hint": "Her branş için kata ve teknik referansı — sıfırdan kendi çalışma programını kurabileceğin detayda.",
         "guide_kata_count": "kata/form",
         "guide_technique_count": "teknik",
         "guide_kata_title": "Kata / Formlar",
@@ -467,7 +467,7 @@ STRINGS = {
         "discipline_taekwondo": "Taekwondo",
         "discipline_other": "Diğer",
         # Kata library
-        "kata_title": "Kata ve suburi kütüphanesi",
+        "kata_title": "Kata ve suburi video kütüphanesi",
         "kata_all": "Tümü",
         "kata_locked": "Pro",
         "kata_free": "Ücretsiz",
