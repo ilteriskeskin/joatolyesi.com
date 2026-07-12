@@ -12,7 +12,7 @@ if settings.sentry_dsn:
 
     sentry_sdk.init(dsn=settings.sentry_dsn, environment=settings.env, traces_sample_rate=0)
 from app.rate_limit import limiter
-from app.routers import admin, auth, billing, blog, guide, kata, landing, practice, profile, programs
+from app.routers import admin, auth, billing, blog, guide, kata, landing, practice, profile, programs, push
 from app.seed import seed_content
 
 app = FastAPI(title="Joryu")
@@ -30,6 +30,7 @@ if not settings.waitlist_only:
     app.include_router(programs.router)
     app.include_router(billing.router)
     app.include_router(profile.router)
+    app.include_router(push.router)
     app.include_router(admin.router)
 
 

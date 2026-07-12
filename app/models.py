@@ -17,6 +17,10 @@ class Waitlist(Base):
     source: Mapped[str | None] = mapped_column(String(20), nullable=True)
     # Lansman daveti gönderildi mi (scripts/send_invites.py çift göndermeyi önler)
     invited_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Kendi paylaşılabilir davet kodu (joatolyesi.com/?ref=<code>)
+    referral_code: Mapped[str] = mapped_column(String(12), unique=True, nullable=False, index=True)
+    # Bu kaydı hangi referral_code getirdi (varsa) — büyüme kanalı ölçümü
+    referred_by: Mapped[str | None] = mapped_column(String(12), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -39,6 +43,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     subscription: Mapped["Subscription | None"] = relationship(back_populates="user", uselist=False)
+    push_subscriptions: Mapped[list["PushSubscription"]] = relationship(cascade="all, delete-orphan")
 
 
 class Subscription(Base):
@@ -68,6 +73,8 @@ class PracticeLog(Base):
     discipline: Mapped[str] = mapped_column(String(20), nullable=False)  # jo/bokken/kata/other
     minutes: Mapped[int] = mapped_column(Integer, nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Kata sayfasından tek tuş kayıt geldiyse dolar — kişisel tekrar sayacı için
+    kata_slug: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -171,3 +178,17 @@ class Post(Base):
     updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     author: Mapped["User"] = relationship()
+
+
+class PushSubscription(Base):
+    """Web Push aboneliği (VAPID). Kullanıcı bildirimleri açınca tarayıcı
+    üretir, /push/subscribe ile buraya kaydedilir."""
+
+    __tablename__ = "push_subscriptions"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    endpoint: Mapped[str] = mapped_column(String(500), unique=True, nullable=False)
+    p256dh: Mapped[str] = mapped_column(String(200), nullable=False)
+    auth: Mapped[str] = mapped_column(String(100), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

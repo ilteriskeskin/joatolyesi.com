@@ -25,6 +25,8 @@ dependencies = [
     # Blog: markdown gövde + XSS temizliği
     "markdown>=3.6",
     "nh3>=0.2",
+    # PWA push bildirimi (VAPID imzalı Web Push)
+    "pywebpush>=2.0",
 ]
 
 [project.optional-dependencies]

@@ -356,3 +356,95 @@ async def test_kata_kind_split_and_admin(client):
 
     r = await client.get("/admin/katas?token=test-admin-token")
     assert r.status_code == 200
+
+
+async def test_waitlist_referral_and_position(client):
+    email_a = f"{unique('ra')}@test.com"
+    token = await get_csrf(client, "/")
+    r = await client.post("/waitlist", data={"email": email_a, "lang": "tr", "csrf_token": token})
+    assert "Listedesin" in r.text
+    assert "form-referral-input" in r.text
+    import re as _re
+    own_ref = _re.search(r"ref=([a-f0-9]+)", r.text).group(1)
+    assert _re.search(r"Listede \d+\. kişisin", r.text)
+
+    # ikinci kisi ilkinin linkinden gelsin
+    email_b = f"{unique('rb')}@test.com"
+    r = await client.get(f"/?ref={own_ref}")
+    assert r.status_code == 200
+    token2 = await get_csrf(client, f"/?ref={own_ref}")
+    r = await client.post("/waitlist", data={"email": email_b, "lang": "tr", "ref": own_ref, "csrf_token": token2})
+    assert "Listedesin" in r.text
+
+    from app.db import async_session
+    from app.models import Waitlist
+    async with async_session() as db:
+        b = (await db.execute(select(Waitlist).where(Waitlist.email == email_b))).scalar_one()
+        assert b.referred_by == own_ref
+        assert b.referral_code and b.referral_code != own_ref
+
+
+async def test_longest_streak_shown(client):
+    email, username = f"{unique('ls')}@test.com", unique("longest")
+    await register(client, email, username)
+    token = await get_csrf(client, "/app")
+    for i in range(5):
+        d = (date.today() - timedelta(days=i)).isoformat()
+        await client.post("/app/practice", data={"practiced_on": d, "discipline": "aikijo",
+                                                 "minutes": "20", "csrf_token": token})
+    old_day = (date.today() - timedelta(days=20)).isoformat()
+    await client.post("/app/practice", data={"practiced_on": old_day, "discipline": "aikijo",
+                                             "minutes": "20", "csrf_token": token})
+    r = await client.get("/app")
+    assert 'streak-number">5' in r.text  # guncel seri 5, rekorla esit oldugu icin ayri not gorunmez
+    csrf = await get_csrf(client, "/profile")
+    await client.post("/profile", data={"username": username, "display_name": "L", "bio": "",
+                                        "discipline": "aikijo", "is_public": "on", "csrf_token": csrf})
+    r = await client.get(f"/u/{username}")
+    assert "En uzun seri" in r.text
+
+
+async def test_kata_repeat_counter(client):
+    email, username = f"{unique('kr')}@test.com", unique("repeater")
+    await register(client, email, username)
+    from app.db import async_session
+    from app.models import Kata
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.is_free))).scalars().first()
+    if kata is None:
+        pytest.skip("seed içerik yok")
+    for _ in range(3):
+        token = await get_csrf(client, f"/kata/{kata.slug}")
+        await client.post(f"/kata/{kata.slug}/log", data={"minutes": "20", "csrf_token": token})
+    r = await client.get(f"/kata/{kata.slug}")
+    assert "3 kez çalıştın" in r.text
+
+
+async def test_push_subscribe_unsubscribe(client):
+    email, username = f"{unique('pu')}@test.com", unique("pushuser")
+    await register(client, email, username)
+    token = await get_csrf(client, "/app")
+    r = await client.post("/push/subscribe", data={
+        "endpoint": "https://push.example.com/abc123",
+        "p256dh": "fake-p256dh", "auth": "fake-auth", "csrf_token": token,
+    })
+    assert r.status_code == 204
+    from app.db import async_session
+    from app.models import PushSubscription
+    async with async_session() as db:
+        sub = (await db.execute(select(PushSubscription).where(
+            PushSubscription.endpoint == "https://push.example.com/abc123"))).scalar_one_or_none()
+        assert sub is not None
+
+    token = await get_csrf(client, "/app")
+    r = await client.post("/push/unsubscribe", data={
+        "endpoint": "https://push.example.com/abc123", "csrf_token": token,
+    })
+    assert r.status_code == 204
+    async with async_session() as db:
+        sub = (await db.execute(select(PushSubscription).where(
+            PushSubscription.endpoint == "https://push.example.com/abc123"))).scalar_one_or_none()
+        assert sub is None
+
+    r = await client.get("/push/vapid-public-key")
+    assert r.status_code == 200 and "key" in r.json()

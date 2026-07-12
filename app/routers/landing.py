@@ -1,10 +1,11 @@
 import csv
 import io
 import re
+import secrets
 
 from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import HTMLResponse, StreamingResponse
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,15 +21,21 @@ router = APIRouter()
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 SOURCE_RE = re.compile(r"^[a-z]{2,10}$")
+REF_RE = re.compile(r"^[a-f0-9]{6,12}$")
 
 
 @router.get("/", response_class=HTMLResponse)
 async def index(
     request: Request,
     src: str | None = Query(default=None),
+    ref: str | None = Query(default=None),
     user: User | None = Depends(get_current_user),
 ):
-    return render(request, "index.html", user=user, source=src if src and SOURCE_RE.match(src) else "")
+    return render(
+        request, "index.html", user=user,
+        source=src if src and SOURCE_RE.match(src) else "",
+        ref=ref if ref and REF_RE.match(ref) else "",
+    )
 
 
 @router.get("/robots.txt")
@@ -68,6 +75,7 @@ async def join_waitlist(request: Request, db: AsyncSession = Depends(get_db)):
     email = str(form.get("email", "")).strip().lower()
     lang = str(form.get("lang", DEFAULT_LANG))
     source = str(form.get("source", "")).strip().lower()
+    ref = str(form.get("ref", "")).strip().lower()
 
     resolved_lang = lang if lang in SUPPORTED_LANGS else DEFAULT_LANG
     strings = get_strings(resolved_lang)
@@ -79,20 +87,35 @@ async def join_waitlist(request: Request, db: AsyncSession = Depends(get_db)):
         )
 
     clean_source = source if SOURCE_RE.match(source) else None
+    referred_by = ref if REF_RE.match(ref) else None
 
     stmt = (
         pg_insert(Waitlist)
-        .values(email=email, lang=resolved_lang, source=clean_source)
+        .values(
+            email=email, lang=resolved_lang, source=clean_source,
+            referral_code=secrets.token_hex(5), referred_by=referred_by,
+        )
         .on_conflict_do_nothing(index_elements=["email"])
     )
     result = await db.execute(stmt)
     await db.commit()
 
-    # Çakışmada insert olmaz (rowcount 0) — kayıt zaten var, kullanıcıya söyle
-    if result.rowcount == 0:
-        return HTMLResponse(f'<p class="form-message form-message--success">{strings["form_already"]}</p>')
+    row = (await db.execute(select(Waitlist).where(Waitlist.email == email))).scalar_one()
+    position = (
+        await db.execute(select(func.count()).select_from(Waitlist).where(Waitlist.created_at <= row.created_at))
+    ).scalar_one()
+    own_link = f"{settings.base_url}/?ref={row.referral_code}"
 
-    return HTMLResponse(f'<p class="form-message form-message--success">{strings["form_success"]}</p>')
+    # Çakışmada insert olmaz (rowcount 0) — kayıt zaten var, o mesajı göster
+    message = strings["form_already"] if result.rowcount == 0 else strings["form_success"]
+
+    return HTMLResponse(
+        f'<p class="form-message form-message--success">{message}</p>'
+        f'<p class="form-position">{strings["form_position"].format(n=position)}</p>'
+        f'<p class="form-referral-label">{strings["form_referral_label"]}</p>'
+        f'<input type="text" class="form-referral-input" readonly value="{own_link}" '
+        f'onclick="this.select()" onfocus="this.select()">'
+    )
 
 
 @router.get("/admin/waitlist")
@@ -105,9 +128,9 @@ async def admin_waitlist(token: str = Query(...), db: AsyncSession = Depends(get
 
     buffer = io.StringIO()
     writer = csv.writer(buffer)
-    writer.writerow(["email", "lang", "source", "created_at"])
+    writer.writerow(["email", "lang", "source", "referral_code", "referred_by", "created_at"])
     for row in rows:
-        writer.writerow([row.email, row.lang, row.source or "", row.created_at.isoformat()])
+        writer.writerow([row.email, row.lang, row.source or "", row.referral_code, row.referred_by or "", row.created_at.isoformat()])
     buffer.seek(0)
 
     return StreamingResponse(

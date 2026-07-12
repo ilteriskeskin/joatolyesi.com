@@ -13,6 +13,14 @@
   </div>
   {% endif %}
 
+  <div class="card push-card">
+    <button type="button" class="push-btn" data-push-enable
+            data-label-on="{{ t.push_disable }}" data-label-off="{{ t.push_enable }}">
+      {{ t.push_enable }}
+    </button>
+    <p class="field-hint">{{ t.push_hint }}</p>
+  </div>
+
   <div id="practice-panel">
     {% include "_practice_panel.html" %}
   </div>
@@ -36,4 +44,5 @@
   </div>
 
 </div>
+<script src="/static/js/push.js" defer></script>
 {% endblock %}

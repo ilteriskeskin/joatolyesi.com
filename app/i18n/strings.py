@@ -22,6 +22,8 @@ STRINGS = {
         "form_error_invalid": "Please enter a valid email address.",
         "form_error_rate_limit": "Too many attempts. Try again in a minute.",
         "form_already": "You're already on the list — your spot is saved.",
+        "form_position": "You're #{n} on the list.",
+        "form_referral_label": "Skip the line — share your link with a friend:",
         "problem_title": "You already know the problem",
         "problem_1_title": "The dojo is open two days a week",
         "problem_1_body": "But you want to train every day.",
@@ -193,6 +195,7 @@ STRINGS = {
         "kata_empty_teknik": "No techniques are documented for this discipline yet.",
         "kata_log_button": "I practiced this today",
         "kata_logged": "Logged. Your streak is safe for today.",
+        "kata_repeat_count": "You have practiced this {n} times.",
         # Weekly summary
         "week_title": "This week",
         "week_days_label": "practice days",
@@ -252,6 +255,8 @@ STRINGS = {
         "feed_title": "People you follow",
         "feed_empty": "Follow practitioners in the community — their practice shows up here and keeps you honest.",
         # Streak freeze
+        "longest_streak_label": "Personal record: {n} days",
+        "longest_streak_stat_label": "Best streak",
         "freeze_left": "Streak freezes this month: {left}/{total}",
         "freeze_tip": "Life happens: up to 2 single-day gaps per month are bridged automatically and your streak survives.",
         # Weekly leaders
@@ -260,7 +265,12 @@ STRINGS = {
         # Reminders
         "reminders_label": "Send me a daily practice reminder email",
         "reminders_hint": "One short email in the evening if you haven't logged practice that day. Turn it off anytime.",
+        "push_enable": "Enable notifications",
+        "push_disable": "Notifications on — tap to turn off",
+        "push_hint": "Get a phone notification if you haven't logged practice by evening. Works on installed/home-screen apps too.",
         "mail_reminder_subject": "Today's practice is waiting — Joryu",
+        "push_reminder_title": "Joryu",
+        "push_reminder_body": "Today's practice is waiting — your streak is at {streak} days.",
         "mail_reminder_body": (
             "<p>You haven't logged practice today.</p>"
             "<p>Your streak is at <strong>{streak}</strong> days — 15 minutes is enough to keep it alive.</p>"
@@ -309,6 +319,8 @@ STRINGS = {
         "form_error_invalid": "Lütfen geçerli bir e-posta adresi gir.",
         "form_error_rate_limit": "Çok fazla deneme yaptın. Bir dakika sonra tekrar dene.",
         "form_already": "Bu e-posta zaten listede — yerin hazır.",
+        "form_position": "Listede {n}. kişisin.",
+        "form_referral_label": "Sırayı atla — linkini bir arkadaşınla paylaş:",
         "problem_title": "Sorunu zaten biliyorsun",
         "problem_1_title": "Dojo haftada iki gün açık",
         "problem_1_body": "Ama sen her gün çalışmak istiyorsun.",
@@ -479,6 +491,7 @@ STRINGS = {
         "kata_empty_teknik": "Bu branş için henüz teknik belgelenmedi.",
         "kata_log_button": "Bugün bunu çalıştım",
         "kata_logged": "Kaydedildi. Bugünün serisi güvende.",
+        "kata_repeat_count": "Bunu {n} kez çalıştın.",
         # Haftalık özet
         "week_title": "Bu hafta",
         "week_days_label": "pratik günü",
@@ -538,6 +551,8 @@ STRINGS = {
         "feed_title": "Takip ettiklerin",
         "feed_empty": "Topluluktan pratisyenleri takip et — pratikleri burada görünür, seni de diri tutar.",
         # Seri dondurma
+        "longest_streak_label": "Kişisel rekorun: {n} gün",
+        "longest_streak_stat_label": "En uzun seri",
         "freeze_left": "Bu ayki donma hakkın: {left}/{total}",
         "freeze_tip": "Hayat araya girer: ayda 2 defaya kadar tek günlük boşluk otomatik köprülenir, serin bozulmaz.",
         # Haftanın enleri
@@ -546,7 +561,12 @@ STRINGS = {
         # Hatırlatmalar
         "reminders_label": "Bana günlük pratik hatırlatması gönder (e-posta)",
         "reminders_hint": "O gün pratik kaydetmediysen akşam kısa bir e-posta. İstediğin an kapatabilirsin.",
+        "push_enable": "Bildirimleri aç",
+        "push_disable": "Bildirimler açık — kapatmak için dokun",
+        "push_hint": "O gün akşama kadar pratik kaydetmezsen telefonuna bildirim gelsin. Ana ekrana eklenmiş uygulamada da çalışır.",
         "mail_reminder_subject": "Bugünün pratiği seni bekliyor — Joryu",
+        "push_reminder_title": "Joryu",
+        "push_reminder_body": "Bugünün pratiği seni bekliyor — serin {streak} günde.",
         "mail_reminder_body": (
             "<p>Bugün henüz pratik kaydetmedin.</p>"
             "<p>Serin <strong>{streak}</strong> günde — canlı tutmak için 15 dakika yeter.</p>"

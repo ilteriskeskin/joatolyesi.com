@@ -42,3 +42,32 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
+// Web Push bildirimi
+self.addEventListener("push", (event) => {
+  let data = { title: "Joryu", body: "Bugünün pratiği seni bekliyor.", url: "/app" };
+  try {
+    if (event.data) data = { ...data, ...event.data.json() };
+  } catch (e) { /* düz metinse varsayılanı kullan */ }
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/static/img/icon-192.png",
+      badge: "/static/img/icon-192.png",
+      data: { url: data.url },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = event.notification.data && event.notification.data.url || "/app";
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((list) => {
+      for (const c of list) {
+        if (c.url.includes(url) && "focus" in c) return c.focus();
+      }
+      if (clients.openWindow) return clients.openWindow(url);
+    })
+  );
+});

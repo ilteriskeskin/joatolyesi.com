@@ -1,6 +1,9 @@
 <div class="streak-block">
   <span class="streak-number">{{ streak }}</span>
   <span class="streak-label">{{ t.dash_streak_label }}</span>
+  {% if longest_streak > streak %}
+  <span class="longest-streak-note">{{ t.longest_streak_label.format(n=longest_streak) }}</span>
+  {% endif %}
   <span class="freeze-note" data-tip="{{ t.freeze_tip }}">{{ t.freeze_left.format(left=freezes_left, total=freezes_total) }}</span>
 </div>
 

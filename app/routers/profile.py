@@ -14,7 +14,7 @@ from app.render import render
 from app.badges import compute_badges, compute_belts, current_belt
 from app.card import render_profile_card
 from app.i18n.strings import get_strings
-from app.stats import build_heatmap, compute_streak, practice_day_counts, practice_stats, total_practice_days, weekly_leaders
+from app.stats import build_heatmap, compute_longest_streak, compute_streak, practice_day_counts, practice_stats, total_practice_days, weekly_leaders
 
 router = APIRouter()
 
@@ -108,6 +108,7 @@ async def public_profile(
     ).scalar_one()
 
     streak = await compute_streak(db, person.id)
+    longest_streak = await compute_longest_streak(db, person.id)
     practice_days = await total_practice_days(db, person.id)
     stats = await practice_stats(db, person.id)
     belts = [b for b in compute_belts(practice_days) if b.earned]
@@ -120,6 +121,7 @@ async def public_profile(
         person=person,
         is_owner=is_owner,
         streak=streak,
+        longest_streak=max(longest_streak, streak),
         is_following=is_following,
         follower_count=follower_count,
         belts=belts,

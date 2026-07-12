@@ -19,6 +19,9 @@
     {% if logged %}
     <p class="form-message form-message--success">{{ t.kata_logged }}</p>
     {% endif %}
+    {% if repeat_count > 0 %}
+    <p class="kata-repeat-count">{{ t.kata_repeat_count.format(n=repeat_count) }}</p>
+    {% endif %}
     <form method="post" action="/kata/{{ kata.slug }}/log" class="kata-log-form">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       <label class="kata-log-minutes">{{ t.dash_minutes }}

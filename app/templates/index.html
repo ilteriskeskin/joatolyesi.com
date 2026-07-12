@@ -48,7 +48,7 @@
     {% endif %}
     {% endif %}
   </nav>
-  <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}">
+  <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}{% if ref %}&ref={{ ref }}{% endif %}">
     {{ other_lang|upper }}
   </a>
 </header>
@@ -74,6 +74,7 @@
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       <input type="hidden" name="lang" value="{{ lang }}">
       <input type="hidden" name="source" value="{{ source }}">
+      <input type="hidden" name="ref" value="{{ ref }}">
       <div class="waitlist-form__row">
         <input type="email" name="email" placeholder="{{ t.email_placeholder }}" required autocomplete="email">
         <button type="submit">{{ t.cta_button }}</button>
@@ -206,6 +207,7 @@
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <input type="hidden" name="lang" value="{{ lang }}">
     <input type="hidden" name="source" value="{{ source }}">
+      <input type="hidden" name="ref" value="{{ ref }}">
     <div class="waitlist-form__row">
       <input type="email" name="email" placeholder="{{ t.email_placeholder }}" required autocomplete="email">
       <button type="submit">{{ t.cta_button }}</button>
@@ -222,7 +224,7 @@
     <a href="/privacy">{{ t.footer_privacy }}</a>
     <a href="/terms">{{ t.footer_terms }}</a>
   </div>
-  <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}">
+  <a class="lang-switch" href="/?lang={{ other_lang }}{% if source %}&src={{ source }}{% endif %}{% if ref %}&ref={{ ref }}{% endif %}">
     {{ other_lang|upper }}
   </a>
 </footer>

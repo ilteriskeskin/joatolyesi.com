@@ -65,11 +65,13 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
 
 Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
 
-- [x] **1. Günlük hatırlatma (e-posta).** Yapıldı: `scripts/send_reminders.py`
-      — o gün pratik kaydetmemiş, hatırlatmayı profilinde açmış kullanıcılara
-      akşam kısa mail (seri + tek tuş link). Opt-in (varsayılan kapalı),
-      migration 0007 (users.reminders_enabled). Cron: DEPLOY.md §6 (18:00 UTC).
-      PWA push sonraki adım (VAPID gerektirir, e-posta daha hızlı teslim edildi).
+- [x] **1. Günlük hatırlatma (e-posta + PWA push).** Yapıldı:
+      `scripts/send_reminders.py` — o gün pratik kaydetmemiş kullanıcılara
+      hem e-posta (opt-in: reminders_enabled) hem push bildirimi (opt-in:
+      dashboard'daki "Bildirimleri aç" butonu) gönderir. VAPID web push
+      (migration 0009: push_subscriptions), `app/push.py` + `scripts/
+      generate_vapid_keys.py`. Geçersiz abonelikler (404/410) otomatik
+      silinir. KALAN: sunucuda VAPID anahtarı üretip .env'e eklemek.
 - [x] **2. Paylaşılabilir profil kartı (OG görseli).** Yapıldı:
       `/u/<kullanıcı>/card.png` — Pillow ile sunucuda çizilen 1200×630 PNG
       (isim, branş, seri, toplam gün, kuşak bandı, 12 haftalık ısı haritası).
@@ -94,9 +96,10 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       "Takip et" butonu (toggle), takipçi sayısı; dashboard'da "Takip
       ettiklerin" kartı son 15 pratiği gösterir. Yorum/beğeni bilinçli yok.
       Migration 0005 (follows).
-- [x] **7. Kata çalışma modu (v1).** Kata sayfasında "Bugün bunu çalıştım"
-      + dakika alanı: tek tuşla pratik kaydı, not olarak kata adı düşer.
-      Kalan: tekrar sayacı.
+- [x] **7. Kata çalışma modu.** Kata sayfasında "Bugün bunu çalıştım" +
+      dakika alanı: tek tuşla pratik kaydı. **Tekrar sayacı eklendi:**
+      practice_logs.kata_slug (migration 0009) ile "bunu N kez çalıştın"
+      göstergesi — kişisel süreklilik motivasyonu.
 - [x] **8. Haftalık özet (v1 — dashboard kartı).** "Bu hafta: X gün, Y dk,
       odak branş" + geçen haftayla kıyas. E-posta versiyonu sonra.
 - [x] **9. PWA kısayolu.** Manifest shortcuts: "Pratik kaydet" (/app) ve
@@ -135,6 +138,20 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
 - [x] **12. Rehber EN derinleştirme.** Kalan tek TR-only adım listesi
       (Taikyoku Shodan) İngilizce'ye çevrildi; rehberde EN açığı kalmadı.
       (Araştırma listesinden gelecek yeni içerikler iki dilde eklenmeli.)
+- [x] **16. Waitlist referans linki.** Her kayıt kendi davet linkini
+      (`?ref=<kod>`) ve sıra numarasını görüyor; kimin kimi getirdiği
+      `referred_by` ile CSV'de izlenebiliyor (migration 0009). Klasik
+      waitlist büyütme mekaniği — detay: WAITLIST_GROWTH.md.
+      KALAN (istenirse): "3 davet = X sıra yukarı" gibi somut bir ödül.
+- [x] **17. En uzun seri gösterimi.** `compute_longest_streak` zaten
+      vardı ama hiçbir yerde gösterilmiyordu; artık dashboard'da (güncel
+      seriden düşükse "Kişisel rekorun: X gün") ve herkese açık profilde
+      ayrı bir stat olarak görünüyor.
+- [x] **18. Dil kalitesi denetimi.** strings.py baştan sona tarandı;
+      TR/EN anahtar paritesi zaten testle garanti (test_langs_have_same_keys).
+      Bulunan 3 gerçek pürüz düzeltildi: TR'de devrik "Branş branş" tekrarı,
+      iki dilde de eksik "video" kelimesi (kata_title), EN'de Türkçe'den
+      birebir çevrilmiş "Freeze rights" ifadesi.
 
 ## 3b. Rehber araştırma listesi (İlteriş doğrulayıp ekleyecek) 📋
 

@@ -14,13 +14,14 @@ from app.models import Enrollment, Follow, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import compute_badges, compute_belts
 from app.render import render
-from app.stats import FREEZES_PER_MONTH, build_heatmap, practice_stats, streak_info, total_practice_days, weekly_summary
+from app.stats import FREEZES_PER_MONTH, build_heatmap, compute_longest_streak, practice_stats, streak_info, total_practice_days, weekly_summary
 
 router = APIRouter()
 
 
 async def dashboard_context(db: AsyncSession, user: User) -> dict:
     sinfo = await streak_info(db, user.id)
+    longest_streak = await compute_longest_streak(db, user.id)
     practice_days = await total_practice_days(db, user.id)
     stats = await practice_stats(db, user.id)
     belts = compute_belts(practice_days)
@@ -58,6 +59,7 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
     return {
         "feed": feed,
         "streak": sinfo["streak"],
+        "longest_streak": max(longest_streak, sinfo["streak"]),
         "freezes_left": sinfo["freezes_left"],
         "freezes_total": FREEZES_PER_MONTH,
         "belts": belts,

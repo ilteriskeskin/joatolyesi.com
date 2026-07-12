@@ -73,7 +73,16 @@ async def kata_detail(
             return RedirectResponse("/login", status_code=303)
         raise ProRequired()
     logged = request.query_params.get("logged") == "1"
-    return render(request, "kata_detail.html", user=user, kata=kata, logged=logged)
+    repeat_count = 0
+    if user is not None:
+        repeat_count = (
+            await db.execute(
+                select(func.count(PracticeLog.id)).where(
+                    PracticeLog.user_id == user.id, PracticeLog.kata_slug == slug
+                )
+            )
+        ).scalar_one()
+    return render(request, "kata_detail.html", user=user, kata=kata, logged=logged, repeat_count=repeat_count)
 
 
 @router.post("/kata/{slug}/log", dependencies=[Depends(csrf_protect)])
@@ -100,6 +109,7 @@ async def kata_quick_log(
             discipline=kata.discipline,
             minutes=minutes,
             notes=kata.title_tr if (user.lang or "tr") == "tr" else kata.title_en,
+            kata_slug=kata.slug,
         )
     )
     await db.commit()
