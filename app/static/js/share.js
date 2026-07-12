@@ -1,35 +1,29 @@
-// Paylaşım: Web Share API (mobilde native paylaşım sayfası, görsel dahil)
-// desteklenmiyorsa doğrudan platform linklerine düşer.
+// Paylaşım: tıklama anında (senkron) navigator.share() çağrılır — öncesinde
+// hiçbir await yok, aksi halde iOS Safari kullanıcı etkileşimini kaybedip
+// share() çağrısını sessizce reddeder. Desteklenmiyorsa küçük bir açılır
+// menüye (X/WhatsApp) düşer. İndirme linki ayrı ve JS'e bağımlı değildir.
 (function () {
-  document.querySelectorAll("[data-share]").forEach((el) => {
-    el.addEventListener("click", async (ev) => {
+  document.querySelectorAll("[data-share]").forEach((btn) => {
+    btn.addEventListener("click", (ev) => {
       ev.preventDefault();
-      const url = el.dataset.shareUrl;
-      const title = el.dataset.shareTitle || "Joryu";
-      const text = el.dataset.shareText || "";
-      const imageUrl = el.dataset.shareImage;
+      const url = btn.dataset.shareUrl;
+      const title = btn.dataset.shareTitle || "Joryu";
+      const text = btn.dataset.shareText || "";
 
       if (navigator.share) {
-        try {
-          const shareData = { title, text, url };
-          if (imageUrl && navigator.canShare) {
-            try {
-              const resp = await fetch(imageUrl);
-              const blob = await resp.blob();
-              const file = new File([blob], "joryu-card.png", { type: blob.type });
-              if (navigator.canShare({ files: [file] })) shareData.files = [file];
-            } catch (e) { /* görsel çekilemedi, linkle paylaş */ }
-          }
-          await navigator.share(shareData);
-          return;
-        } catch (e) {
-          if (e.name === "AbortError") return; // kullanıcı iptal etti
-        }
+        navigator.share({ title, text, url }).catch(() => {
+          // Kullanıcı iptal etti ya da tarayıcı reddetti — sessiz geç
+        });
+        return;
       }
-      const menu = el.nextElementSibling;
-      if (menu && menu.classList.contains("share-menu")) {
-        menu.classList.toggle("share-menu--open");
-      }
+      const menu = btn.parentElement.querySelector(".share-menu");
+      if (menu) menu.classList.toggle("share-menu--open");
+    });
+  });
+
+  document.addEventListener("click", (ev) => {
+    document.querySelectorAll(".share-menu--open").forEach((menu) => {
+      if (!menu.parentElement.contains(ev.target)) menu.classList.remove("share-menu--open");
     });
   });
 })();

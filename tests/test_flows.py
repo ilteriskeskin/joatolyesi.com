@@ -476,11 +476,11 @@ async def test_avatar_and_share_widget(client):
     # profil sayfasinda avatar + paylasim widget'i gorunur
     r = await client.get(f"/u/{username}")
     assert f'/u/{username}/avatar.png' in r.text
-    assert 'share-widget' in r.text and 'data-share' in r.text
+    assert 'share-inline' in r.text and 'data-share' in r.text
 
     # dashboard'da da paylasim widget'i (public profil sahibi icin)
     r = await client.get("/app")
-    assert 'share-widget' in r.text and f'/u/{username}/card.png' in r.text
+    assert 'streak-share' in r.text and f'/u/{username}/card.png' in r.text
 
 
 async def test_avatar_deterministic_but_belt_aware(client):

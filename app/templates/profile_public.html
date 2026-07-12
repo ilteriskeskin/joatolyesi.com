@@ -24,35 +24,36 @@
       <span class="muted profile-joined">{{ t.profile_member_since }}: {{ person.created_at.date().isoformat() }}</span>
       <span class="muted">· {{ follower_count }} {{ t.followers_label }}</span>
 
-      {% if user and not is_owner and person.is_public %}
-      <form method="post" action="/u/{{ person.username }}/follow" class="follow-form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button type="submit" class="{% if is_following %}follow-button follow-button--active{% else %}follow-button{% endif %}">
-          {{ t.unfollow_button if is_following else t.follow_button }}
-        </button>
-      </form>
-      {% endif %}
+      <div class="profile-actions">
+        {% if user and not is_owner and person.is_public %}
+        <form method="post" action="/u/{{ person.username }}/follow" class="follow-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="{% if is_following %}follow-button follow-button--active{% else %}follow-button{% endif %}">
+            {{ t.unfollow_button if is_following else t.follow_button }}
+          </button>
+        </form>
+        {% endif %}
+
+        {% if person.is_public %}
+        {% set share_text = streak ~ " " ~ t.dash_streak_label ~ " · " ~ t["discipline_" ~ person.discipline] %}
+        {% set share_url = "https://joatolyesi.com/u/" ~ person.username %}
+        <div class="share-inline">
+          <button type="button" class="share-icon-btn" data-share
+                  data-share-url="{{ share_url }}"
+                  data-share-title="{{ person.display_name or person.username }} — Joryu"
+                  data-share-text="{{ share_text }}">
+            {{ t.share_button }}
+          </button>
+          <div class="share-menu">
+            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={{ share_text|urlencode }}&url={{ share_url|urlencode }}">X (Twitter)</a>
+            <a target="_blank" rel="noopener" href="https://wa.me/?text={{ (share_text ~ ' ' ~ share_url)|urlencode }}">WhatsApp</a>
+          </div>
+        </div>
+        <a class="share-icon-btn share-icon-btn--ghost" href="/u/{{ person.username }}/card.png" download>{{ t.share_download }}</a>
+        {% endif %}
+      </div>
     </div>
   </header>
-
-  {% if person.is_public %}
-  <div class="share-widget">
-    <button type="button" class="button share-btn" data-share
-            data-share-url="https://joatolyesi.com/u/{{ person.username }}"
-            data-share-image="/u/{{ person.username }}/card.png"
-            data-share-title="{{ person.display_name or person.username }} — Joryu"
-            data-share-text="{{ streak }} {{ t.dash_streak_label }} · {{ t['discipline_' ~ person.discipline] }}">
-      {{ t.share_button }}
-    </button>
-    {% set share_text = streak ~ " " ~ t.dash_streak_label ~ " · " ~ t["discipline_" ~ person.discipline] %}
-    {% set share_url = "https://joatolyesi.com/u/" ~ person.username %}
-    <div class="share-menu">
-      <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={{ share_text|urlencode }}&url={{ share_url|urlencode }}">X (Twitter)</a>
-      <a target="_blank" rel="noopener" href="https://wa.me/?text={{ (share_text ~ ' ' ~ share_url)|urlencode }}">WhatsApp</a>
-      <a href="/u/{{ person.username }}/card.png" download>{{ t.share_download }}</a>
-    </div>
-  </div>
-  {% endif %}
 
   {% if person.bio %}<p class="profile-bio">{{ person.bio }}</p>{% endif %}
 

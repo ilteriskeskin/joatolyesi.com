@@ -1645,7 +1645,6 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   border: 2px solid var(--border);
   flex-shrink: 0;
 }
-.profile-avatar--sm { width: 48px; height: 48px; margin-bottom: 0.6rem; }
 .profile-header {
   display: flex;
   gap: 1.25rem;
@@ -1664,31 +1663,53 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   margin-right: 0.35rem;
 }
 
-/* ---- Paylaşım widget'ı ---- */
-.share-widget {
-  position: relative;
-  margin: 1.25rem 0;
-  text-align: center;
+/* ---- Paylaşım: kompakt, satır içi ---- */
+.profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
 }
-.share-widget--dash { padding-top: 1.5rem; }
-.share-btn { position: relative; }
+.streak-share {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+.streak-share-hint { margin-top: 0.6rem; font-size: 0.82rem; }
+.share-inline { position: relative; display: inline-flex; }
+.share-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+  border-radius: 999px;
+  padding: 0.4rem 0.95rem;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.share-icon-btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
 .share-menu {
   display: none;
   flex-direction: column;
   gap: 0.4rem;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 0.5rem;
+  top: 100%;
+  left: 0;
+  margin-top: 0.4rem;
   background: var(--bg-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 0.75rem 1.25rem;
+  padding: 0.6rem 0.9rem;
   z-index: 20;
-  min-width: 180px;
+  min-width: 150px;
 }
 .share-menu--open { display: flex; }
-.share-menu a { font-size: 0.9rem; color: var(--ink); text-align: left; }
+.share-menu a { font-size: 0.85rem; color: var(--ink); text-align: left; }
 .share-menu a:hover { color: var(--accent); }
 
 @media (max-width: 480px) {
