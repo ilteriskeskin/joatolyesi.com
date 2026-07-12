@@ -21,6 +21,28 @@
     <p class="field-hint">{{ t.push_hint }}</p>
   </div>
 
+  <div class="card share-widget share-widget--dash">
+    {% if user.is_public and user.username %}
+    <img class="profile-avatar profile-avatar--sm" src="/u/{{ user.username }}/avatar.png" alt="" width="48" height="48">
+    <button type="button" class="button share-btn" data-share
+            data-share-url="https://joatolyesi.com/u/{{ user.username }}"
+            data-share-image="/u/{{ user.username }}/card.png"
+            data-share-title="{{ user.display_name or user.username }} — Joryu"
+            data-share-text="{{ t.dash_share_text.format(streak=streak) }}">
+      {{ t.share_button }}
+    </button>
+    <div class="share-menu">
+      {% set share_url = "https://joatolyesi.com/u/" ~ user.username %}
+      <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={{ t.dash_share_text.format(streak=streak)|urlencode }}&url={{ share_url|urlencode }}">X (Twitter)</a>
+      <a target="_blank" rel="noopener" href="https://wa.me/?text={{ (t.dash_share_text.format(streak=streak) ~ ' ' ~ share_url)|urlencode }}">WhatsApp</a>
+      <a href="/u/{{ user.username }}/card.png" download>{{ t.share_download }}</a>
+    </div>
+    {% else %}
+    <p class="muted">{{ t.dash_share_hint }}</p>
+    <a class="button" href="/profile">{{ t.dash_share_cta }}</a>
+    {% endif %}
+  </div>
+
   <div id="practice-panel">
     {% include "_practice_panel.html" %}
   </div>
@@ -45,4 +67,5 @@
 
 </div>
 <script src="/static/js/push.js" defer></script>
+<script src="/static/js/share.js" defer></script>
 {% endblock %}

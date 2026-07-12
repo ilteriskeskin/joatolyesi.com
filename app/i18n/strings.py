@@ -295,6 +295,12 @@ STRINGS = {
         "badge_sessions_fmt": "{n} Sessions",
         "badge_tip_earned_fmt": "{n} sessions — earned",
         "badge_tip_locked_fmt": "Unlocks at {n} sessions",
+        # Sharing
+        "share_button": "Share",
+        "share_download": "Download image",
+        "dash_share_text": "{streak}-day streak on Joryu.",
+        "dash_share_hint": "Make your profile public to get a shareable card and link.",
+        "dash_share_cta": "Make profile public",
     },
     "tr": {
         "html_lang": "tr",
@@ -591,6 +597,12 @@ STRINGS = {
         "badge_sessions_fmt": "{n} Seans",
         "badge_tip_earned_fmt": "{n} seans — kazanıldı",
         "badge_tip_locked_fmt": "{n} seansta açılır",
+        # Paylaşım
+        "share_button": "Paylaş",
+        "share_download": "Görseli indir",
+        "dash_share_text": "Joryu'da {streak} günlük serim var.",
+        "dash_share_hint": "Paylaşılabilir kart ve link için profilini herkese açık yap.",
+        "dash_share_cta": "Profili herkese açık yap",
     },
 }
 

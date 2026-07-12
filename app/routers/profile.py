@@ -12,6 +12,7 @@ from app.models import Follow, User
 from app.rate_limit import limiter
 from app.render import render
 from app.badges import compute_badges, compute_belts, current_belt
+from app.avatar import render_avatar
 from app.card import render_profile_card
 from app.i18n.strings import get_strings
 from app.stats import build_heatmap, compute_longest_streak, compute_streak, practice_day_counts, practice_stats, total_practice_days, weekly_leaders
@@ -156,6 +157,36 @@ async def toggle_follow(
     return RedirectResponse(f"/u/{username}", status_code=303)
 
 
+@router.get("/u/{username}/avatar.png")
+@limiter.limit("60/minute")
+async def profile_avatar(
+    username: str,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+):
+    """Yüklemesiz avatar — profil herkese açıksa herkes görebilir."""
+    result = await db.execute(select(User).where(User.username == username.lower()))
+    person = result.scalar_one_or_none()
+    if person is None or not person.is_public:
+        return Response(status_code=404)
+
+    size = 256
+    try:
+        size = max(64, min(512, int(request.query_params.get("size", 256))))
+    except ValueError:
+        pass
+
+    practice_days = await total_practice_days(db, person.id)
+    belt = current_belt(practice_days)
+    png = render_avatar(
+        seed=str(person.id),
+        initial=person.display_name or person.username,
+        belt_id=belt.id,
+        size=size,
+    )
+    return Response(png, media_type="image/png", headers={"Cache-Control": "public, max-age=3600"})
+
+
 @router.get("/u/{username}/card.png")
 @limiter.limit("30/minute")
 async def profile_card(
@@ -178,6 +209,7 @@ async def profile_card(
     png = render_profile_card(
         name=person.display_name or person.username,
         username=person.username,
+        user_id=str(person.id),
         discipline_label=strings[f"discipline_{person.discipline}"],
         streak=streak,
         streak_label=strings["dash_streak_label"],

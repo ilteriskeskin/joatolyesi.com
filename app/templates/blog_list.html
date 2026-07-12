@@ -31,6 +31,9 @@
     <h3>{{ post.title }}</h3>
     <p class="muted post-excerpt">{{ excerpts[post.id] }}</p>
     <p class="post-meta">
+      {% if post.author.is_public and post.author.username %}
+      <img class="author-avatar" src="/u/{{ post.author.username }}/avatar.png?size=64" alt="" width="24" height="24">
+      {% endif %}
       <span>{{ post.author.display_name or post.author.username }}</span>
       · <span>{{ post.created_at.date().isoformat() }}</span>
       {% if post.discipline %}· <span class="post-discipline">{{ t["discipline_" ~ post.discipline] }}</span>{% endif %}

@@ -49,6 +49,7 @@ def render_profile_card(
     *,
     name: str,
     username: str,
+    user_id: str,
     discipline_label: str,
     streak: int,
     streak_label: str,
@@ -63,13 +64,21 @@ def render_profile_card(
 
     # Çerçeve + marka
     d.rounded_rectangle([24, 24, W - 24, H - 24], radius=18, outline=BORDER, width=2)
-    d.text((60, 52), "joryu", font=_font(40, bold=True), fill=ACCENT)
     d.text((W - 60, 60), "joatolyesi.com", font=_font(26), fill=DIM, anchor="ra")
 
-    # İsim + kullanıcı adı + branş
-    d.text((60, 140), name[:28], font=_font(64, bold=True), fill=INK)
-    d.text((60, 222), f"@{username}", font=_font(30), fill=DIM)
-    d.text((60, 268), discipline_label, font=_font(30), fill=ACCENT)
+    # Avatar amblemi (enso + kuşak rengi + baş harf) isim solunda
+    from app.avatar import render_avatar
+
+    avatar_size = 140
+    avatar_png = render_avatar(seed=user_id, initial=name, belt_id=belt_id, size=avatar_size)
+    avatar_img = Image.open(io.BytesIO(avatar_png)).convert("RGB")
+    img.paste(avatar_img, (60, 52))
+
+    # İsim + kullanıcı adı + branş (avatarın sağında)
+    text_x = 60 + avatar_size + 28
+    d.text((text_x, 60), name[:24], font=_font(52, bold=True), fill=INK)
+    d.text((text_x, 128), f"@{username}", font=_font(26), fill=DIM)
+    d.text((text_x, 168), discipline_label, font=_font(26), fill=ACCENT)
 
     # Seri ve toplam gün blokları
     d.text((60, 360), str(streak), font=_font(120, bold=True), fill=ACCENT)

@@ -1638,3 +1638,59 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
 }
 .push-btn--active { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 .push-card .field-hint { margin-top: 0.6rem; }
+
+/* ---- Avatar ---- */
+.profile-avatar {
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.profile-avatar--sm { width: 48px; height: 48px; margin-bottom: 0.6rem; }
+.profile-header {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+.profile-header__text { flex: 1; min-width: 0; }
+.person-card__avatar {
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  margin-bottom: 0.6rem;
+  display: block;
+}
+.author-avatar {
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+}
+
+/* ---- Paylaşım widget'ı ---- */
+.share-widget {
+  position: relative;
+  margin: 1.25rem 0;
+  text-align: center;
+}
+.share-widget--dash { padding-top: 1.5rem; }
+.share-btn { position: relative; }
+.share-menu {
+  display: none;
+  flex-direction: column;
+  gap: 0.4rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.5rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  z-index: 20;
+  min-width: 180px;
+}
+.share-menu--open { display: flex; }
+.share-menu a { font-size: 0.9rem; color: var(--ink); text-align: left; }
+.share-menu a:hover { color: var(--accent); }
+
+@media (max-width: 480px) {
+  .profile-header { flex-direction: column; align-items: center; text-align: center; }
+}

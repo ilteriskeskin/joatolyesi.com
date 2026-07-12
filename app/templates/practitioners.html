@@ -29,6 +29,7 @@
 <div class="card-grid">
   {% for person in people %}
   <a class="card person-card" href="/u/{{ person.username }}">
+    <img class="person-card__avatar" src="/u/{{ person.username }}/avatar.png?size=96" alt="" width="48" height="48">
     <h3>{{ person.display_name or person.username }}</h3>
     <p class="muted">@{{ person.username }}</p>
     <span class="badge badge--pro">{{ t["discipline_" ~ person.discipline] }}</span>

@@ -147,6 +147,14 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       vardı ama hiçbir yerde gösterilmiyordu; artık dashboard'da (güncel
       seriden düşükse "Kişisel rekorun: X gün") ve herkese açık profilde
       ayrı bir stat olarak görünüyor.
+- [x] **19. Avatar + paylaşım.** Yüklemesiz avatar (`app/avatar.py`):
+      enso halkası (kuşak rengiyle boyanır) + baş harf monogramı, her
+      kullanıcı için deterministik açıda döner. `/u/<kullanıcı>/avatar.png`
+      (herkese açık profilde). Profil kartına (`card.png`) gömüldü.
+      Paylaşım widget'ı (dashboard + profil): Web Share API (mobilde
+      görsel dahil native paylaşım) + masaüstü fallback (X/WhatsApp/
+      İndir linkleri). CJK font riski nedeniyle kanji yerine monogram
+      tercih edildi (prod Docker imajında yalnız DejaVu var).
 - [x] **18. Dil kalitesi denetimi.** strings.py baştan sona tarandı;
       TR/EN anahtar paritesi zaten testle garanti (test_langs_have_same_keys).
       Bulunan 3 gerçek pürüz düzeltildi: TR'de devrik "Branş branş" tekrarı,

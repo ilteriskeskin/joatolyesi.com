@@ -448,3 +448,45 @@ async def test_push_subscribe_unsubscribe(client):
 
     r = await client.get("/push/vapid-public-key")
     assert r.status_code == 200 and "key" in r.json()
+
+
+async def test_avatar_and_share_widget(client):
+    email, username = f"{unique('av')}@test.com", unique("avataruser")
+    await register(client, email, username)
+    csrf = await get_csrf(client, "/profile")
+    await client.post("/profile", data={"username": username, "display_name": "Avatar Kişi", "bio": "",
+                                        "discipline": "aikijo", "is_public": "on", "csrf_token": csrf})
+
+    r = await client.get(f"/u/{username}/avatar.png")
+    assert r.status_code == 200 and r.content[:8] == b"\x89PNG\r\n\x1a\n"
+
+    r = await client.get(f"/u/{username}/avatar.png?size=64")
+    assert r.status_code == 200
+
+    # gizli profilde avatar 404 (ayri, anonim client ile kayit ol)
+    from app.main import app as _app
+    import httpx as _httpx
+    other_username = unique("privateuser")
+    tr = _httpx.ASGITransport(app=_app)
+    async with _httpx.AsyncClient(transport=tr, base_url="http://test") as other_client:
+        await register(other_client, f"{unique('priv')}@test.com", other_username)
+    r = await client.get(f"/u/{other_username}/avatar.png")
+    assert r.status_code == 404
+
+    # profil sayfasinda avatar + paylasim widget'i gorunur
+    r = await client.get(f"/u/{username}")
+    assert f'/u/{username}/avatar.png' in r.text
+    assert 'share-widget' in r.text and 'data-share' in r.text
+
+    # dashboard'da da paylasim widget'i (public profil sahibi icin)
+    r = await client.get("/app")
+    assert 'share-widget' in r.text and f'/u/{username}/card.png' in r.text
+
+
+async def test_avatar_deterministic_but_belt_aware(client):
+    from app.avatar import render_avatar
+    png_a = render_avatar(seed="same-seed", initial="A", belt_id="white", size=64)
+    png_b = render_avatar(seed="same-seed", initial="A", belt_id="white", size=64)
+    assert png_a == png_b  # ayni girdi -> ayni gorsel (deterministik)
+    png_black = render_avatar(seed="same-seed", initial="A", belt_id="black", size=64)
+    assert png_black != png_a  # kusak degisince gorsel degisir
