@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
@@ -28,17 +28,35 @@ async def kata_list(request: Request, user: User | None = Depends(get_current_us
     else:
         selected = user.discipline if user and user.discipline in available else None
 
+    # Kata / teknik sekmesi — branş seçiliyken anlamlı, "tümü" görünümünde karışık kalır
+    kind = request.query_params.get("kind")
+    if kind not in ("kata", "teknik"):
+        kind = "kata"
+
     stmt = select(Kata).order_by(Kata.sort_order, Kata.title_en)
     if selected:
-        stmt = stmt.where(Kata.discipline == selected)
+        stmt = stmt.where(Kata.discipline == selected, Kata.kind == kind)
     result = await db.execute(stmt)
+    katas = list(result.scalars().all())
+
+    # Seçili branşta bu türde hiç içerik yoksa (ör. aikido'da kata) diğer türü öner
+    other_kind_has_content = False
+    if selected and not katas:
+        other = "teknik" if kind == "kata" else "kata"
+        count = await db.execute(
+            select(func.count(Kata.id)).where(Kata.discipline == selected, Kata.kind == other)
+        )
+        other_kind_has_content = count.scalar_one() > 0
+
     return render(
         request,
         "kata_list.html",
         user=user,
-        katas=list(result.scalars().all()),
+        katas=katas,
         available=available,
         selected=selected,
+        kind=kind,
+        other_kind_has_content=other_kind_has_content,
     )
 
 

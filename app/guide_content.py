@@ -954,3 +954,189 @@ PROGRAMS: dict = {
 
 for _d, _p in PROGRAMS.items():
     GUIDE[_d]["program"] = _p
+
+
+# Genel, doğrulanabilir pratik ipuçları — branşa özgü teknik iddia değil,
+# ekipman/güvenlik/alışkanlık düzeyinde yaygın bilgi. Sayfanın en altında,
+# "İpuçları" başlığı altında gösterilir.
+TIPS: dict = {
+    "aikijo": {
+        "tr": [
+            "Jo'yu nemden uzak tut ve ara sıra keten yağıyla (bezir/tung yağı) besle — "
+            "ahşap çatlarsa suburi'nin gücü elinde patlar.",
+            "Bilek ağrısı suburi'yi yavaşlatmanın işaretidir, ara vermenin değil; hız "
+            "yerine hattı düzelt.",
+            "13'lü ve 31'li katayı öğrenirken sayıyı yüksek sesle söylemek ritmi "
+            "beynine daha hızlı yerleştirir.",
+            "Jo'nun iki ucu da eşit kullanılmalı — çoğu kişi baskın elini fazla "
+            "çalışıp diğerini ihmal eder, bu asimetri ileride kata'da görünür.",
+            "Tavan yüksekliği düşükse (ev/balkon) hasso gaeshi ve happo giri'yi dışarıda "
+            "çalış; jo tavana çarpınca hem alet hem alışkanlık zarar görür.",
+        ],
+        "en": [
+            "Keep the jo dry and oil it occasionally (linseed/tung oil) — a cracked "
+            "shaft can splinter under full-power suburi.",
+            "Wrist pain is a signal to slow down, not to stop; fix the line before "
+            "adding speed.",
+            "Counting the 13- and 31-count kata out loud speeds up memorising the rhythm.",
+        ],
+    },
+    "bokken": {
+        "tr": [
+            "Bokken'i asla başka bir bokken'e sertçe vurdurma (kumitachi hariç, kontrollü) "
+            "— sert ahşap darbede kırılıp parçalanabilir, bu ciddi yaralanma riskidir.",
+            "Kesişten sonra kılıcı aniden durdurmak bilekleri yorar; kesiş doğal olarak "
+              "chudan'da yavaşlayıp dursun.",
+            "Haftada bir ayna karşısında yavaş çekim (video) çek — kesiş hattındaki "
+            "sapmalar gerçek hızda görünmez.",
+            "Tsuka (kabza) sıkı değil rahat kavranır; aşırı sıkı tutuş kesişi sertleştirir "
+            "ve bilek yaralanmasına yol açar.",
+        ],
+        "en": [
+            "Never strike bokken against bokken at full force outside controlled "
+            "kumitachi practice — hard wood can splinter and cause serious injury.",
+            "Record yourself in slow motion weekly; line deviations are invisible at "
+            "full speed.",
+            "Grip the tsuka firmly but not tight — over-gripping stiffens the cut and "
+            "strains the wrist.",
+        ],
+    },
+    "jodo": {
+        "tr": [
+            "Jo'nun tutuş hizası kihon'dan kihon'a değişir (honte/gyakute); hangi "
+            "kihonu çalıştığını bilerek başla, karışık tutuşla tekrar hatayı pekiştirir.",
+            "Hiki otoshi'de hız değil açı önemlidir — çoğu yeni başlayan hızlanarak "
+            "telafi etmeye çalışır, tam tersi gerekir.",
+            "Tek başına çalışırken karşındaki kılıcı gerçekten orada gibi mesafe tut; "
+            "mesafesiz tekrar yanlış refleks oturtur.",
+        ],
+        "en": [
+            "Grip orientation changes kihon to kihon (honte/gyakute); know which one "
+            "you're drilling before you start.",
+            "Hiki otoshi is about angle, not speed — resist the urge to speed up to "
+            "compensate for a wrong angle.",
+            "Keep real distance from an imagined opponent when training solo; training "
+            "too close builds the wrong reflex.",
+        ],
+    },
+    "jojutsu": {
+        "tr": [
+            "Koryu kataları YouTube'dan taklit ederek öğrenilmez — sıra ve mesafe "
+            "hafızada oturur ama içerideki niyet (ma-ai, zamanlama) aktarılmadan kaybolur.",
+            "Öğretmen bulana kadar 12 kihonu kusursuzlaştırmak zaman kaybı değildir; "
+            "koryu okulları da öğrenciyi aynı temelle başlatır.",
+        ],
+        "en": [
+            "Koryu kata cannot be learned by imitating video — the sequence sticks but "
+            "the internal timing (ma-ai) is lost without a teacher.",
+            "Perfecting the 12 kihon while you look for a teacher is not wasted time — "
+            "koryu schools start students the same way.",
+        ],
+    },
+    "kenjutsu": {
+        "tr": [
+            "Okulsuz çalışan biri için en değerli yatırım kesiş kalitesidir, kata "
+            "sayısı değil — bir okula katıldığında zaten o okulun kendi katasını "
+            "öğreneceksin.",
+            "Kesişi ayna karşısında değil, bir hedefe (askıda gazete rulosu, iplik "
+            "üzerinde şişe kapağı) doğru çalışmak hat hatasını hemen gösterir.",
+        ],
+        "en": [
+            "Without a school, cut quality is the best investment, not kata count — "
+            "you'll learn that school's own kata once you join one.",
+            "Cutting toward an actual small target (rolled newspaper, a cork on a "
+            "string) reveals line errors instantly, better than a mirror.",
+        ],
+    },
+    "kendo": {
+        "tr": [
+            "Bogu (zırh) olmadan da suburi ve ayak çalışması günlük tutulabilir; "
+            "kondisyon ve form bogu'suz da gelişir.",
+            "Fumikomi'yi sert zeminde abartılı yapmak eklemleri yorar — yumuşak "
+            "zeminde ya da yalnızca ayak tabanını düz indirerek çalış.",
+            "Kiai (haykırış) teknik bir parçadır, utanma kaynağı değil — nefes ve "
+            "vuruşun aynı ana denk gelmesini sağlar.",
+        ],
+        "en": [
+            "Suburi and footwork can be trained daily without bogu; conditioning and "
+            "form both develop without armor.",
+            "Avoid aggressive fumikomi on hard floors — it strains joints over time; "
+            "use soft flooring or a flatter foot strike.",
+        ],
+    },
+    "iaido": {
+        "tr": [
+            "Iaito (alaşım, keskin olmayan) ile bokken arasındaki fark ağırlık "
+            "dağılımıdır — gerçek katana kullanmadan önce iaito ile aylarca çalışmak "
+            "normaldir ve gereklidir.",
+            "Noto (kılıfa koyma) sırasında asla kılıca bakma; gözler karşıdaki hayali "
+            "rakipte kalır — bu, kataların en çok atlanan detayıdır.",
+            "Chiburi'yi hızlandırmak yaygın bir hata; bu faz zanshin'in (uyanıklığın) "
+            "bir parçasıdır, acele edilmez.",
+        ],
+        "en": [
+            "An iaito (unsharpened alloy blade) has different balance than a bokken — "
+            "training with one for months before a live blade is normal and necessary.",
+            "Never look at the blade during noto; eyes stay on the imagined opponent — "
+            "the most commonly skipped detail in the kata.",
+            "Rushing chiburi is a common mistake; this phase is part of zanshin and "
+            "should never be hurried.",
+        ],
+    },
+    "aikido": {
+        "tr": [
+            "Ukemi (düşüş) becerisi tekniklerden önce gelir — düşmeyi öğrenmeden atış "
+            "çalışmak sakatlanma riskini artırır.",
+            "Tenkan'ı tek başına günde 20 tekrar etmek, dojoda partnerle çalışırken "
+            "dengeni gözle görülür şekilde iyileştirir.",
+            "Kılıç (bokken) ve jo çalışması aikido tekniklerinin gövde mekaniğini "
+            "doğrudan besler; aikido dojoları çoğu zaman bu yüzden silah çalışması "
+            "da yaptırır.",
+        ],
+        "en": [
+            "Ukemi (falling) comes before technique — practising throws before you can "
+            "fall safely increases injury risk.",
+            "20 solo tenkan reps a day visibly improves your balance when working with "
+            "a partner at the dojo.",
+            "Sword (bokken) and jo work directly feed aikido's body mechanics; many "
+            "aikido dojos include weapons training for this reason.",
+        ],
+    },
+    "karate": {
+        "tr": [
+            "Kata'da hız değil, kime (odaklanmış güç anı) puan getirir — her hareketin "
+            "sonunda net bir duruş var mı diye kendine sor.",
+            "Ayak bileği ve diz esnekliği olmadan derin duruşlar (kiba dachi, "
+            "zenkutsu) sakatlanma riski taşır; kata öncesi 10 dk dinamik esneme şart.",
+            "Nefes verme kime anıyla eşleşmeli (kiai gibi); nefesi tutarak vurmak "
+            "gücü azaltır.",
+        ],
+        "en": [
+            "In kata, kime (a focused moment of power) scores, not speed — ask "
+            "yourself if each move ends in a clear, stable stance.",
+            "Deep stances (kiba dachi, zenkutsu dachi) carry injury risk without ankle "
+            "and knee mobility; 10 minutes of dynamic stretching before kata is essential.",
+        ],
+    },
+    "taekwondo": {
+        "tr": [
+            "Tekmeden önce kalça açıklığı (hip flexor esnekliği) çalışılmazsa bel "
+            "sakatlanma riski artar — her seansa mutlaka dinamik esnemeyle başla.",
+            "Yüksek tekmeye hemen geçmek yerine önce alçak/orta seviyede doğru "
+            "mekaniği otur; yükseklik zamanla gelir, mekanik gelmezse sakatlık gelir.",
+            "Poomsae'de duruş yüksekliğinin sabit kalması (yukarı-aşağı zıplamama) "
+            "hakemlerin ilk baktığı şeylerden biridir.",
+        ],
+        "en": [
+            "Skipping hip-flexor mobility work before kicking raises lower-back injury "
+            "risk — always start sessions with dynamic stretching.",
+            "Master low/mid kick mechanics before chasing head height; height comes "
+            "with time, but bad mechanics invite injury.",
+            "Keeping a constant stance height (no bobbing) in poomsae is one of the "
+            "first things judges look for.",
+        ],
+    },
+}
+
+for _d, _tips in TIPS.items():
+    GUIDE[_d]["tips"] = _tips

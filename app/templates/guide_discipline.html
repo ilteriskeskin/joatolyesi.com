@@ -10,6 +10,8 @@
     {% if g.program %}<a href="#program">{{ t.guide_program_title }}</a>{% endif %}
     {% if g.kata %}<a href="#kata">{{ t.guide_kata_title }}</a>{% endif %}
     <a href="#teknikler">{{ t.guide_techniques_title }}</a>
+    {% if g.tips %}<a href="#ipuclari">{{ t.guide_tips_title }}</a>{% endif %}
+    <a href="/kata?d={{ d }}">{{ t.guide_video_library_link }} →</a>
   </nav>
 
   {% if g.program %}
@@ -67,6 +69,17 @@
     </dl>
   </div>
   {% endfor %}
+
+  {% if g.tips %}
+  <h2 class="guide-section-title" id="ipuclari">{{ t.guide_tips_title }}</h2>
+  <div class="card guide-item guide-tips">
+    <ul>
+      {% for tip in (g.tips[lang] if lang in g.tips else g.tips.tr) %}
+      <li>{{ tip }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
   <div class="card guide-cta">
     <p>{{ t.guide_cta_text }}</p>

@@ -336,3 +336,23 @@ async def test_blog_markdown_rendering(client):
     r = await client.get("/blog")
     assert "Markdown testi başlığı" in r.text
     assert "<h2>Alt başlık</h2>" not in r.text  # excerpt duz metin, HTML degil
+
+
+async def test_kata_kind_split_and_admin(client):
+    from app.seed import seed_content
+    await seed_content()
+
+    r = await client.get("/kata?d=aikijo&kind=kata")
+    assert "31 no jo kata" in r.text
+    assert "Choku tsuki" not in r.text
+    r = await client.get("/kata?d=aikijo&kind=teknik")
+    assert "Choku tsuki" in r.text
+    assert "31 no jo kata" not in r.text
+
+    # Aikido'da kata yok — bos durum + teknik sekmesine yonlendirme gorunur
+    r = await client.get("/kata?d=aikido&kind=kata")
+    assert "kata_empty_kata" not in r.text  # ceviri anahtari kalmamis olmali
+    assert "kata" in r.text.lower()
+
+    r = await client.get("/admin/katas?token=test-admin-token")
+    assert r.status_code == 200

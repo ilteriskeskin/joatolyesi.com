@@ -4,6 +4,7 @@
 <article class="kata-detail">
   <h1>{{ kata.title_en if lang == 'en' else kata.title_tr }}</h1>
   <span class="kata-discipline">{{ t["discipline_" ~ kata.discipline] }}</span>
+  <span class="badge badge--pro kata-kind-badge">{{ t.kata_kind_kata if kata.kind == 'kata' else t.kata_kind_teknik }}</span>
   {% if kata.video_url %}
   <div class="video-frame">
     <iframe src="{{ kata.video_url }}" loading="lazy" allowfullscreen></iframe>

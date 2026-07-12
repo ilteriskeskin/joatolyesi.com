@@ -8,8 +8,10 @@ embed formatına çevrilir. Boş bırakıp kaydedersen video kaldırılır.</p>
 {% set grouped = katas | groupby("discipline") %}
 {% for discipline, items in grouped %}
 <h2 class="admin-section">{{ t["discipline_" ~ discipline] }}</h2>
+{% for kind, kind_items in items | groupby("kind") %}
+<h3 class="admin-subsection">{{ t.kata_kind_kata if kind == "kata" else t.kata_kind_teknik }}</h3>
 <div class="admin-list">
-  {% for kata in items %}
+  {% for kata in kind_items %}
   <form method="post" action="/admin/katas/{{ kata.slug }}" class="admin-row" id="{{ kata.slug }}">
     <input type="hidden" name="token" value="{{ token }}">
     <span class="admin-row__title">
@@ -24,5 +26,6 @@ embed formatına çevrilir. Boş bırakıp kaydedersen video kaldırılır.</p>
   </form>
   {% endfor %}
 </div>
+{% endfor %}
 {% endfor %}
 {% endblock %}

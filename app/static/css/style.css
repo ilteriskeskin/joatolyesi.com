@@ -1569,3 +1569,21 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   letter-spacing: 0.05em;
 }
 .leaders-minutes { margin-left: auto; color: var(--ink-dim); font-size: 0.85rem; }
+
+/* Kata/Teknik sekmesi + admin alt başlık */
+.kind-tabs { margin-top: 0.75rem; }
+.kata-kind-badge { margin-left: 0.6rem; }
+.kata-empty-note {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+.admin-subsection {
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+  margin: 1rem 0 0.5rem;
+}
+
+.guide-tips ul { margin: 0 0 0 1.25rem; color: var(--ink-dim); font-size: 0.95rem; }
+.guide-tips li { margin-bottom: 0.7rem; line-height: 1.6; }

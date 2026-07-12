@@ -8,6 +8,15 @@
   <a class="tab {{ 'tab--active' if selected == d }}" href="/kata?d={{ d }}">{{ t["discipline_" ~ d] }}</a>
   {% endfor %}
 </div>
+
+{% if selected %}
+<div class="tabs kind-tabs">
+  <a class="tab {{ 'tab--active' if kind == 'kata' }}" href="/kata?d={{ selected }}&kind=kata">{{ t.kata_kind_kata }}</a>
+  <a class="tab {{ 'tab--active' if kind == 'teknik' }}" href="/kata?d={{ selected }}&kind=teknik">{{ t.kata_kind_teknik }}</a>
+</div>
+{% endif %}
+
+{% if katas %}
 <div class="card-grid">
   {% for kata in katas %}
   <a class="card kata-card" href="/kata/{{ kata.slug }}">
@@ -20,4 +29,15 @@
   </a>
   {% endfor %}
 </div>
+{% elif selected %}
+<p class="muted kata-empty-note">
+  {% if kind == 'kata' %}{{ t.kata_empty_kata }}{% else %}{{ t.kata_empty_teknik }}{% endif %}
+  {% if other_kind_has_content %}
+  <a href="/kata?d={{ selected }}&kind={{ 'teknik' if kind == 'kata' else 'kata' }}">
+    {{ t.kata_kind_teknik if kind == 'kata' else t.kata_kind_kata }} →
+  </a>
+  {% endif %}
+  · <a href="/guide/{{ selected }}">{{ t.guide_title }}</a>
+</p>
+{% endif %}
 {% endblock %}

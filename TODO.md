@@ -104,9 +104,22 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
 - [x] **11. Branş rehberi (/guide).** 10 branş için kata + teknik/vuruş
       sınıflandırması; TR detaylı, EN özet; embusen/happo/seviye SVG
       diyagramları. Giriş istemez ama WAITLIST_ONLY=true iken kapalıdır
-      (lansmanla açılır). Kata'sı olmayan
-      branşlarda (aikido, kenjutsu kısmen) yalnız teknikler. İçerik
-      `app/guide_content.py` — düzeltme/ekleme oradan.
+      (lansmanla açılır). Kata'sı olmayan branşlarda (aikido, kenjutsu
+      kısmen) yalnız teknikler. Her branşa **"İpuçları"** bölümü eklendi
+      (ekipman bakımı, yaygın hatalar, güvenlik — genel/doğrulanabilir
+      bilgi, teknik-özgü iddia değil). İçerik `app/guide_content.py` —
+      düzeltme/ekleme oradan.
+- [x] **15. Kata kütüphanesi: Kata / Vuruşlar ayrımı.** `katas.kind`
+      kolonu (migration 0008) ile /kata sayfası branş seçilince iki ayrı
+      sekmede gösteriyor: Kata (form/poomsae) ve Vuruşlar/Teknikler
+      (suburi/kihon/duruş/tekme). 200 girişe çıkarıldı — tüm branşların
+      kata VE tekniklerini kapsıyor (aikido hariç: gerçekten kata'sı yok,
+      boş sekmede dürüst mesaj + teknik sekmesine yönlendirme). Video
+      YouTube linki kabul ediyor (senin çekimin ya da başkasının videosu
+      olabilir — `/admin/katas` normalize ediyor); video yoksa yazılı
+      açıklama zaten var. `app/seed.py` artık katalogdan çıkarılan eski
+      satırları otomatik temizliyor (upsert-only'nin bıraktığı öksüz
+      kayıtlar sorunu çözüldü).
 - [x] **13. Topluluk blogu.** Yapıldı: yazma girişli (/blog/yeni), okuma
       ve keşfet (/blog) herkese açık; başlık+metin araması, branş filtresi,
       düzenleme/silme (sadece sahibi), yazar → profil linki, og meta

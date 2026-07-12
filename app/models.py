@@ -84,6 +84,8 @@ class Kata(Base):
     video_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     is_free: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    # "kata" (form) veya "teknik" (tek hareket/vuruş) — /kata sayfasında ayrı sekmeler
+    kind: Mapped[str] = mapped_column(String(10), nullable=False, default='kata', server_default='kata')
 
 
 class Program(Base):
