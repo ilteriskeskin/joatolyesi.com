@@ -15,32 +15,18 @@
 
   <div class="card push-card">
     <button type="button" class="push-btn" data-push-enable
-            data-label-on="{{ t.push_disable }}" data-label-off="{{ t.push_enable }}">
+            data-label-on="{{ t.push_disable }}" data-label-off="{{ t.push_enable }}"
+            data-msg-on="{{ t.push_msg_on }}" data-msg-off="{{ t.push_msg_off }}"
+            data-msg-denied="{{ t.push_msg_denied }}" data-msg-unconfigured="{{ t.push_msg_unconfigured }}"
+            data-msg-unsupported="{{ t.push_msg_unsupported }}" data-msg-error="{{ t.push_msg_error }}">
       {{ t.push_enable }}
     </button>
+    <p class="field-hint push-status" data-push-status></p>
     <p class="field-hint">{{ t.push_hint }}</p>
   </div>
 
   <div id="practice-panel">
     {% include "_practice_panel.html" %}
-  </div>
-
-  <div class="card feed-card">
-    <h2>{{ t.feed_title }}</h2>
-    {% if feed %}
-    <ul class="log-list">
-      {% for log, person in feed %}
-      <li>
-        <a href="/u/{{ person.username }}">{{ person.display_name or person.username }}</a>
-        <span class="log-date">{{ log.practiced_on.isoformat() }}</span>
-        <span class="log-discipline">{{ t["discipline_" ~ log.discipline] }}</span>
-        <span class="log-minutes">{{ log.minutes }} {{ t.minutes_short }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p class="muted">{{ t.feed_empty }}</p>
-    {% endif %}
   </div>
 
 </div>

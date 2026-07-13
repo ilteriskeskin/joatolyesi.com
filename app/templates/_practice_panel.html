@@ -7,22 +7,13 @@
   <span class="freeze-note" data-tip="{{ t.freeze_tip }}">{{ t.freeze_left.format(left=freezes_left, total=freezes_total) }}</span>
 
   {% if user.is_public and user.username %}
-  {% set share_text = t.dash_share_text.format(streak=streak) %}
-  {% set share_url = "https://joatolyesi.com/u/" ~ user.username %}
   <div class="streak-share">
-    <div class="share-inline">
-      <button type="button" class="share-icon-btn" data-share
-              data-share-url="{{ share_url }}"
-              data-share-title="{{ user.display_name or user.username }} — Joryu"
-              data-share-text="{{ share_text }}">
-        {{ t.share_button }}
-      </button>
-      <div class="share-menu">
-        <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={{ share_text|urlencode }}&url={{ share_url|urlencode }}">X (Twitter)</a>
-        <a target="_blank" rel="noopener" href="https://wa.me/?text={{ (share_text ~ ' ' ~ share_url)|urlencode }}">WhatsApp</a>
-      </div>
-    </div>
-    <a class="share-icon-btn share-icon-btn--ghost" href="/u/{{ user.username }}/card.png" download>{{ t.share_download }}</a>
+    {% with share_url = "https://joatolyesi.com/u/" ~ user.username,
+            share_title = (user.display_name or user.username) ~ " — Joryu",
+            share_text = t.dash_share_text.format(streak=streak),
+            card_url = "/u/" ~ user.username ~ "/card.png" %}
+    {% include "_share_controls.html" %}
+    {% endwith %}
   </div>
   {% else %}
   <p class="streak-share-hint"><a href="/profile">{{ t.dash_share_cta }}</a></p>

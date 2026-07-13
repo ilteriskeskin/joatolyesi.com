@@ -147,6 +147,23 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       vardı ama hiçbir yerde gösterilmiyordu; artık dashboard'da (güncel
       seriden düşükse "Kişisel rekorun: X gün") ve herkese açık profilde
       ayrı bir stat olarak görünüyor.
+- [x] **20. Paylaşım/push düzeltmeleri (kullanıcı geri bildirimi sonrası).**
+      (a) Push "hiçbir şey olmuyor" hatası: kök sebep VAPID anahtarlarının
+      hiç üretilmemiş olmasıydı (`/push/vapid-public-key` boş dönüyordu,
+      JS sessizce hiçbir şey yapmıyordu) — lokal `.env`'e anahtar üretip
+      eklendi, ayrıca push.js artık her adımda görünür durum mesajı
+      veriyor (izin reddi, yapılandırma eksikliği, tarayıcı desteği yok
+      vb. — asla sessiz kalmıyor).
+      (b) Paylaş butonları text-pill'den ikon butona (paylaş + indir,
+      site genelinde tek görünüm, `_share_controls.html` partial'ı)
+      geçirildi — hem profil hem dashboard'da kullanılıyor.
+      (c) Kart görselindeki (card.png) kuşak artık düz bant değil, gerçek
+      kuşak şekli (bant + düğüm + sarkan uçlar — sitedeki SVG ile aynı
+      oran), `app/card.py::_draw_belt`.
+      (d) "Takip ettiklerin" akışı dashboard'un altından kaldırılıp
+      `/practitioners` (topluluk) sayfasına taşındı — bağlamsal olarak
+      oraya ait. Profil sayfasına gerçek **Takipçiler / Takip Edilenler**
+      bölümü eklendi (avatar listeleri, tıklanabilir).
 - [x] **19. Avatar + paylaşım.** Yüklemesiz avatar (`app/avatar.py`):
       enso halkası (kuşak rengiyle boyanır) + baş harf monogramı, her
       kullanıcı için deterministik açıda döner. `/u/<kullanıcı>/avatar.png`

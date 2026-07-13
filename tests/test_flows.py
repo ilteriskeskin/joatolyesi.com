@@ -227,15 +227,22 @@ async def test_follow_feed_and_card(client):
     assert r.status_code == 303
     r = await client.get(f"/u/{user_b}")
     assert "Takiptesin" in r.text or "Following" in r.text
-    assert "1 takipçi" in r.text or "1 followers" in r.text
-    # akışta görünsün
-    r = await client.get("/app")
+    assert "(1)" in r.text  # Takipçiler (1)
+    assert f"/u/{user_b}/avatar.png" in r.text  # takipci disina kendi avatarini gormez ama b, a'nin "takip ettikleri" listesinde gorunmeli
+
+    # akış artık /practitioners sayfasında (community)
+    r = await client.get("/practitioners")
     assert "feed-card" in r.text and user_b in r.text
+
+    # a'nin kendi profilinde "takip ettikleri" listesinde b gorunmeli
+    r = await client.get(f"/u/{user_a}")
+    assert f"/u/{user_b}" in r.text
+
     # takibi bırak
     csrf = await get_csrf(client, f"/u/{user_b}")
     await client.post(f"/u/{user_b}/follow", data={"csrf_token": csrf})
     r = await client.get(f"/u/{user_b}")
-    assert "0 takipçi" in r.text or "0 followers" in r.text
+    assert "Takiptesin" not in r.text  # takip birakildi
 
     # OG kartı: herkese açık profil PNG döner, gizli profil 404
     r = await client.get(f"/u/{user_b}/card.png")

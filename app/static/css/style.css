@@ -1637,7 +1637,10 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   cursor: pointer;
 }
 .push-btn--active { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+.push-btn:disabled { opacity: 0.6; cursor: default; }
 .push-card .field-hint { margin-top: 0.6rem; }
+.push-status:empty { display: none; }
+.push-status { color: var(--accent); }
 
 /* ---- Avatar ---- */
 .profile-avatar {
@@ -1678,21 +1681,41 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   margin-top: 0.9rem;
 }
 .streak-share-hint { margin-top: 0.6rem; font-size: 0.82rem; }
+
+/* Kompakt ikon butonlar: paylaş + indir (site genelinde tek görünüm) */
+.share-controls { display: inline-flex; align-items: center; gap: 0.5rem; }
 .share-inline { position: relative; display: inline-flex; }
-.share-icon-btn {
+.icon-btn {
   display: inline-flex;
   align-items: center;
-  background: transparent;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   border: 1px solid var(--border);
-  color: var(--ink-dim);
-  border-radius: 999px;
-  padding: 0.4rem 0.95rem;
-  font-size: 0.82rem;
-  font-family: var(--font-sans);
+  background: transparent;
   cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.share-icon-btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.icon-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(184, 146, 90, 0.35);
+  text-decoration: none;
+}
+.icon-btn__svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--ink-dim);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.2s ease;
+}
+.icon-btn:hover .icon-btn__svg { stroke: var(--accent); }
+.icon-btn .icon-btn__svg circle { fill: var(--ink-dim); stroke: none; }
+.icon-btn:hover .icon-btn__svg circle { fill: var(--accent); }
+
 .share-menu {
   display: none;
   flex-direction: column;
@@ -1700,7 +1723,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   position: absolute;
   top: 100%;
   left: 0;
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
   background: var(--bg-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -1714,4 +1737,24 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
 
 @media (max-width: 480px) {
   .profile-header { flex-direction: column; align-items: center; text-align: center; }
+}
+
+/* Takipçiler / Takip edilenler */
+.follow-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.follow-list-col h2 { font-size: 1.05rem; margin-bottom: 0.75rem; }
+.follow-avatars { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.follow-avatar-item {
+  display: block;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+}
+.follow-avatar-item:hover { transform: translateY(-2px); }
+.follow-avatar-item img { border-radius: 50%; border: 1px solid var(--border); display: block; }
+
+@media (max-width: 560px) {
+  .follow-lists { grid-template-columns: 1fr; }
 }

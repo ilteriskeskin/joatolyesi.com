@@ -45,6 +45,26 @@ def _font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
     return ImageFont.load_default(size)
 
 
+def _draw_belt(d: ImageDraw.ImageDraw, x: float, y: float, width: float, belt_rgb: tuple) -> None:
+    """Gerçek bir kuşak çizer (bant + düğüm + sarkan uçlar) — sitedeki
+    _belt_svg.html ile aynı 72x44 oranlarını kullanır, düz banttan
+    çok daha tanınabilir."""
+    scale = width / 72
+
+    def rx(v: float) -> float:
+        return x + v * scale
+
+    def ry(v: float) -> float:
+        return y + v * scale
+
+    knot_rgb = tuple(max(0, int(c * 0.82)) for c in belt_rgb)
+
+    d.rounded_rectangle([rx(2), ry(14), rx(70), ry(26)], radius=max(2, scale * 2), fill=belt_rgb, outline=BORDER, width=1)
+    d.polygon([(rx(31), ry(25)), (rx(25), ry(41)), (rx(31), ry(41)), (rx(35), ry(27))], fill=belt_rgb)
+    d.polygon([(rx(41), ry(25)), (rx(47), ry(41)), (rx(41), ry(41)), (rx(37), ry(27))], fill=belt_rgb)
+    d.rounded_rectangle([rx(29), ry(11), rx(43), ry(29)], radius=max(2, scale * 3), fill=knot_rgb, outline=BORDER, width=1)
+
+
 def render_profile_card(
     *,
     name: str,
@@ -81,15 +101,18 @@ def render_profile_card(
     d.text((text_x, 168), discipline_label, font=_font(26), fill=ACCENT)
 
     # Seri ve toplam gün blokları
-    d.text((60, 360), str(streak), font=_font(120, bold=True), fill=ACCENT)
-    streak_w = d.textlength(str(streak), font=_font(120, bold=True))
-    d.text((60 + streak_w + 20, 440), streak_label, font=_font(30), fill=DIM)
-    d.text((60, 508), f"{total_days} {days_label}", font=_font(30), fill=DIM)
+    d.text((60, 350), str(streak), font=_font(110, bold=True), fill=ACCENT)
+    streak_w = d.textlength(str(streak), font=_font(110, bold=True))
+    d.text((60 + streak_w + 20, 420), streak_label, font=_font(28), fill=DIM)
+    d.text((60 + streak_w + 20, 456), f"{total_days} {days_label}", font=_font(28), fill=DIM)
 
-    # Kuşak bandı (alt kenar)
+    # Kuşak — gerçek kuşak şekli (bant + düğüm + sarkan uçlar)
     belt_rgb = BELT_COLORS.get(belt_id, BELT_COLORS["white"])
-    d.rounded_rectangle([60, 556, 560, 580], radius=6, fill=belt_rgb, outline=BORDER, width=1)
-    d.text((580, 556), belt_label, font=_font(26, bold=True), fill=INK)
+    belt_width = 130
+    belt_x, belt_y = 60, 526
+    _draw_belt(d, belt_x, belt_y, belt_width, belt_rgb)
+    belt_h = belt_width * 44 / 72
+    d.text((belt_x + belt_width + 26, belt_y + belt_h / 2 - 16), belt_label, font=_font(30, bold=True), fill=INK)
 
     # Isı haritası (sağ blok): sütun=hafta, satır=gün
     cell, gap = 26, 6

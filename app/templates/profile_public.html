@@ -22,7 +22,6 @@
       <p class="muted">@{{ person.username }}</p>
       <span class="badge badge--pro">{{ t["discipline_" ~ person.discipline] }}</span>
       <span class="muted profile-joined">{{ t.profile_member_since }}: {{ person.created_at.date().isoformat() }}</span>
-      <span class="muted">· {{ follower_count }} {{ t.followers_label }}</span>
 
       <div class="profile-actions">
         {% if user and not is_owner and person.is_public %}
@@ -35,21 +34,12 @@
         {% endif %}
 
         {% if person.is_public %}
-        {% set share_text = streak ~ " " ~ t.dash_streak_label ~ " · " ~ t["discipline_" ~ person.discipline] %}
-        {% set share_url = "https://joatolyesi.com/u/" ~ person.username %}
-        <div class="share-inline">
-          <button type="button" class="share-icon-btn" data-share
-                  data-share-url="{{ share_url }}"
-                  data-share-title="{{ person.display_name or person.username }} — Joryu"
-                  data-share-text="{{ share_text }}">
-            {{ t.share_button }}
-          </button>
-          <div class="share-menu">
-            <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={{ share_text|urlencode }}&url={{ share_url|urlencode }}">X (Twitter)</a>
-            <a target="_blank" rel="noopener" href="https://wa.me/?text={{ (share_text ~ ' ' ~ share_url)|urlencode }}">WhatsApp</a>
-          </div>
-        </div>
-        <a class="share-icon-btn share-icon-btn--ghost" href="/u/{{ person.username }}/card.png" download>{{ t.share_download }}</a>
+        {% with share_url = "https://joatolyesi.com/u/" ~ person.username,
+                share_title = (person.display_name or person.username) ~ " — Joryu",
+                share_text = streak ~ " " ~ t.dash_streak_label ~ " · " ~ t["discipline_" ~ person.discipline],
+                card_url = "/u/" ~ person.username ~ "/card.png" %}
+        {% include "_share_controls.html" %}
+        {% endwith %}
         {% endif %}
       </div>
     </div>
@@ -75,6 +65,39 @@
       <span class="stat-label">{{ t.stats_minutes }}</span>
     </div>
   </div>
+
+  {% if follower_count or following_count %}
+  <div class="card follow-lists">
+    <div class="follow-list-col">
+      <h2>{{ t.followers_title }} <span class="muted">({{ follower_count }})</span></h2>
+      {% if followers %}
+      <div class="follow-avatars">
+        {% for f in followers %}
+        <a href="/u/{{ f.username }}" class="follow-avatar-item" data-tip="{{ f.display_name or f.username }}">
+          <img src="/u/{{ f.username }}/avatar.png?size=96" alt="{{ f.display_name or f.username }}" width="44" height="44">
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="muted">{{ t.followers_empty }}</p>
+      {% endif %}
+    </div>
+    <div class="follow-list-col">
+      <h2>{{ t.following_title }} <span class="muted">({{ following_count }})</span></h2>
+      {% if following %}
+      <div class="follow-avatars">
+        {% for f in following %}
+        <a href="/u/{{ f.username }}" class="follow-avatar-item" data-tip="{{ f.display_name or f.username }}">
+          <img src="/u/{{ f.username }}/avatar.png?size=96" alt="{{ f.display_name or f.username }}" width="44" height="44">
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="muted">{{ t.following_empty }}</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
 
   {% if belts or badges %}
   <div class="card">

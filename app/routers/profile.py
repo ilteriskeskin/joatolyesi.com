@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.constants import DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user
-from app.models import Follow, User
+from app.models import Follow, PracticeLog, User
 from app.rate_limit import limiter
 from app.render import render
 from app.badges import compute_badges, compute_belts, current_belt
@@ -81,8 +81,21 @@ async def practitioners(
     day_counts = await practice_day_counts(db, [p.id for p in people])
     belts = {p.id: current_belt(day_counts.get(p.id, 0)) for p in people}
     leaders = await weekly_leaders(db)
+
+    feed = []
+    if user is not None:
+        feed_result = await db.execute(
+            select(PracticeLog, User)
+            .join(User, PracticeLog.user_id == User.id)
+            .join(Follow, Follow.followee_id == User.id)
+            .where(Follow.follower_id == user.id, User.is_public)
+            .order_by(PracticeLog.practiced_on.desc(), PracticeLog.created_at.desc())
+            .limit(15)
+        )
+        feed = feed_result.all()
+
     return render(request, "practitioners.html", user=user, people=people, belts=belts,
-                  leaders=leaders, q=q)
+                  leaders=leaders, feed=feed, q=q)
 
 
 @router.get("/u/{username}", response_class=HTMLResponse)
@@ -107,6 +120,23 @@ async def public_profile(
     follower_count = (
         await db.execute(select(func.count(Follow.id)).where(Follow.followee_id == person.id))
     ).scalar_one()
+    following_count = (
+        await db.execute(select(func.count(Follow.id)).where(Follow.follower_id == person.id))
+    ).scalar_one()
+    followers = list((
+        await db.execute(
+            select(User).join(Follow, Follow.follower_id == User.id)
+            .where(Follow.followee_id == person.id, User.is_public, User.username.is_not(None))
+            .order_by(Follow.created_at.desc()).limit(24)
+        )
+    ).scalars().all())
+    following = list((
+        await db.execute(
+            select(User).join(Follow, Follow.followee_id == User.id)
+            .where(Follow.follower_id == person.id, User.is_public, User.username.is_not(None))
+            .order_by(Follow.created_at.desc()).limit(24)
+        )
+    ).scalars().all())
 
     streak = await compute_streak(db, person.id)
     longest_streak = await compute_longest_streak(db, person.id)
@@ -125,6 +155,9 @@ async def public_profile(
         longest_streak=max(longest_streak, streak),
         is_following=is_following,
         follower_count=follower_count,
+        following_count=following_count,
+        followers=followers,
+        following=following,
         belts=belts,
         badges=badges,
         heatmap=heatmap,
