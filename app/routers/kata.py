@@ -6,6 +6,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
+from app.config import settings
 from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, require_user
 from app.models import Kata, PracticeLog, User
 from app.rate_limit import limiter
@@ -36,6 +37,8 @@ async def kata_list(request: Request, user: User | None = Depends(get_current_us
     stmt = select(Kata).order_by(Kata.sort_order, Kata.title_en)
     if selected:
         stmt = stmt.where(Kata.discipline == selected, Kata.kind == kind)
+    if not settings.pro_enabled:
+        stmt = stmt.where(Kata.is_free)  # Pro henuz aktif degil: kilitli icerik hic gorunmesin
     result = await db.execute(stmt)
     katas = list(result.scalars().all())
 
@@ -66,7 +69,7 @@ async def kata_detail(
 ):
     result = await db.execute(select(Kata).where(Kata.slug == slug))
     kata = result.scalar_one_or_none()
-    if kata is None:
+    if kata is None or (not kata.is_free and not settings.pro_enabled):
         return render(request, "404.html", user=user)
     if not kata.is_free and not is_pro(user):
         if user is None:
@@ -98,7 +101,7 @@ async def kata_quick_log(
     aktif antrenman aracına çevirir."""
     result = await db.execute(select(Kata).where(Kata.slug == slug))
     kata = result.scalar_one_or_none()
-    if kata is None:
+    if kata is None or (not kata.is_free and not settings.pro_enabled):
         return render(request, "404.html", user=user)
     if not kata.is_free and not is_pro(user):
         raise ProRequired()

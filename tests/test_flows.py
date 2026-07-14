@@ -503,24 +503,20 @@ async def test_pro_disabled_by_default(client):
     email, username = f"{unique('nopro')}@test.com", unique("noprouser")
     await register(client, email, username)
 
-    # Pro nav linki ve /billing kapali
+    # Pro nav linki, Programlar linki ve /billing tamamen kapali
     r = await client.get("/app")
-    assert "/billing" not in r.text
+    assert "/billing" not in r.text and "/programs" not in r.text
 
-    r = await client.get("/billing")
-    assert r.status_code == 404
+    assert (await client.get("/billing")).status_code == 404
+    assert (await client.get("/programs")).status_code == 404
 
-    # Programlar aboneliksiz erisilebilir, kilitli rozet/upsell yok
-    r = await client.get("/programs")
-    assert r.status_code == 200
-    assert "badge--pro" not in r.text
-    assert "kata_locked" not in r.text
-
-    # Pro icerikli bir kata varsa (is_free=False) yine de acilabiliyor olmali
+    # Kilitli kata varsa: listede gorunmez, dogrudan slug ile de 404
     from app.db import async_session
     from app.models import Kata
     async with async_session() as db:
         locked_kata = (await db.execute(select(Kata).where(Kata.is_free.is_(False)))).scalars().first()
     if locked_kata is not None:
         r = await client.get(f"/kata/{locked_kata.slug}")
-        assert r.status_code == 200  # ProRequired firlatilmadi
+        assert r.status_code == 200 and "404" in r.text
+        r = await client.get(f"/kata?d={locked_kata.discipline}&kind={locked_kata.kind}")
+        assert locked_kata.title_tr not in r.text

@@ -39,7 +39,7 @@
     <a href="/kata">{{ t.nav_kata }}</a>
     <a href="/guide">{{ t.nav_guide }}</a>
     <a href="/blog">{{ t.nav_blog }}</a>
-    <a href="/programs">{{ t.nav_programs }}</a>
+    {% if pro_enabled %}<a href="/programs">{{ t.nav_programs }}</a>{% endif %}
     <a href="/practitioners">{{ t.nav_community }}</a>
     <a href="/profile">{{ t.nav_profile }}</a>
     {% if pro_enabled %}
