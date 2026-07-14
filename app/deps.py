@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.config import settings
 from app.db import get_db
 from app.models import Subscription, User
 from app.security import SESSION_COOKIE, password_fingerprint, read_session_token
@@ -22,6 +23,10 @@ class ProRequired(Exception):
 
 
 def is_pro(user: User | None) -> bool:
+    # Pro büyüme aşamasında kapalı: kimse kilitli içerikle karşılaşmasın —
+    # PRO_ENABLED=true olunca gerçek abonelik durumuna göre kapı yeniden çalışır
+    if not settings.pro_enabled:
+        return True
     if user is None or user.subscription is None:
         return False
     sub: Subscription = user.subscription

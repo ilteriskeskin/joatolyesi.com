@@ -28,7 +28,8 @@ if not settings.waitlist_only:
     app.include_router(practice.router)
     app.include_router(kata.router)
     app.include_router(programs.router)
-    app.include_router(billing.router)
+    if settings.pro_enabled:
+        app.include_router(billing.router)  # kapalıyken /billing ve webhook da kapanır
     app.include_router(profile.router)
     app.include_router(push.router)
     app.include_router(admin.router)

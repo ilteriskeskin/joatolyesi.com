@@ -497,3 +497,30 @@ async def test_avatar_deterministic_but_belt_aware(client):
     assert png_a == png_b  # ayni girdi -> ayni gorsel (deterministik)
     png_black = render_avatar(seed="same-seed", initial="A", belt_id="black", size=64)
     assert png_black != png_a  # kusak degisince gorsel degisir
+
+
+async def test_pro_disabled_by_default(client):
+    email, username = f"{unique('nopro')}@test.com", unique("noprouser")
+    await register(client, email, username)
+
+    # Pro nav linki ve /billing kapali
+    r = await client.get("/app")
+    assert "/billing" not in r.text
+
+    r = await client.get("/billing")
+    assert r.status_code == 404
+
+    # Programlar aboneliksiz erisilebilir, kilitli rozet/upsell yok
+    r = await client.get("/programs")
+    assert r.status_code == 200
+    assert "badge--pro" not in r.text
+    assert "kata_locked" not in r.text
+
+    # Pro icerikli bir kata varsa (is_free=False) yine de acilabiliyor olmali
+    from app.db import async_session
+    from app.models import Kata
+    async with async_session() as db:
+        locked_kata = (await db.execute(select(Kata).where(Kata.is_free.is_(False)))).scalars().first()
+    if locked_kata is not None:
+        r = await client.get(f"/kata/{locked_kata.slug}")
+        assert r.status_code == 200  # ProRequired firlatilmadi

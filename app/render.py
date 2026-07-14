@@ -48,6 +48,7 @@ def render(request: Request, template: str, user: User | None = None, **context)
             "user": user,
             "user_is_pro": is_pro(user),
             "waitlist_only": settings.waitlist_only,
+            "pro_enabled": settings.pro_enabled,
             "practice_days": practice_days(),
             "csrf_token": csrf_token,
             **context,

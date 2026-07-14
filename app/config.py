@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     env: str = "development"
     # True iken sadece landing + waitlist açık; login/register ve app kapalı
     waitlist_only: bool = False
+    # False iken Pro üyelik/yükseltme tamamen kapalı — kilitli içerik yok,
+    # herkes her şeye erişir; büyüme aşamasında kullanıcı kazanmaya odaklanmak için
+    pro_enabled: bool = False
     database_url: str
     admin_token: str
     secret_key: str

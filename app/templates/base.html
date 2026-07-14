@@ -42,7 +42,9 @@
     <a href="/programs">{{ t.nav_programs }}</a>
     <a href="/practitioners">{{ t.nav_community }}</a>
     <a href="/profile">{{ t.nav_profile }}</a>
+    {% if pro_enabled %}
     <a href="/billing" {% if user_is_pro %}class="pro-active"{% endif %}>{{ t.nav_pro }}</a>
+    {% endif %}
     <form method="post" action="/logout" class="inline-form">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       <button type="submit" class="link-button">{{ t.nav_logout }}</button>
