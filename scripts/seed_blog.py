@@ -21,6 +21,10 @@ USERS = [
      "bio": "Shotokan. Kata'nın tekrar sayısıyla değil, niyetiyle ilgileniyorum."},
     {"username": "tatami-notlari", "display_name": "Tatami Notları", "discipline": "iaido",
      "bio": "Iaido günlüğü. Yavaş olan hızlıdır."},
+    {"username": "suburi-defteri", "display_name": "Suburi Defteri", "discipline": "bokken",
+     "bio": "Aiki-ken çalışıyorum. Yedi suburi, bin tekrar."},
+    {"username": "poomsae-calismasi", "display_name": "Poomsae Çalışması", "discipline": "taekwondo",
+     "bio": "Taegeuk'ten siyah kuşak poomsae'lerine giden yolun günlüğü."},
 ]
 
 POSTS = [
@@ -74,6 +78,90 @@ Başlamak için dojo bile şart değil: iki metre boşluk, bir jo ve günde on b
 > Duruş çalışması sıkıcıdır. Sıkıcı olduğu için de çoğu kişi atlar; aradaki fark tam olarak burada açılır.
 
 Not: isimler stiller arasında değişebilir (ör. taekwondoda ap kubi, juchum seogi). Prensip aynıdır: kökü sağlam olmayan ağaç rüzgârda eğilir.""",
+    },
+    {
+        "username": "suburi-defteri",
+        "title": "Aiki-ken'e Başlarken: Yedi Suburi Neden Bu Kadar Önemli?",
+        "discipline": "bokken",
+        "body": """Aiki-ken'e yeni başlayanlar genellikle kumitachi (eşli form) çalışmaya can atar — kılıç kılıca karşı gelince heyecan orada. Ama Saito yönteminin temeli yedi suburi'dir; kumitachi'nin her hareketi bu yedisinin bir kombinasyonundan ibarettir.
+
+## Yedi suburi, kısaca
+
+1. **Ikkajo no suburi** — dikey kesiş, shomen'e iniş
+2. **Nikajo no suburi** — kesiş + kesiş (iki vuruşluk zincir)
+3. **Sankajo no suburi** — üç kesişlik zincir
+4. **Shihogiri** — dört yöne kesiş
+5. **Gyaku kesa giri** — ters çapraz kesiş
+6. **Zengo giri** — öne-arkaya kesiş
+7. **Sonkyo giri** — çömelerek kesiş
+
+## Neden tek başına yeterli değil, ama şart
+
+Suburi'yi tek başına bin kez tekrar etseniz bile kumitachi'deki mesafe ve zamanlama hissini vermez — o ancak eşli çalışmada gelir. Ama suburi olmadan kumitachi'ye girerseniz kesişiniz güvenilmez olur: mesafe doğru olsa bile kılıç hattı kayar.
+
+> Suburi, kılıcın "dilini" öğrendiğiniz yerdir. Kumitachi, o dille konuştuğunuz yer.
+
+## Solo çalışma önerisi
+
+- Her suburi'yi günde 10 tekrar, yavaş ve kontrollü — hız sonra gelir
+- Aynadan değil, gölgenizden çalışın: kesişin düz olup olmadığını gölge söyler
+- Shihogiri'de dönüşler arası duraklamayın; dört kesiş tek nefeste bitmeli
+
+Kılıcınız yoksa endişelenmeyin — düzgün bir sopa veya süpürge sapı bile mesafe ve kalça dönüşünü öğretir. Gerçek kılıcın ağırlığı ancak temel oturunca fark yaratır.""",
+    },
+    {
+        "username": "poomsae-calismasi",
+        "title": "Poomsae Çalışırken Gözden Kaçan Üç Detay",
+        "discipline": "taekwondo",
+        "body": """Taegeuk serisini ezberleyen çoğu kişi hareket sırasını doğru bilir ama üç detayı gözden kaçırır — ve bu üçü, bir poomsae'yi "doğru" ile "iyi" arasında ayıran şeydir.
+
+## 1. Duraklama noktaları (jumbi ve son duruş)
+
+Her poomsae hazır duruşla (jumbi seogi) başlar ve biter; aradaki geçiş çoğu kişide aceleyle olur. Oysa jumbi'de bir nefeslik durmak, hakemin (ya da izleyicinin) gördüğü ilk ve son şeydir. Taegeuk'ün başında ve sonunda tam iki saniye kıpırdamadan durun.
+
+## 2. Nefes ve kihap zamanlaması
+
+Kihap (haykırış), rastgele bir hareketle değil, poomsae'nin "vurgu" noktasıyla eşleşir — genelde en güçlü tekniğin geldiği an. Taegeuk Sam-jang'da örneğin çift yumruk anında gelir. Nefesinizi o ana kadar tutmak, gücü orada patlatmanızı sağlar.
+
+## 3. Sigi (duruş) geçişleri tekme kadar önemli
+
+Yeni başlayanlar tekmeye odaklanır, ama tekmeden sonraki inişte duruş (ap seogi, ap kubi seogi) tam oturmazsa bütün poomsae sallantılı görünür. Her tekmeden sonra ayağınızı doğru duruşa **tam** yerleştirin — bir sonraki tekniğe erken geçmeyin.
+
+## Solo çalışma önerisi
+
+- Aynı poomsae'yi üç kez art arda çalışın: birinci hız için, ikinci duruş netliği için, üçüncü kihap zamanlaması için
+- Video çekip jumbi'deki duraklamanızı sayaçla ölçün — çoğu kişi bir saniyeden az durduğunu görünce şaşırır
+
+> Poomsae bir koreografi değildir; her duruşun bir savunma/saldırı anlamı vardır. Anlamını bilmediğiniz bir hareketi hızlandırmak, sadece hatayı hızlandırmaktır.""",
+    },
+    {
+        "username": "tatami-notlari",
+        "title": "Iaido'da Nukitsuke: Hız Yanılsaması",
+        "discipline": "iaido",
+        "body": """Iaido'ya yeni başlayanların neredeyse hepsi aynı hatayı yapar: nukitsuke'yi (kını çekip kesme) hızlandırmaya çalışmak. Oysa ZNKR Seitei Iai'nin öğrettiği şey tam tersi bir sıra: önce doğru, sonra hızlı.
+
+## Nukitsuke'nin dört bileşeni
+
+Nukitsuke tek bir hareket gibi görünür ama aslında dört şeyin aynı anda uyumlu olmasını gerektirir:
+
+1. **Saya biki** — kının kesişe karşı geri çekilmesi (kılıcı sıyırmak, itmek değil)
+2. **Kılıcın açısı** — ağız kenarının (ha) doğru açıda hedefe gelmesi
+3. **Kalça dönüşü** — gücün bilekten değil kalçadan gelmesi
+4. **Göz hizası** — kesiş bitmeden önce hedefe kilitlenmiş bakış
+
+Bu dördü aynı anda oturmadan hız eklemek, sadece düzensizliği hızlandırır — tecrübeli bir gözün en çok yakaladığı hata budur.
+
+## Neden "yavaş olan hızlıdır"
+
+Iaido'da gerçek hedef, düşmanı kesmeden önce görmeden hareket etmemektir (metsuke). Kesiş ne kadar keskin görünürse görünsün, saya biki geç kalmışsa veya açı bozuksa, gerçek bir kılıçla o kesiş işe yaramaz. Yavaş çalışıp dört bileşeni ayrı ayrı doğrulamak, hız gelince otomatik olarak doğru kalmanızı sağlar.
+
+## Solo çalışma önerisi
+
+- Nukitsuke'yi üçe bölerek çalışın: saya biki tek başına, açı tek başına, sonra ikisini birleştirip yavaş tam hareket
+- Ayna karşısında kının ağzının (koiguchi) kesiş sırasında ne kadar döndüğünü izleyin — gereğinden fazla dönüyorsa kalçanız erken açılıyor demektir
+- Chiburi ve noto'yu (kılıcı silme ve kına sokma) nukitsuke kadar ciddiye alın; iaido'da form, kesişle bitmez.
+
+> Bir kılıç ustası kesişin hızından değil, kesişin gerekmediği anı bilmesinden tanınır.""",
     },
 ]
 

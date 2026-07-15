@@ -15,7 +15,7 @@ from app.rate_limit import limiter
 from app.routers import admin, auth, billing, blog, guide, kata, landing, practice, profile, programs, push
 from app.seed import seed_content
 
-app = FastAPI(title="Joryu")
+app = FastAPI(title="Joryu", docs_url=None, redoc_url=None, openapi_url=None)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
