@@ -20,8 +20,9 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
       Migration 0004 (users.email_verified_at, waitlist.invited_at).
 - [ ] **Prod deploy.** VPS + Caddy/Traefik (otomatik HTTPS), compose prod
       ayarları (`ENV=production` → secure cookie), joatolyesi.com DNS.
-      Lemon Squeezy webhook URL'i prod domain'e tanımlanmalı, gerçek
-      checkout URL'leri + webhook secret .env'e girilmeli.
+      Lemon Squeezy kurulumu artık lansman engeli DEĞİL — `PRO_ENABLED=false`
+      olduğu sürece /billing route'u hiç register edilmiyor. Pro açılacağı
+      gün webhook URL'i + gerçek checkout URL'leri + webhook secret girilir.
 - [x] **Postgres yedekleme.** `scripts/backup.sh` yazıldı (günlük cron,
       son 14 yedek); offsite kopya hâlâ manuel (ayda bir scp).
 - [x] **CSRF koruması.** Double-submit cookie: tüm POST formlarında gizli
@@ -53,8 +54,10 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
       NOT: deploy edildiğinde mevcut tüm oturumlar bir kez düşer (format değişti).
 - [x] **Hesap silme.** Profil sayfasında şifre onaylı "Hesabı sil" (danger
       zone); tüm veriler cascade ile silinir, KVKK metninde belirtildi.
-- [ ] **Admin ekranlarını birleştir.** /admin/waitlist (CSV) + /admin/katas
-      tek panel altında; token yerine admin hesabı düşünülebilir.
+- [x] **Admin ekranlarını birleştir.** `/admin` tek panel: waitlist (HTML liste
+      + CSV export), kata videoları, sistem durumu (Resend/VAPID/Sentry/LS
+      yapılandırılmış mı), test e-postası gönderme, ve `/admin/docs` rota
+      listesi. Hâlâ token tabanlı — admin hesabı fikri ileride düşünülebilir.
 - [ ] **Performans.** Google Fonts + unpkg CDN render-blocking; font ve
       htmx/alpine self-host edilirse Lighthouse mobil hedefi (90+) garantiye
       alınır. (GA zaten async.)

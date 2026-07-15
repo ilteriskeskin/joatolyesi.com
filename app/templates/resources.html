@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ t.resources_title }} — Joryu{% endblock %}
+{% block content %}
+<h1>{{ t.resources_title }}</h1>
+<p class="muted">{{ t.resources_hint }}</p>
+
+<div class="card-grid">
+  {% for r in resources %}
+  <a class="card" href="{{ r.url }}" target="_blank" rel="noopener">
+    <h3>{{ r.name }}</h3>
+    <p class="muted">{{ r.note_tr if lang == 'tr' else r.note_en }}</p>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -21,6 +21,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(landing.router)
+app.include_router(admin.router)  # token korumalı; waitlist aşamasında da erişilebilir olmalı
 if not settings.waitlist_only:
     app.include_router(guide.router)  # rehber halka açık (giriş istemez) ama lansmanla gelir
     app.include_router(auth.router)
@@ -32,7 +33,6 @@ if not settings.waitlist_only:
         app.include_router(billing.router)  # kapalıyken /billing ve webhook da kapanır
     app.include_router(profile.router)
     app.include_router(push.router)
-    app.include_router(admin.router)
 
 
 @app.exception_handler(AuthRequired)

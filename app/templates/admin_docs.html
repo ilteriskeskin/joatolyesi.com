@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Admin — Rota dokümantasyonu{% endblock %}
+{% block content %}
+<h1>Rota dokümantasyonu</h1>
+<p><a href="/admin?token={{ token }}">&larr; Admin</a></p>
+<p class="muted">Uygulamadaki tüm endpoint'lerin listesi (statik dosyalar hariç). Bazı yollar
+şu anki bayraklara göre (WAITLIST_ONLY, PRO_ENABLED) devre dışı olabilir, o durumda 404 döner.</p>
+
+<table class="admin-table">
+  <thead>
+    <tr><th>Metod</th><th>Yol</th><th>Açıklama</th></tr>
+  </thead>
+  <tbody>
+    {% for route in routes %}
+    <tr>
+      <td>{{ route.methods|join(", ") }}</td>
+      <td><code>{{ route.path }}</code></td>
+      <td>{{ route.doc }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -4,17 +4,18 @@ STRINGS = {
         "meta_title": "Joryu — Train every day. Even when the dojo is closed.",
         "meta_description": (
             "Joryu is the solo practice companion for aikido, iaido, jodo and "
-            "kobudo practitioners — log your jo, bokken and kata sessions, keep "
-            "your streak, and follow structured programs between dojo days."
+            "kenjutsu practitioners — log your jo, bokken and kata sessions, "
+            "keep your streak, and browse the kata & technique library "
+            "between dojo days."
         ),
         "hero_h1": "Train every day. Even when the dojo is closed.",
         "hero_sub": (
-            "For aikido, iaido, jodo and kobudo practitioners who train alone "
+            "For aikido, iaido, jodo and kenjutsu practitioners who train alone "
             "between dojo days: log your jo, bokken and kata practice, keep "
-            "your streak, and follow ready-made programs — built by a "
+            "your streak, and browse the kata & technique library — built by a "
             "practitioner who trained {days} days straight."
         ),
-        "hero_disciplines": "Aikido · Iaido · Jodo · Kendo · Kenjutsu · Karate-do · Taekwondo · Kobudo",
+        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Jojutsu · Kenjutsu · Kendo · Karate · Taekwondo",
         "cta_button": "Join the waitlist",
         "email_placeholder": "you@example.com",
         "form_success": "You're in. First invites go out soon.",
@@ -35,21 +36,26 @@ STRINGS = {
         "feature_1_title": "Streaks that earn you belts",
         "feature_1_body": (
             "Log every session and keep your streak alive. Everyone starts with "
-            "the white belt — 365 days of practice earns the black belt. Then "
-            "the dan ranks begin."
+            "the white belt — 365 days of practice earns the black belt."
         ),
-        "feature_2_title": "Kata & suburi video library",
-        "feature_2_body": "Reference videos for the forms you're trying to remember.",
-        "feature_3_title": "30-day structured programs",
-        "feature_3_body": "A ready plan for every session.",
+        "feature_2_title": "Kata & technique library",
+        "feature_2_body": (
+            "Every kata and technique for your discipline, with clear step "
+            "descriptions. Reference videos are being added over time."
+        ),
+        "feature_3_title": "A public profile that tracks your practice",
+        "feature_3_body": (
+            "A practice heatmap, your streak, and a profile you can share — "
+            "opt-in and public, like a GitHub for martial artists."
+        ),
         "devices_title": "In your pocket at the dojo, on your desk at home",
         "devices_body": (
             "Joryu runs in the browser — no app store. Log a session from "
-            "your phone right after practice; review your progress and "
-            "programs on the big screen at home."
+            "your phone right after practice; review your streak and "
+            "heatmap on the big screen at home."
         ),
         "devices_phone_label": "Log a session — on your phone",
-        "devices_desktop_label": "Progress & programs — on your computer",
+        "devices_desktop_label": "Streak & heatmap — on your computer",
         "devices_note": "Installable: add it to your home screen and use it like a native app.",
         "social_proof": "Born from {days} days of uninterrupted jo practice.",
         "social_link_label": "Follow the practice on Instagram",
@@ -63,6 +69,9 @@ STRINGS = {
         "nav_community": "Community",
         "nav_guide": "Guide",
         "nav_blog": "Blog",
+        "nav_resources": "Resources",
+        "resources_title": "Resources",
+        "resources_hint": "External sites worth following — magazines, clubs, video channels. This list grows over time.",
         # Blog
         "blog_title": "Blog",
         "blog_hint": "Practitioners share their experience — training logs, plateau stories, equipment notes. Reading is open to everyone.",
@@ -316,18 +325,18 @@ STRINGS = {
         "html_lang": "tr",
         "meta_title": "Joryu — Her gün çalış. Dojo kapalıyken bile.",
         "meta_description": (
-            "Joryu, aikido, iaido, jodo ve kobudo çalışanlar için solo pratik "
+            "Joryu, aikido, iaido, jodo ve kenjutsu çalışanlar için solo pratik "
             "yoldaşı: dojo dışındaki günlerde jo, bokken ve kata seanslarını "
-            "kaydet, serini koru, hazır programlarla çalış."
+            "kaydet, serini koru, kata ve teknik kütüphanesine göz at."
         ),
         "hero_h1": "Her gün çalış. Dojo kapalıyken bile.",
         "hero_sub": (
             "Dojo günleri arasında tek başına çalışan aikido, iaido, jodo ve "
-            "kobudo pratisyenleri için: jo, bokken ve kata seanslarını kaydet, "
-            "serini koru, hazır programlarla ilerle — {days} gün aralıksız "
-            "çalışmış bir pratisyenden."
+            "kenjutsu pratisyenleri için: jo, bokken ve kata seanslarını kaydet, "
+            "serini koru, kata ve teknik kütüphanesinde ilerle — {days} gün "
+            "aralıksız çalışmış bir pratisyenden."
         ),
-        "hero_disciplines": "Aikido · Iaido · Jodo · Kendo · Kenjutsu · Karate-do · Taekwondo · Kobudo",
+        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Jojutsu · Kenjutsu · Kendo · Karate · Taekwondo",
         "cta_button": "Bekleme listesine katıl",
         "email_placeholder": "sen@ornek.com",
         "form_success": "Listedesin. İlk davetler yakında gelecek.",
@@ -348,20 +357,26 @@ STRINGS = {
         "feature_1_title": "Kuşak kazandıran seriler",
         "feature_1_body": (
             "Her seansı kaydet, serini canlı tut. Herkes beyaz kuşakla başlar — "
-            "365 pratik gününü dolduran siyah kuşak olur. Sonrası dan dereceleri."
+            "365 pratik gününü dolduran siyah kuşak olur."
         ),
-        "feature_2_title": "Kata ve suburi video kütüphanesi",
-        "feature_2_body": "Hatırlamaya çalıştığın formlar için referans videolar.",
-        "feature_3_title": "30 günlük yapılandırılmış programlar",
-        "feature_3_body": "Her seans için hazır bir plan.",
+        "feature_2_title": "Kata ve teknik kütüphanesi",
+        "feature_2_body": (
+            "Branşındaki tüm kata ve teknikler, adım adım açıklamalarla. "
+            "Referans videolar zamanla eklenecek."
+        ),
+        "feature_3_title": "Pratiğini izleyen bir profil",
+        "feature_3_body": (
+            "Pratik ısı haritası, serin ve paylaşılabilir bir profil — "
+            "isteğe bağlı ve herkese açık, dövüş sanatçıları için GitHub gibi."
+        ),
         "devices_title": "Dojoda cebinde, evde masanda",
         "devices_body": (
             "Joryu tarayıcıda çalışır — uygulama mağazası yok. Pratikten hemen "
-            "sonra telefonundan seansını kaydet; evde ilerlemeni ve programını "
+            "sonra telefonundan seansını kaydet; evde serini ve ısı haritanı "
             "büyük ekrandan incele."
         ),
         "devices_phone_label": "Seans kaydı — telefonda",
-        "devices_desktop_label": "İlerleme ve programlar — bilgisayarda",
+        "devices_desktop_label": "Seri & ısı haritası — bilgisayarda",
         "devices_note": "Yüklenebilir: ana ekranına ekle, normal bir uygulama gibi kullan.",
         "social_proof": "{days} gün kesintisiz jo pratiğinden doğdu.",
         "social_link_label": "Pratiği Instagram'da takip et",
@@ -375,6 +390,9 @@ STRINGS = {
         "nav_community": "Topluluk",
         "nav_guide": "Rehber",
         "nav_blog": "Blog",
+        "nav_resources": "Kaynaklar",
+        "resources_title": "Kaynaklar",
+        "resources_hint": "Takip etmeye değer dış siteler — dergiler, kulüpler, video kanalları. Bu liste zamanla genişleyecek.",
         # Blog
         "blog_title": "Blog",
         "blog_hint": "Pratisyenler tecrübelerini paylaşıyor — antrenman günlükleri, plato hikâyeleri, ekipman notları. Okumak herkese açık.",

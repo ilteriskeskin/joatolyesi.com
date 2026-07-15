@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Admin — Waitlist{% endblock %}
+{% block content %}
+<h1>Waitlist ({{ rows|length }})</h1>
+<p><a href="/admin?token={{ token }}">&larr; Admin</a> ·
+   <a href="/admin/waitlist?token={{ token }}">CSV indir</a></p>
+
+<table class="admin-table">
+  <thead>
+    <tr>
+      <th>E-posta</th>
+      <th>Dil</th>
+      <th>Kaynak</th>
+      <th>Davet kodu</th>
+      <th>Kim davet etti</th>
+      <th>Kayıt tarihi</th>
+      <th>Davet gönderildi mi</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.email }}</td>
+      <td>{{ row.lang }}</td>
+      <td>{{ row.source or "—" }}</td>
+      <td>{{ row.referral_code }}</td>
+      <td>{{ row.referred_by or "—" }}</td>
+      <td>{{ row.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ row.invited_at.strftime("%Y-%m-%d %H:%M") if row.invited_at else "—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.config import settings
 from app.constants import DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, require_user
@@ -34,17 +35,19 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         .order_by(PracticeLog.practiced_on.desc(), PracticeLog.created_at.desc())
         .limit(10)
     )
-    enrollment_result = await db.execute(
-        select(Enrollment)
-        .options(selectinload(Enrollment.program), selectinload(Enrollment.completed_days))
-        .where(Enrollment.user_id == user.id)
-        .order_by(Enrollment.created_at.desc())
-        .limit(1)
-    )
-    enrollment = enrollment_result.scalar_one_or_none()
+    enrollment = None
     current_day = None
-    if enrollment:
-        current_day = min(len(enrollment.completed_days) + 1, enrollment.program.duration_days)
+    if settings.pro_enabled:  # Pro kapalıyken program kaydı olsa bile banner gösterilmez
+        enrollment_result = await db.execute(
+            select(Enrollment)
+            .options(selectinload(Enrollment.program), selectinload(Enrollment.completed_days))
+            .where(Enrollment.user_id == user.id)
+            .order_by(Enrollment.created_at.desc())
+            .limit(1)
+        )
+        enrollment = enrollment_result.scalar_one_or_none()
+        if enrollment:
+            current_day = min(len(enrollment.completed_days) + 1, enrollment.program.duration_days)
 
     return {
         "streak": sinfo["streak"],

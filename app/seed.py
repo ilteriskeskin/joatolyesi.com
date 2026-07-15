@@ -547,6 +547,27 @@ AIKIDO = [
        "Gök-yer fırlatması — bir el yukarı, bir el aşağı.", kind="teknik"),
     _k("aikido-koshi-nage", "Koshi nage",
        "Hip throw.", "Kalça fırlatması.", kind="teknik"),
+    _k("aikido-kokyu-nage", "Kokyu nage",
+       "Breath throw — off-balance and cast without a joint lock; the umbrella term for "
+       "a whole family of throws with no single fixed form.",
+       "Nefes fırlatması: eklem kilidi olmadan dengeyi bozup savurma. Tek bir sabit "
+       "formu yoktur — bir çok atışın şemsiye adıdır.", kind="teknik"),
+    _k("aikido-kokyu-ho", "Kokyu-ho (kokyu dosa)",
+       "Seated power-extension exercise: unbalance a two-hand grip using the centre, "
+       "not arm strength — distinct from the kokyu-nage throw.",
+       "Oturarak güç açma egzersizi: suwariwaza'da iki elden tutuşu kol gücüyle değil "
+       "merkezden dengeyi bozarak çöz. Kokyu-nage atışından farklıdır — bu bir egzersizdir.",
+       kind="teknik"),
+    _k("aikido-juji-nage", "Juji nage (juji garami)",
+       "Cross-arm throw — the arms are locked into an X shape before the throw.",
+       "Çapraz kol fırlatması: atmadan önce kollar X şeklinde kilitlenir; juji-garami "
+       "olarak da bilinir.", kind="teknik"),
+    _k("aikido-sumi-otoshi", "Sumi otoshi",
+       "Corner drop — off-balance straight back into the rear corner; deceptively "
+       "simple, easy to muscle instead of blend.",
+       "Köşe düşürmesi: rakibi arka köşesine doğru dengeyi bozarak düşür. Basit "
+       "görünür ama kaba kuvvetle yapılırsa yozlaşır — kalça değil dengeyle çalış.",
+       kind="teknik"),
 ]
 
 # --- Karate (Shotokan): kata + duruş/yumruk/blok/tekme (teknik) ---
@@ -593,6 +614,18 @@ KARATE = [
     _k("karate-jion", "Jion",
        "Temple-named kata — solid stances and classical techniques.",
        "Tapınak adını taşıyan kata — sağlam duruşlar, klasik teknikler."),
+    _k("karate-jitte", "Jitte",
+       "'Ten hands' — defence-oriented kata built around blocking a staff (bo) attack.",
+       "'On el' — bir sopa (bo) saldırısına karşı savunmayı esas alan blok ağırlıklı kata."),
+    _k("karate-bassai-sho", "Bassai Sho",
+       "Companion to Bassai Dai — same 'storming a fortress' theme, lighter and faster.",
+       "Bassai Dai'nin eşi — aynı 'kaleyi yarma' teması, daha hafif ve hızlı."),
+    _k("karate-gankaku", "Gankaku",
+       "'Crane on a rock' — one-legged stances testing balance, formerly known as Chinto.",
+       "'Kayadaki turna' — dengeyi sınayan tek ayak duruşları; eski adı Chinto."),
+    _k("karate-hangetsu", "Hangetsu",
+       "'Half moon' — slow breathing kata in a deep hangetsu-dachi, tension over speed.",
+       "'Yarım ay' — derin hangetsu-dachi'de yavaş nefesli kata; hız yerine gerilim."),
     # Teknik — dachi
     _k("karate-zenkutsu-dachi", "Zenkutsu dachi",
        "Front stance, 60% weight forward.",
@@ -661,6 +694,15 @@ KARATE = [
     _k("karate-ushiro-geri", "Ushiro geri",
        "Back kick with the heel, looking over the shoulder.",
        "Geri tekme: topukla, omuz üzerinden bakarak.", kind="teknik"),
+    _k("karate-kakato-geri", "Kakato geri",
+       "Axe kick — the leg swings up then drops with the heel; used to break a "
+       "rising guard.",
+       "Balta tekmesi: bacak yukarı savrulup topukla düşer; yükselen korumayı kırmak "
+       "için kullanılır.", kind="teknik"),
+    _k("karate-nukite", "Nukite",
+       "Spear-hand thrust with the fingertips; conditioning comes before power.",
+       "Parmak uçlarıyla saplama vuruş (mızrak el). Güçten önce parmak "
+       "kondisyonu gelir — makiwara veya kum ile kademeli sertleştir.", kind="teknik"),
 ]
 
 # --- Taekwondo (WT): Taegeuk + kara kuşak poomsae (kata) + chagi/jireugi/makki/seogi (teknik) ---
@@ -687,6 +729,27 @@ TAEKWONDO = [
     _k("tkd-keumgang", "Keumgang",
        "'Diamond' — slow, powerful black-belt poomsae.",
        "'Elmas' — yavaş ve güçlü siyah kuşak poomsae'si."),
+    _k("tkd-taebaek", "Taebaek",
+       "Third black-belt poomsae — named after Mt. Taebaek, symbol of the founding legend.",
+       "3. siyah kuşak poomsae'si — kuruluş efsanesinin simgesi Taebaek Dağı'ndan adını alır."),
+    _k("tkd-pyongwon", "Pyongwon",
+       "'Vast plain' — wide, expansive movements.",
+       "'Uçsuz ova' — geniş ve yayılan hareketler."),
+    _k("tkd-sipjin", "Sipjin",
+       "'Ten' — symbolises steady growth and development.",
+       "'On' — istikrarlı büyüme ve gelişimi simgeler."),
+    _k("tkd-jitae", "Jitae",
+       "'On the earth' — grounded stances, humility toward the ground.",
+       "'Yeryüzünde' — yere basan duruşlar, toprağa karşı alçakgönüllülük."),
+    _k("tkd-cheonkwon", "Cheonkwon",
+       "'Sky' — reverent, expansive movement toward the heavens.",
+       "'Gökyüzü' — göğe doğru saygılı ve geniş hareket."),
+    _k("tkd-hansu", "Hansu",
+       "'Water' — flowing, adaptable movement.",
+       "'Su' — akışkan ve uyum sağlayan hareket."),
+    _k("tkd-ilyeo", "Ilyeo",
+       "'Oneness' — final black-belt poomsae; body and mind as one, named for a monk's teaching.",
+       "'Birlik' — son siyah kuşak poomsae'si; beden ve zihnin birliği, bir keşiş öğretisinden adını alır."),
 ] + [
     # Teknik — chagi
     _k("tkd-ap-chagi", "Ap chagi",
