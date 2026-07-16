@@ -52,7 +52,7 @@ async def sitemap():
     if not settings.waitlist_only:
         from app.guide_content import GUIDE
 
-        paths += ["/guide", "/blog", "/resources"] + [f"/guide/{d}" for d in GUIDE]
+        paths += ["/guide", "/blog", "/resources", "/tips"] + [f"/guide/{d}" for d in GUIDE]
     urls = "".join(f"<url><loc>{settings.base_url}{p}</loc></url>" for p in paths)
     xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
     return Response(xml, media_type="application/xml")

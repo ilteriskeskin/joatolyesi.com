@@ -730,6 +730,29 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
   padding-left: 1.2rem;
 }
 
+.tip-of-day {
+  padding: 2rem;
+  text-align: center;
+}
+
+.tip-quote {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1.4;
+  margin: 1rem 0;
+  color: var(--ink);
+}
+
+.tip-author {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.tip-source {
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
 .admin-links li {
   margin: 0.3rem 0;
 }

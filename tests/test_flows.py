@@ -510,13 +510,15 @@ async def test_pro_disabled_by_default(client):
     assert (await client.get("/billing")).status_code == 404
     assert (await client.get("/programs")).status_code == 404
 
-    # Kilitli kata varsa: listede gorunmez, dogrudan slug ile de 404
+    # Pro kapaliyken odeme duvari yok: is_free=False isaretli kata da tamamen
+    # erisilebilir olmali (listede gorunur, detay 200 doner) - aksi halde
+    # kutuphanenin buyuk kismi bombos gorunur (bkz. gecmis geri bildirim).
     from app.db import async_session
     from app.models import Kata
     async with async_session() as db:
         locked_kata = (await db.execute(select(Kata).where(Kata.is_free.is_(False)))).scalars().first()
     if locked_kata is not None:
         r = await client.get(f"/kata/{locked_kata.slug}")
-        assert r.status_code == 200 and "404" in r.text
+        assert r.status_code == 200 and "404" not in r.text
         r = await client.get(f"/kata?d={locked_kata.discipline}&kind={locked_kata.kind}")
-        assert locked_kata.title_tr not in r.text
+        assert locked_kata.title_tr in r.text

@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="96" fill="#0b0c0d"/>
-  <!-- jo: eğik tek çizgi -->
-  <line x1="140" y1="400" x2="372" y2="112" stroke="#b8925a" stroke-width="28" stroke-linecap="round"/>
-  <circle cx="256" cy="256" r="196" fill="none" stroke="#26282b" stroke-width="12"/>
+  <!-- enso: elle çizilmiş gibi kırık daire, marka rengiyle (landing hero ile aynı motif) -->
+  <circle cx="256" cy="256" r="176" fill="none" stroke="#b8925a" stroke-width="26"
+          stroke-linecap="round" stroke-dasharray="970 150" transform="rotate(-58 256 256)"/>
+  <!-- jo: enso'nun içinden geçen tek çapraz çizgi -->
+  <line x1="158" y1="366" x2="354" y2="146" stroke="#e8e4dc" stroke-width="20" stroke-linecap="round"/>
 </svg>

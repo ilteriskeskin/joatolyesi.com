@@ -37,8 +37,9 @@ async def kata_list(request: Request, user: User | None = Depends(get_current_us
     stmt = select(Kata).order_by(Kata.sort_order, Kata.title_en)
     if selected:
         stmt = stmt.where(Kata.discipline == selected, Kata.kind == kind)
-    if not settings.pro_enabled:
-        stmt = stmt.where(Kata.is_free)  # Pro henuz aktif degil: kilitli icerik hic gorunmesin
+    # Listede her zaman tüm katalog görünür (kilitliyse rozetiyle); gerçek
+    # erişim kontrolü sadece detay sayfasında (kata_detail) yapılır — Pro
+    # kapalıyken zaten herkese açık, açılınca kilitliler orada engellenir.
     result = await db.execute(stmt)
     katas = list(result.scalars().all())
 
@@ -69,9 +70,11 @@ async def kata_detail(
 ):
     result = await db.execute(select(Kata).where(Kata.slug == slug))
     kata = result.scalar_one_or_none()
-    if kata is None or (not kata.is_free and not settings.pro_enabled):
+    if kata is None:
         return render(request, "404.html", user=user)
-    if not kata.is_free and not is_pro(user):
+    # Pro kapalıyken ödeme duvarı yok, is_free ayrımı uygulanmaz — herkes
+    # her şeyi görür. Pro açılınca kilitli içerik yine gerçek abonelik ister.
+    if settings.pro_enabled and not kata.is_free and not is_pro(user):
         if user is None:
             return RedirectResponse("/login", status_code=303)
         raise ProRequired()
@@ -101,9 +104,9 @@ async def kata_quick_log(
     aktif antrenman aracına çevirir."""
     result = await db.execute(select(Kata).where(Kata.slug == slug))
     kata = result.scalar_one_or_none()
-    if kata is None or (not kata.is_free and not settings.pro_enabled):
+    if kata is None:
         return render(request, "404.html", user=user)
-    if not kata.is_free and not is_pro(user):
+    if settings.pro_enabled and not kata.is_free and not is_pro(user):
         raise ProRequired()
     db.add(
         PracticeLog(

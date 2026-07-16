@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ t.tips_title }} — Joryu{% endblock %}
+{% block content %}
+<h1>{{ t.tips_title }}</h1>
+<p class="muted">{{ t.tips_hint }}</p>
+
+<div class="card tip-of-day">
+  <span class="card-label">{{ t.tips_today_label }}</span>
+  <blockquote class="tip-quote">
+    {{ today_tip.tr if lang == 'tr' else today_tip.en }}
+  </blockquote>
+  {% if today_tip.author %}
+  <p class="tip-author">
+    {{ today_tip.author }}
+    <span class="muted">— {{ today_tip.role_tr if lang == 'tr' else today_tip.role_en }}</span>
+  </p>
+  {% endif %}
+  <p class="tip-source muted">{{ today_tip.source }}</p>
+</div>
+
+<h2 class="admin-section">{{ t.tips_all_label }}</h2>
+<div class="card-grid">
+  {% for tip in all_tips %}
+  <div class="card">
+    <p>{{ tip.tr if lang == 'tr' else tip.en }}</p>
+    {% if tip.author %}
+    <p class="muted">{{ tip.author }} — {{ tip.source }}</p>
+    {% else %}
+    <p class="muted">{{ tip.source }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

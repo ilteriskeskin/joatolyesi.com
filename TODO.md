@@ -157,13 +157,16 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       seriden düşükse "Kişisel rekorun: X gün") ve herkese açık profilde
       ayrı bir stat olarak görünüyor.
 - [x] **21. Pro üyelik/yükseltme kapatıldı (büyüme aşaması).** `PRO_ENABLED`
-      ayarı (varsayılan false). Kapalıyken Pro içerik aboneliksiz AÇILMAZ,
-      tamamen GİZLENİR: kilitli kata listede görünmez + doğrudan slug ile
-      de 404, /programs ve /billing route'ları hiç register edilmiyor
-      (404), nav'daki "Pro"/"Programlar" linkleri yok. `is_pro()`
-      gerçek abonelik mantığına geri döndü (dokunulmadı). Kod silinmedi —
-      `PRO_ENABLED=true` yapıp deploy edince Pro içerik + gerçek ödeme
-      duvarı (Lemon Squeezy) aynen geri gelir.
+      ayarı (varsayılan false). Kapalıyken /programs ve /billing route'ları
+      hiç register edilmiyor (404), nav'daki "Pro"/"Programlar" linkleri yok.
+      DÜZELTME (kata kütüphanesi "bomboş" görünüyordu — ~130 teknikten
+      sadece ~12'si is_free=True idi): artık Pro kapalıyken kata/teknik
+      kütüphanesindeki is_free ayrımı da uygulanmıyor, herkes her şeyi
+      görüp kaydedebiliyor — ödeme duvarı yokken içerik kilitlemenin bir
+      anlamı yok. `is_pro()` gerçek abonelik mantığına geri döndü
+      (dokunulmadı). Kod silinmedi — `PRO_ENABLED=true` yapıp deploy edince
+      hem /programs+/billing hem kata is_free kilidi + gerçek ödeme duvarı
+      (Lemon Squeezy) aynen geri gelir.
 - [x] **20. Paylaşım/push düzeltmeleri (kullanıcı geri bildirimi sonrası).**
       (a) Push "hiçbir şey olmuyor" hatası: kök sebep VAPID anahtarlarının
       hiç üretilmemiş olmasıydı (`/push/vapid-public-key` boş dönüyordu,

@@ -72,6 +72,11 @@ STRINGS = {
         "nav_resources": "Resources",
         "resources_title": "Resources",
         "resources_hint": "External sites worth following — magazines, clubs, video channels. This list grows over time.",
+        "nav_tips": "Tips",
+        "tips_title": "Tips",
+        "tips_hint": "Documented teachings from historical martial arts figures, plus general training wisdom — changes daily.",
+        "tips_today_label": "Today's tip",
+        "tips_all_label": "All tips",
         # Blog
         "blog_title": "Blog",
         "blog_hint": "Practitioners share their experience — training logs, plateau stories, equipment notes. Reading is open to everyone.",
@@ -393,6 +398,11 @@ STRINGS = {
         "nav_resources": "Kaynaklar",
         "resources_title": "Kaynaklar",
         "resources_hint": "Takip etmeye değer dış siteler — dergiler, kulüpler, video kanalları. Bu liste zamanla genişleyecek.",
+        "nav_tips": "İpuçları",
+        "tips_title": "İpuçları",
+        "tips_hint": "Tarihe belgelenmiş dövüş sanatçılarının öğretilerinden ve genel antrenman bilgeliğinden bir seçki — her gün değişir.",
+        "tips_today_label": "Bugünün ipucu",
+        "tips_all_label": "Tüm ipuçları",
         # Blog
         "blog_title": "Blog",
         "blog_hint": "Pratisyenler tecrübelerini paylaşıyor — antrenman günlükleri, plato hikâyeleri, ekipman notları. Okumak herkese açık.",

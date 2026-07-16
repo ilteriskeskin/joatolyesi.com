@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 
@@ -6,6 +8,7 @@ from app.deps import get_current_user, waitlist_gate
 from app.guide_content import GUIDE, get_guide
 from app.models import User
 from app.render import render
+from app.tips_content import TIPS
 
 router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
@@ -27,6 +30,14 @@ async def guide_index(request: Request, user: User | None = Depends(get_current_
 async def resources(request: Request, user: User | None = Depends(get_current_user)):
     """Faydalı dış kaynaklar — giriş istemez."""
     return render(request, "resources.html", user=user, resources=RESOURCES)
+
+
+@router.get("/tips", response_class=HTMLResponse)
+async def tips(request: Request, user: User | None = Depends(get_current_user)):
+    """Günün ipucu — tarihe göre deterministik döner, giriş istemez."""
+    day_of_year = datetime.now(UTC).timetuple().tm_yday
+    today_tip = TIPS[day_of_year % len(TIPS)]
+    return render(request, "tips.html", user=user, today_tip=today_tip, all_tips=TIPS)
 
 
 @router.get("/guide/{discipline}", response_class=HTMLResponse)
