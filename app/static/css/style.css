@@ -277,6 +277,12 @@ a:hover { text-decoration: underline; }
 
 .app-main h1 { font-size: 1.8rem; margin-bottom: 1.5rem; }
 
+/* Global reset (margin: 0) sayfa başlığı sonrası açıklama paragrafının hemen
+   altındaki kutuya (.card, .card-grid vb.) yapışmasına neden oluyordu —
+   neredeyse her app sayfasında görülen bir bug. Direkt çocuk olduğu için
+   form içi ipucu/hata paragraflarını etkilemez. */
+.app-main > p { margin-bottom: 1.25rem; }
+
 .card {
   background: var(--bg-raised);
   border: 1px solid var(--border);
