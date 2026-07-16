@@ -6,6 +6,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+    # 512MB'lık VPS için: varsayılan shared_buffers (128MB) + max_connections (100)
+    # tek başına RAM'in çoğunu ayırır. Bu ölçekte gerçek trafik küçük, düşürülmesi
+    # güvenli — pool app tarafında zaten 5 bağlantıyla sınırlı (app/db.py).
+    command: >
+      postgres -c shared_buffers=48MB -c max_connections=20
+      -c effective_cache_size=128MB -c work_mem=4MB -c maintenance_work_mem=32MB
     volumes:
       - joryu_pgdata:/var/lib/postgresql/data
     healthcheck:

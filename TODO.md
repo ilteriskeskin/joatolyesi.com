@@ -58,11 +58,17 @@ Son güncelleme: 2026-07-10. Durum işaretleri: 🔴 lansman engeli,
       + CSV export), kata videoları, sistem durumu (Resend/VAPID/Sentry/LS
       yapılandırılmış mı), test e-postası gönderme, ve `/admin/docs` rota
       listesi. Hâlâ token tabanlı — admin hesabı fikri ileride düşünülebilir.
-- [ ] **Performans.** Google Fonts + unpkg CDN render-blocking; font ve
-      htmx/alpine self-host edilirse Lighthouse mobil hedefi (90+) garantiye
-      alınır. (GA zaten async.)
-- [ ] **PWA offline sayfası.** SW statikleri cache'liyor ama sayfa offline
-      açılırsa çıplak hata veriyor; basit bir offline.html iyi olur.
+- [x] **Performans.** Google Fonts + unpkg CDN kaldırıldı: Inter + Cormorant
+      Garamond (`app/static/fonts/`, ~200KB, tek dosya değişken font olarak
+      500/600 ağırlığı kapsıyor) ve htmx/alpine (`app/static/js/vendor/`)
+      artık self-host, 3. taraf isteği yok. `/static/fonts` ve
+      `/static/js/vendor` içeriği 1 yıl `Cache-Control: immutable` ile
+      sunuluyor (app/main.py::CachedStaticFiles). 512MB VPS için ayrıca
+      Postgres tuning (compose.yml: shared_buffers 48MB, max_connections 20)
+      ve SQLAlchemy pool küçültme (app/db.py: pool_size=5, max_overflow=2).
+- [x] **PWA offline sayfası.** `app/static/offline.html` eklendi; sw.js artık
+      navigasyon isteklerinde (mode: "navigate") ağ hatasında bu sayfayı
+      gösteriyor, çıplak tarayıcı hatası yerine.
 
 ## 3. Ürünü gerçekten kullandıracak özellikler (önerilerim) 🟢
 

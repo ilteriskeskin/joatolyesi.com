@@ -5,10 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.db import get_db
-from app.deps import csrf_protect, require_user
+from app.deps import csrf_protect, require_user, waitlist_gate
 from app.models import PushSubscription, User
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 
 @router.get("/push/vapid-public-key")

@@ -5,7 +5,10 @@ from sqlalchemy.orm import DeclarativeBase
 
 from app.config import settings
 
-engine = create_async_engine(settings.database_url, pool_pre_ping=True)
+
+# 512MB'lık tek instance VPS: tek uvicorn worker'ı besleyen küçük bir pool
+# yeterli, varsayılan (5+10 overflow) burada gereksiz RAM/bağlantı israfı.
+engine = create_async_engine(settings.database_url, pool_pre_ping=True, pool_size=5, max_overflow=2)
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 

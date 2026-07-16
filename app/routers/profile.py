@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.constants import DISCIPLINES
 from app.db import get_db
-from app.deps import csrf_protect, get_current_user, require_user
+from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
 from app.models import Follow, PracticeLog, User
 from app.rate_limit import limiter
 from app.render import render
@@ -17,7 +17,7 @@ from app.card import render_profile_card
 from app.i18n.strings import get_strings
 from app.stats import build_heatmap, compute_longest_streak, compute_streak, practice_day_counts, practice_stats, total_practice_days, weekly_leaders
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 USERNAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$")
 

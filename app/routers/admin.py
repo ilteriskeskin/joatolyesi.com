@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.db import get_db
+from app.deps import ADMIN_PREVIEW_COOKIE, has_admin_preview
 from app.mail import send_email
 from app.models import Kata, Waitlist
 from app.render import render
@@ -63,7 +64,36 @@ async def admin_index(
         health=health,
         waitlist_count=len(waitlist_count),
         mail_sent=mail_sent,
+        preview_active=has_admin_preview(request),
     )
+
+
+@router.get("/admin/preview")
+async def admin_preview_on(token: str = Query(default=""), next: str = Query(default="/app")):
+    """WAITLIST_ONLY=true iken sahibin app'i canlıda görebilmesi için çerez set eder."""
+    if not _token_ok(token):
+        return Response(status_code=404)
+    if not next.startswith("/") or next.startswith("//"):
+        next = "/app"
+    response = RedirectResponse(next, status_code=303)
+    response.set_cookie(
+        ADMIN_PREVIEW_COOKIE,
+        settings.admin_token,
+        max_age=60 * 60 * 24 * 30,
+        httponly=True,
+        samesite="lax",
+        secure=settings.env == "production",
+    )
+    return response
+
+
+@router.get("/admin/preview/off")
+async def admin_preview_off(token: str = Query(default="")):
+    if not _token_ok(token):
+        return Response(status_code=404)
+    response = RedirectResponse(f"/admin?token={token}", status_code=303)
+    response.delete_cookie(ADMIN_PREVIEW_COOKIE)
+    return response
 
 
 @router.post("/admin/test-email")

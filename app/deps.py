@@ -6,11 +6,16 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.config import settings
 from app.db import get_db
 from app.models import Subscription, User
 from app.security import SESSION_COOKIE, password_fingerprint, read_session_token
 
 PRO_STATUSES = {"on_trial", "active", "past_due", "cancelled"}
+
+# WAITLIST_ONLY açıkken admin panelinden /admin/preview ile set edilen çerez;
+# sahibi uygulamayı canlıda diğer ziyaretçiler göremeden test edebilsin diye.
+ADMIN_PREVIEW_COOKIE = "admin_preview"
 
 
 class AuthRequired(Exception):
@@ -19,6 +24,24 @@ class AuthRequired(Exception):
 
 class ProRequired(Exception):
     pass
+
+
+class WaitlistGate(Exception):
+    """WAITLIST_ONLY açıkken app rotalarına admin önizlemesi olmadan erişim."""
+
+
+def has_admin_preview(request: Request) -> bool:
+    return hmac.compare_digest(request.cookies.get(ADMIN_PREVIEW_COOKIE, ""), settings.admin_token)
+
+
+async def waitlist_gate(request: Request) -> None:
+    """WAITLIST_ONLY=true iken app rotalarını kapatır — admin önizleme
+    çerezi geçerliyse (bkz. /admin/preview) sahibi yine de görebilir."""
+    if not settings.waitlist_only:
+        return
+    if has_admin_preview(request):
+        return
+    raise WaitlistGate()
 
 
 def is_pro(user: User | None) -> bool:

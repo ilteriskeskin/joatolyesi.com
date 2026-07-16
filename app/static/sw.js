@@ -1,10 +1,11 @@
-const CACHE = "joryu-v2";
+const CACHE = "joryu-v3";
 const SHELL = [
   "/static/css/style.css",
   "/static/img/icon.svg",
   "/static/img/icon-192.png",
   "/static/img/icon-512.png",
   "/static/manifest.webmanifest",
+  "/static/offline.html",
 ];
 
 self.addEventListener("install", (event) => {
@@ -21,10 +22,18 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Statik dosyalar: stale-while-revalidate — önce cache'ten sun, arkada
-// tazele. CSS/ikon güncellemeleri bir sonraki açılışta kendiliğinden gelir.
-// Sayfalar: network, dokunma.
+// Sayfa gezintileri: her zaman network — ama bağlantı yoksa çıplak tarayıcı
+// hatası yerine basit bir offline.html göster.
 self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match("/static/offline.html"))
+    );
+    return;
+  }
+
+  // Statik dosyalar: stale-while-revalidate — önce cache'ten sun, arkada
+  // tazele. CSS/ikon güncellemeleri bir sonraki açılışta kendiliğinden gelir.
   const url = new URL(event.request.url);
   if (url.origin !== location.origin || !url.pathname.startsWith("/static/")) {
     return;

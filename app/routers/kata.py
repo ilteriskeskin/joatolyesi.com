@@ -7,12 +7,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
 from app.config import settings
-from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, require_user
+from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, require_user, waitlist_gate
 from app.models import Kata, PracticeLog, User
 from app.rate_limit import limiter
 from app.render import render
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 
 @router.get("/kata", response_class=HTMLResponse)

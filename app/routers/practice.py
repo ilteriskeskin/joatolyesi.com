@@ -10,14 +10,14 @@ from sqlalchemy.orm import selectinload
 from app.config import settings
 from app.constants import DISCIPLINES
 from app.db import get_db
-from app.deps import csrf_protect, require_user
+from app.deps import csrf_protect, require_user, waitlist_gate
 from app.models import Enrollment, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import compute_badges, compute_belts
 from app.render import render
 from app.stats import FREEZES_PER_MONTH, build_heatmap, compute_longest_streak, practice_stats, streak_info, total_practice_days, weekly_summary
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 
 async def dashboard_context(db: AsyncSession, user: User) -> dict:

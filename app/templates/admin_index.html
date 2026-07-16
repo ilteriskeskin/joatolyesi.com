@@ -7,6 +7,18 @@
 <ul class="admin-health">
   <li><strong>ENV:</strong> {{ health.env }}</li>
   <li><strong>WAITLIST_ONLY:</strong> {{ health.waitlist_only }}</li>
+  {% if health.waitlist_only %}
+  <li>
+    <strong>Admin önizleme:</strong>
+    {% if preview_active %}
+    <span class="badge badge--free">açık</span> —
+    <a href="/admin/preview/off?token={{ token }}">kapat</a>
+    {% else %}
+    <span class="badge badge--pro">kapalı</span> —
+    <a href="/admin/preview?token={{ token }}">uygulamayı önizle</a>
+    {% endif %}
+  </li>
+  {% endif %}
   <li><strong>PRO_ENABLED:</strong> {{ health.pro_enabled }}</li>
   <li><strong>BASE_URL:</strong> {{ health.base_url }}</li>
   <li>
@@ -30,6 +42,12 @@
     {% else %}<span class="badge badge--pro">yapılandırılmadı</span>{% endif %}
   </li>
 </ul>
+
+{% if health.waitlist_only %}
+<p class="muted">Önizleme açıkken sadece bu tarayıcıda (bir çerezle) app'e erişebilirsin —
+diğer ziyaretçiler hâlâ sadece bekleme listesini görür. Kapatmayı unutma ya da 30 gün
+sonra kendiliğinden düşer.</p>
+{% endif %}
 
 <h2 class="admin-section">E-posta gönderimini test et</h2>
 <p class="muted">Kendi adresine bir test e-postası gönder. Gelen kutusuna (ve spam'e) düşüyorsa Resend

@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from app.constants import DISCIPLINES
 from app.db import get_db
-from app.deps import csrf_protect, get_current_user, require_user
+from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
 from app.i18n.strings import get_strings
 from app.mail import send_email
 from app.models import User
@@ -28,7 +28,7 @@ from app.security import (
     verify_password,
 )
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 USERNAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$")

@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 
 from app.constants import DISCIPLINES
-from app.deps import get_current_user
+from app.deps import get_current_user, waitlist_gate
 from app.guide_content import GUIDE, get_guide
 from app.models import User
 from app.render import render
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 # Dış kaynaklar: dergi, kulüp, video kanalı gibi siteler. Zamanla elle genişletilir.
 RESOURCES = [

@@ -13,13 +13,13 @@ from sqlalchemy.orm import selectinload
 
 from app.constants import DISCIPLINES
 from app.db import get_db
-from app.deps import csrf_protect, get_current_user, require_user
+from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
 from app.markdown_utils import markdown_excerpt, render_markdown
 from app.models import Post, User
 from app.rate_limit import limiter
 from app.render import render
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 TITLE_MIN, BODY_MIN = 5, 100
 
