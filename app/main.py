@@ -29,6 +29,11 @@ class CachedStaticFiles(_StarletteStaticFiles):
         path = scope.get("path", "")
         if any(f"/static/{p}" in path for p in _LONG_CACHE_PREFIXES):
             response.headers["cache-control"] = "public, max-age=31536000, immutable"
+        if path == "/static/sw.js":
+            # sw.js /static/ altında yaşıyor ama tüm siteyi (scope: "/")
+            # kontrol etmesi isteniyor — tarayıcı bunu bu header olmadan
+            # reddeder (push bildirimleri hiçbir sayfada calışmazdı).
+            response.headers["service-worker-allowed"] = "/"
         return response
 
 
