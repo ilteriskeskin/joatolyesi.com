@@ -1719,23 +1719,30 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   margin-bottom: 0.75rem;
 }
 
-/* Push bildirim butonu */
-.push-card { text-align: center; }
+/* Push bildirim butonu — tek satır, ince bir çubuk (eskiden büyük bir
+   kart olarak tüm genişliği kaplıyordu, dashboard'da çok yer yiyordu) */
+.push-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
 .push-btn {
   background: var(--accent-red);
   color: #0b0c0d;
   border: none;
-  border-radius: 4px;
-  padding: 0.65rem 1.3rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.95rem;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   cursor: pointer;
+  white-space: nowrap;
 }
 .push-btn--active { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 .push-btn:disabled { opacity: 0.6; cursor: default; }
-.push-card .field-hint { margin-top: 0.6rem; }
 .push-status:empty { display: none; }
-.push-status { color: var(--accent); }
+.push-status { font-size: 0.8rem; color: var(--ink-dim); }
 
 /* ---- Avatar ---- */
 .profile-avatar {

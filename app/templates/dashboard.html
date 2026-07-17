@@ -13,16 +13,15 @@
   </div>
   {% endif %}
 
-  <div class="card push-card">
-    <button type="button" class="push-btn" data-push-enable
+  <div class="push-bar">
+    <button type="button" class="push-btn" data-push-enable title="{{ t.push_hint }}"
             data-label-on="{{ t.push_disable }}" data-label-off="{{ t.push_enable }}"
             data-msg-on="{{ t.push_msg_on }}" data-msg-off="{{ t.push_msg_off }}"
             data-msg-denied="{{ t.push_msg_denied }}" data-msg-unconfigured="{{ t.push_msg_unconfigured }}"
             data-msg-unsupported="{{ t.push_msg_unsupported }}" data-msg-error="{{ t.push_msg_error }}">
       {{ t.push_enable }}
     </button>
-    <p class="field-hint push-status" data-push-status></p>
-    <p class="field-hint">{{ t.push_hint }}</p>
+    <span class="push-status" data-push-status></span>
   </div>
 
   <div id="practice-panel">
