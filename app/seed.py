@@ -263,57 +263,6 @@ JODO = [
        "Bedeni hattan çıkarıp vuruş: sabaki + uchi tek harekette.", kind="teknik"),
 ]
 
-# --- Shintō Musō-ryū jōjutsu: kata (koryu setleri, bilgilendirici) + 12 kihon (teknik) ---
-JOJUTSU = [
-    # Kata (koryu — öğretmensiz çalışılmaz; isim + bağlam)
-    _k("smr-omote", "Omote seti (12 kata)",
-       "The first koryu set — ancestors of the Seitei kata, at closer and harder distance.",
-       "İlk koryu seti: Tachi Otoshi, Tsuba Wari, Sun Dome, Hissage... Seitei'nin "
-       "atalarıdır; senaryolar daha kısa mesafeli ve serttir.", True),
-    _k("smr-chudan-set", "Chudan seti (12 kata)",
-       "Second set with a more assertive sword side.",
-       "İkinci set; kılıç tarafı daha inisiyatifli, jo tarafı daha ince açı çalışır."),
-    _k("smr-okuden", "İleri setler (Ran Ai, Kage, Samidare, Okuden)",
-       "Transmitted teacher-to-student; know the names, watch, and drill kihon.",
-       "Okul geleneği içinde, öğretmenle aktarılan setler. Solo pratisyen için: isimleri "
-       "bil, videolarını izle, kihon çalış."),
-    # Teknik — 12 kihon (Seitei Jodo ile paylaşılan temel)
-    _k("smr-honte-uchi", "Honte uchi",
-       "The fundamental strike with the natural grip.",
-       "SMR kihon 1 — doğal tutuşla temel vuruş.", True, "teknik"),
-    _k("smr-gyakute-uchi", "Gyakute uchi",
-       "Strike with the reversed grip.",
-       "SMR kihon 2 — ters tutuşla vuruş.", kind="teknik"),
-    _k("smr-hikiotoshi-uchi", "Hikiotoshi uchi",
-       "Dropping strike that knocks the sword down.",
-       "SMR kihon 3 — kılıcı aşağı düşüren indirme vuruşu.", kind="teknik"),
-    _k("smr-kaeshi-tsuki", "Kaeshi tsuki",
-       "Counter thrust.", "SMR kihon 4 — karşı saplama.", kind="teknik"),
-    _k("smr-gyakute-tsuki", "Gyakute tsuki",
-       "Thrust from the reversed grip.",
-       "SMR kihon 5 — ters tutuştan saplama.", kind="teknik"),
-    _k("smr-maki-otoshi", "Maki otoshi",
-       "Wrapping the sword and dropping it.",
-       "SMR kihon 6 — kılıcı sarıp düşürme.", kind="teknik"),
-    _k("smr-kuritsuke", "Kuritsuke",
-       "Pinning the sword arm against the body.",
-       "SMR kihon 7 — kılıç kolunu gövdeye sabitleme.", kind="teknik"),
-    _k("smr-kurihanashi", "Kurihanashi",
-       "Pinning and then casting the sword away.",
-       "SMR kihon 8 — sabitleyip kılıcı savurarak uzaklaştırma.", kind="teknik"),
-    _k("smr-taiatari", "Taiatari",
-       "Body check delivered with the jo.",
-       "SMR kihon 9 — jo ile yapılan gövde çarpması.", kind="teknik"),
-    _k("smr-tsukihazushi-uchi", "Tsukihazushi uchi",
-       "Evading the thrust and striking.",
-       "SMR kihon 10 — saplamadan sıyrılıp vurma.", kind="teknik"),
-    _k("smr-dobarai-uchi", "Dobarai uchi",
-       "Sweeping the torso cut aside and striking.",
-       "SMR kihon 11 — gövde kesişini süpürüp vurma.", kind="teknik"),
-    _k("smr-taihazushi-uchi", "Taihazushi uchi",
-       "Shifting the body off line and striking.",
-       "SMR kihon 12 — gövdeyi hattan çıkarıp vurma.", kind="teknik"),
-]
 
 # --- Kenjutsu: okul kataları hakkında (kata, bilgilendirici) + temel kesişler/kamae (teknik) ---
 KENJUTSU = [
@@ -812,7 +761,6 @@ CATALOG: dict[str, list[dict]] = {
     "aikijo": AIKIJO,
     "bokken": BOKKEN,
     "jodo": JODO,
-    "jojutsu": JOJUTSU,
     "kenjutsu": KENJUTSU,
     "kendo": KENDO,
     "iaido": IAIDO,

@@ -15,7 +15,7 @@ STRINGS = {
             "your streak, and browse the kata & technique library — built by a "
             "practitioner who trained {days} days straight."
         ),
-        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Jojutsu · Kenjutsu · Kendo · Karate · Taekwondo",
+        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo · Karate · Taekwondo",
         "cta_button": "Join the waitlist",
         "email_placeholder": "you@example.com",
         "form_success": "You're in. First invites go out soon.",
@@ -189,7 +189,6 @@ STRINGS = {
         "discipline_bokken": "Bokken (Aiki-ken)",
         "discipline_aikido": "Aikido",
         "discipline_jodo": "Jodo",
-        "discipline_jojutsu": "Jojutsu",
         "discipline_kenjutsu": "Kenjutsu",
         "discipline_kendo": "Kendo",
         "discipline_iaido": "Iaido",
@@ -341,7 +340,7 @@ STRINGS = {
             "serini koru, kata ve teknik kütüphanesinde ilerle — {days} gün "
             "aralıksız çalışmış bir pratisyenden."
         ),
-        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Jojutsu · Kenjutsu · Kendo · Karate · Taekwondo",
+        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo · Karate · Taekwondo",
         "cta_button": "Bekleme listesine katıl",
         "email_placeholder": "sen@ornek.com",
         "form_success": "Listedesin. İlk davetler yakında gelecek.",
@@ -515,7 +514,6 @@ STRINGS = {
         "discipline_bokken": "Bokken (Aiki-ken)",
         "discipline_aikido": "Aikido",
         "discipline_jodo": "Jodo",
-        "discipline_jojutsu": "Jojutsu",
         "discipline_kenjutsu": "Kenjutsu",
         "discipline_kendo": "Kendo",
         "discipline_iaido": "Iaido",

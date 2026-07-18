@@ -114,6 +114,7 @@ gönderimi, sosyal özellikler, çoklu kullanıcı rolleri.
 - Waitlist e-postaları için gönderim: şimdilik yok, sadece topla
 - Analytics: **Google Analytics 4** — ölçüm kimliği G-54NX2S2Z01
 - Branşlar: aiki-jo, bokken (aiki-ken), aikido, jodo (ZNKR seitei),
-  jojutsu (SMR kihon), kenjutsu, kendo (Nihon Kendō Kata), iaido (ZNKR
-  seitei), karate (Shotokan), taekwondo (WT Taegeuk) + diğer. Katalog
-  standart müfredat listelerinden doğrulanarak seed'lendi.
+  kenjutsu, kendo (Nihon Kendō Kata), iaido (ZNKR seitei), karate
+  (Shotokan), taekwondo (WT Taegeuk) + diğer. Katalog standart müfredat
+  listelerinden doğrulanarak seed'lendi. (Jojutsu ayrı bir branş olarak
+  kaldırıldı — jodo ile aynı SMR kihon'a dayanıyordu, gereksiz çakışıyordu.)

@@ -3,7 +3,6 @@ DISCIPLINES = (
     "bokken",
     "aikido",
     "jodo",
-    "jojutsu",
     "kenjutsu",
     "kendo",
     "iaido",

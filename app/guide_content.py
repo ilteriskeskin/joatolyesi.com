@@ -407,45 +407,6 @@ GUIDE: dict = {
             },
         ],
     },
-    # ------------------------------------------------------------------ JOJUTSU
-    "jojutsu": {
-        "has_kata": True,
-        "intro": {
-            "tr": (
-                "Jojutsu, jodonun koryu (eski okul) kökenidir; ana kaynak "
-                "Shinto Muso-ryu'dur. Teknik temel Seitei Jodo ile aynı 12 "
-                "kihon üzerine kurulur (jodo bölümüne bak); fark, kata "
-                "setlerinin derinliğindedir: Omote (12), Chudan (12), Ran Ai, "
-                "Kage, Samidare, Gohon no Midare ve Okuden setleri. Koryu "
-                "kataları öğretmensiz öğrenilmez — solo çalışan biri için "
-                "doğru hedef: 12 kihonu kusursuzlaştırmak ve Omote setinin "
-                "isimlerini/senaryolarını tanımak."
-            ),
-            "en": (
-                "Jojutsu is the koryu root of jodo (Shinto Muso-ryu). The "
-                "technical base is the same 12 kihon (see Jodo); the koryu "
-                "depth lies in the kata sets: Omote, Chudan, Ran Ai, Kage, "
-                "Samidare and beyond. Solo, perfect the kihon."
-            ),
-        },
-        "kata": [
-            {"name": "Omote seti (12 kata)", "jp": "表", "level": {"tr": "Koryu — giriş", "en": "Koryu — entry"},
-             "summary": {"tr": "İlk koryu seti: Tachi Otoshi, Tsuba Wari, Sun Dome, Hissage... Seitei'nin atalarıdır; senaryolar daha kısa mesafeli ve serttir.", "en": "The first koryu set — ancestors of the Seitei kata, at closer and harder distance."}},
-            {"name": "Chudan seti (12 kata)", "jp": "中段", "level": {"tr": "Koryu — orta", "en": "Koryu — middle"},
-             "summary": {"tr": "İkinci set; kılıç tarafı daha inisiyatifli, jo tarafı daha ince açı çalışır.", "en": "Second set with a more assertive sword side."}},
-            {"name": "İleri setler (Ran Ai, Kage, Samidare, Okuden)", "jp": "乱合・影・五月雨・奥伝", "level": {"tr": "Koryu — ileri", "en": "Koryu — advanced"},
-             "summary": {"tr": "Okul geleneği içinde, öğretmenle aktarılan setler. Solo pratisyen için: isimleri bil, videolarını izle, kihon çalış.", "en": "Transmitted teacher-to-student; know the names, watch, and drill kihon."}},
-        ],
-        "techniques": [
-            {
-                "group": {"tr": "Temel (Seitei ile ortak)", "en": "Fundamentals (shared with Seitei)"},
-                "items": [
-                    {"name": "12 kihon", "detail": {"tr": "Honte uchi'den tai hazushi uchi'ye — tam liste ve açıklamalar Jodo bölümünde.", "en": "From honte uchi to tai hazushi uchi — full list under Jodo."}},
-                    {"name": "Suburi rutini", "detail": {"tr": "Koryu jojutsu'da da günlük temel aynıdır: honte uchi 20, gyakute uchi 20, hiki otoshi 20, kaeshi tsuki 20.", "en": "Daily basics: 20 reps each of the four core strikes."}},
-                ],
-            },
-        ],
-    },
     # ------------------------------------------------------------------ KENJUTSU
     "kenjutsu": {
         "has_kata": True,
@@ -873,17 +834,6 @@ PROGRAMS: dict = {
             "Week 9+: 10 min kihon + the jo side of known kata twice each (tandoku)",
         ],
     },
-    "jojutsu": {
-        "tr": [
-            "Temel program Jodo ile aynıdır: 12 kihonu kusursuzlaştır",
-            "Koryu kataları öğretmensiz ÇALIŞMA; isimlerini ve senaryolarını öğren, video izle",
-            "Haftada 1: Omote setinden bir katayı videodan analiz et (henüz yapmadan)",
-        ],
-        "en": [
-            "The base program equals Jodo: perfect the 12 kihon",
-            "Do not self-teach koryu kata; learn their names and watch, analyse one Omote kata weekly",
-        ],
-    },
     "kenjutsu": {
         "tr": [
             "Her gün: kiri oroshi 30, kesa giri 20+20 (iki taraf), tsuki 20",
@@ -1017,20 +967,6 @@ TIPS: dict = {
             "compensate for a wrong angle.",
             "Keep real distance from an imagined opponent when training solo; training "
             "too close builds the wrong reflex.",
-        ],
-    },
-    "jojutsu": {
-        "tr": [
-            "Koryu kataları YouTube'dan taklit ederek öğrenilmez — sıra ve mesafe "
-            "hafızada oturur ama içerideki niyet (ma-ai, zamanlama) aktarılmadan kaybolur.",
-            "Öğretmen bulana kadar 12 kihonu kusursuzlaştırmak zaman kaybı değildir; "
-            "koryu okulları da öğrenciyi aynı temelle başlatır.",
-        ],
-        "en": [
-            "Koryu kata cannot be learned by imitating video — the sequence sticks but "
-            "the internal timing (ma-ai) is lost without a teacher.",
-            "Perfecting the 12 kihon while you look for a teacher is not wasted time — "
-            "koryu schools start students the same way.",
         ],
     },
     "kenjutsu": {
