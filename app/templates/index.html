@@ -70,6 +70,7 @@
     <p class="hero__sub">{{ t.hero_sub.format(days=practice_days) }}</p>
     <p class="hero__disciplines">{{ t.hero_disciplines }}</p>
 
+    {% if waitlist_only %}
     <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
       <input type="hidden" name="lang" value="{{ lang }}">
@@ -81,6 +82,10 @@
       </div>
       <div class="form-message-slot"></div>
     </form>
+    {% else %}
+    <a class="button" href="/register">{{ t.cta_button_open }}</a>
+    <p class="hero__login-hint">{{ t.cta_login_hint }} <a href="/login">{{ t.nav_login }}</a></p>
+    {% endif %}
   </div>
 </section>
 
@@ -202,7 +207,8 @@
 </section>
 
 <section class="cta2">
-  <h2>{{ t.cta2_title }}</h2>
+  <h2>{{ t.cta2_title if waitlist_only else t.cta2_title_open }}</h2>
+  {% if waitlist_only %}
   <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <input type="hidden" name="lang" value="{{ lang }}">
@@ -214,6 +220,9 @@
     </div>
     <div class="form-message-slot"></div>
   </form>
+  {% else %}
+  <a class="button" href="/register">{{ t.cta_button_open }}</a>
+  {% endif %}
 </section>
 
 <footer class="site-footer">

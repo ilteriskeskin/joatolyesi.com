@@ -158,7 +158,7 @@ async def test_account_delete_cascades(client):
 
 async def test_waitlist_duplicate_message(client):
     email = f"{unique('w')}@test.com"
-    token = await get_csrf(client, "/")
+    token = await get_csrf(client, "/login")
     r1 = await client.post("/waitlist", data={"email": email, "lang": "tr", "csrf_token": token})
     r2 = await client.post("/waitlist", data={"email": email, "lang": "tr", "csrf_token": token})
     assert "Listedesin" in r1.text
@@ -367,7 +367,7 @@ async def test_kata_kind_split_and_admin(client):
 
 async def test_waitlist_referral_and_position(client):
     email_a = f"{unique('ra')}@test.com"
-    token = await get_csrf(client, "/")
+    token = await get_csrf(client, "/login")
     r = await client.post("/waitlist", data={"email": email_a, "lang": "tr", "csrf_token": token})
     assert "Listedesin" in r.text
     assert "form-referral-input" in r.text
@@ -379,7 +379,7 @@ async def test_waitlist_referral_and_position(client):
     email_b = f"{unique('rb')}@test.com"
     r = await client.get(f"/?ref={own_ref}")
     assert r.status_code == 200
-    token2 = await get_csrf(client, f"/?ref={own_ref}")
+    token2 = await get_csrf(client, "/login")
     r = await client.post("/waitlist", data={"email": email_b, "lang": "tr", "ref": own_ref, "csrf_token": token2})
     assert "Listedesin" in r.text
 

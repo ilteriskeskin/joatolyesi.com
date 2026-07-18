@@ -55,11 +55,6 @@
   {% else %}
   <nav class="app-nav" :class="open && 'app-nav--open'">
     {% if not waitlist_only %}
-    <a href="/guide">{{ t.nav_guide }}</a>
-    <a href="/blog">{{ t.nav_blog }}</a>
-    <a href="/resources">{{ t.nav_resources }}</a>
-    <a href="/tips">{{ t.nav_tips }}</a>
-    <a href="/practitioners">{{ t.nav_community }}</a>
     <a href="/login">{{ t.nav_login }}</a>
     <a href="/register">{{ t.nav_register }}</a>
     {% endif %}
