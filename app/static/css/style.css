@@ -80,6 +80,14 @@ a:hover { text-decoration: underline; }
   text-transform: lowercase;
 }
 
+.brand__sub {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0;
+  color: var(--ink-dim);
+  text-transform: none;
+}
+
 .lang-switch {
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -1749,6 +1757,46 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
 .push-btn:disabled { opacity: 0.6; cursor: default; }
 .push-status:empty { display: none; }
 .push-status { font-size: 0.8rem; color: var(--ink-dim); }
+
+/* Ana ekrana ekleme banner'ı — alt köşede sabit, ince bir çubuk */
+.install-bar {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  max-width: 420px;
+  margin: 0 auto;
+}
+.install-bar__text { flex: 1; font-size: 0.85rem; color: var(--ink); }
+.install-bar__install {
+  background: var(--accent-red);
+  color: #0b0c0d;
+  border: none;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.install-bar__close {
+  background: none;
+  border: none;
+  color: var(--ink-dim);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+}
 
 /* ---- Avatar ---- */
 .profile-avatar {

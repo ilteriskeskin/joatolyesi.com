@@ -330,11 +330,11 @@ STRINGS = {
     },
     "tr": {
         "html_lang": "tr",
-        "meta_title": "Joryu — Her gün çalış. Dojo kapalıyken bile.",
+        "meta_title": "Joryu (Jo Atölyesi) — Her gün çalış. Dojo kapalıyken bile.",
         "meta_description": (
-            "Joryu, aikido, iaido, jodo ve kenjutsu çalışanlar için solo pratik "
-            "yoldaşı: dojo dışındaki günlerde jo, bokken ve kata seanslarını "
-            "kaydet, serini koru, kata ve teknik kütüphanesine göz at."
+            "Joryu (Jo Atölyesi), aikido, iaido, jodo ve kenjutsu çalışanlar için "
+            "solo pratik yoldaşı: dojo dışındaki günlerde jo, bokken ve kata "
+            "seanslarını kaydet, serini koru, kata ve teknik kütüphanesine göz at."
         ),
         "hero_h1": "Her gün çalış. Dojo kapalıyken bile.",
         "hero_sub": (

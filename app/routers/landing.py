@@ -4,7 +4,7 @@ import re
 import secrets
 
 from fastapi import APIRouter, Depends, Query, Request, Response
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -31,6 +31,8 @@ async def index(
     ref: str | None = Query(default=None),
     user: User | None = Depends(get_current_user),
 ):
+    if user is not None:
+        return RedirectResponse("/app", status_code=303)
     return render(
         request, "index.html", user=user,
         source=src if src and SOURCE_RE.match(src) else "",

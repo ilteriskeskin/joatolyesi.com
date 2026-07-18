@@ -18,6 +18,16 @@
   <meta property="og:title" content="{{ t.meta_title }}">
   <meta property="og:description" content="{{ t.meta_description.format(days=practice_days) }}">
   <meta property="og:image" content="https://joatolyesi.com/static/img/icon-512.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Joryu",
+    "alternateName": "Jo Atölyesi",
+    "url": "https://joatolyesi.com/",
+    "description": "{{ t.meta_description.format(days=practice_days) }}"
+  }
+  </script>
   <link rel="stylesheet" href="/static/css/style.css">
   <script src="/static/js/vendor/htmx.min.js" defer></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-54NX2S2Z01"></script>
@@ -36,7 +46,7 @@
 <body>
 
 <header class="site-header">
-  <span class="brand">joryu</span>
+  <span class="brand">joryu{% if lang == 'tr' %} <span class="brand__sub">(Jo Atölyesi)</span>{% endif %}</span>
   <nav class="app-nav">
     {% if not waitlist_only %}
     <a href="/guide">{{ t.nav_guide }}</a>
@@ -239,5 +249,6 @@
 </footer>
 
 <script src="/static/js/motion.js" defer></script>
+<script src="/static/js/install-prompt.js" defer></script>
 </body>
 </html>
