@@ -754,6 +754,10 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
   padding-left: 1.2rem;
 }
 
+.admin-user-card { margin: 0 0 1.5rem; max-width: 480px; }
+.admin-pagination { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 1rem 0; }
+.admin-pagination a { color: var(--ink-dim); }
+
 .tip-of-day {
   padding: 2rem;
   text-align: center;
@@ -1211,6 +1215,10 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
   cursor: pointer;
 }
 .danger-button:hover { background: #d97a6c; color: #0b0c0d; }
+/* .admin-row button zaten background/color set ediyor ve daha yüksek
+   specificity'ye sahip (class+element) — burada elle geri kazanıyoruz. */
+.admin-row .danger-button { background: transparent; border: 1px solid #d97a6c; color: #d97a6c; }
+.admin-row .danger-button:hover { background: #d97a6c; color: #0b0c0d; }
 
 .legal-page {
   max-width: 680px;

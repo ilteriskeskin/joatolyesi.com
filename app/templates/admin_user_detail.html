@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Admin — {{ user_row.email }}{% endblock %}
+{% block content %}
+<h1>{{ user_row.email }}</h1>
+<p><a href="/admin/users?token={{ token }}">&larr; Kullanıcılar</a></p>
+
+{% if saved == "1" %}
+<p class="form-message form-message--success">Kaydedildi.</p>
+{% elif saved == "reset_sent" %}
+<p class="form-message form-message--success">Şifre sıfırlama e-postası gönderildi.</p>
+{% elif saved == "delete_mismatch" %}
+<p class="form-message form-message--error">E-posta eşleşmedi, hesap silinmedi.</p>
+{% endif %}
+
+<h2 class="admin-section">İstatistikler</h2>
+<ul class="admin-health">
+  <li><strong>Toplam pratik günü:</strong> {{ practice_days }}</li>
+  <li><strong>Toplam seans:</strong> {{ stats.total_sessions }}</li>
+  <li><strong>Toplam dakika:</strong> {{ stats.total_minutes }}</li>
+  <li><strong>Güncel seri:</strong> {{ streak }} gün</li>
+  <li><strong>Kayıt tarihi:</strong> {{ user_row.created_at.strftime("%Y-%m-%d %H:%M") }}</li>
+  <li><strong>Public profil:</strong> {% if user_row.username %}<a href="/u/{{ user_row.username }}" target="_blank">/u/{{ user_row.username }}</a>{% else %}kullanıcı adı yok{% endif %}</li>
+</ul>
+
+<h2 class="admin-section">Düzenle</h2>
+<div class="auth-card admin-user-card">
+<form method="post" action="/admin/users/{{ user_row.id }}">
+  <input type="hidden" name="token" value="{{ token }}">
+  <label>Kullanıcı adı
+    <input type="text" name="username" value="{{ user_row.username or '' }}">
+  </label>
+  <label>Görünen ad
+    <input type="text" name="display_name" value="{{ user_row.display_name or '' }}">
+  </label>
+  <label>Branş
+    <select name="discipline">
+      {% for d in disciplines %}
+      <option value="{{ d }}" {% if user_row.discipline == d %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label class="checkbox-label">
+    <input type="checkbox" name="is_public" {% if user_row.is_public %}checked{% endif %}>
+    <span>Herkese açık profil</span>
+  </label>
+  <label class="checkbox-label">
+    <input type="checkbox" name="reminders_enabled" {% if user_row.reminders_enabled %}checked{% endif %}>
+    <span>Hatırlatma e-postaları açık</span>
+  </label>
+  <label class="checkbox-label">
+    <input type="checkbox" name="email_verified" {% if user_row.email_verified_at %}checked{% endif %}>
+    <span>E-posta doğrulanmış (elle işaretle)</span>
+  </label>
+  <button type="submit">Kaydet</button>
+</form>
+</div>
+
+<h2 class="admin-section">İşlemler</h2>
+<form method="post" action="/admin/users/{{ user_row.id }}/send-reset" class="admin-row">
+  <input type="hidden" name="token" value="{{ token }}">
+  <button type="submit">Şifre sıfırlama e-postası gönder</button>
+</form>
+
+<h2 class="admin-section">Tehlikeli bölge</h2>
+<p class="muted">Hesabı ve tüm pratik kayıtlarını, takip ilişkilerini, aboneliğini kalıcı olarak
+siler. Geri alınamaz. Onaylamak için kullanıcının e-postasını aynen yaz.</p>
+<form method="post" action="/admin/users/{{ user_row.id }}/delete" class="admin-row"
+      onsubmit="return confirm('Bu hesabı kalıcı olarak silmek istediğine emin misin?');">
+  <input type="hidden" name="token" value="{{ token }}">
+  <input type="email" name="confirm_email" placeholder="{{ user_row.email }}" required>
+  <button type="submit" class="danger-button">Hesabı kalıcı olarak sil</button>
+</form>
+{% endblock %}

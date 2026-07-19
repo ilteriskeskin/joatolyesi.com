@@ -1,17 +1,23 @@
 import hmac
 import re
+import uuid
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Form, Query, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy import select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
+from app.constants import DISCIPLINES
 from app.db import get_db
 from app.deps import ADMIN_PREVIEW_COOKIE, has_admin_preview
+from app.i18n.strings import DEFAULT_LANG, get_strings
 from app.mail import send_email
-from app.models import Kata, Waitlist
+from app.models import Kata, User, Waitlist
 from app.render import render
+from app.security import create_reset_token
+from app.stats import practice_stats, streak_info, total_practice_days
 
 router = APIRouter()
 
@@ -140,6 +146,137 @@ async def admin_docs(request: Request, token: str = Query(default="")):
         routes.append({"path": path, "methods": sorted(methods - {"HEAD", "OPTIONS"}), "doc": doc})
     routes.sort(key=lambda r: r["path"])
     return render(request, "admin_docs.html", token=token, routes=routes)
+
+
+USERS_PAGE_SIZE = 30
+
+
+@router.get("/admin/users", response_class=HTMLResponse)
+async def admin_users(
+    request: Request,
+    token: str = Query(default=""),
+    q: str = Query(default=""),
+    page: int = Query(default=1, ge=1),
+    db: AsyncSession = Depends(get_db),
+):
+    if not _token_ok(token):
+        return Response(status_code=404)
+    stmt = select(User).order_by(User.created_at.desc())
+    count_stmt = select(func.count(User.id))
+    q = q.strip()
+    if q:
+        pattern = f"%{q}%"
+        cond = or_(User.email.ilike(pattern), User.username.ilike(pattern))
+        stmt = stmt.where(cond)
+        count_stmt = count_stmt.where(cond)
+    total = (await db.execute(count_stmt)).scalar_one()
+    stmt = stmt.offset((page - 1) * USERS_PAGE_SIZE).limit(USERS_PAGE_SIZE)
+    users = (await db.execute(stmt)).scalars().all()
+    return render(
+        request,
+        "admin_users.html",
+        token=token,
+        users=users,
+        q=q,
+        page=page,
+        total=total,
+        page_size=USERS_PAGE_SIZE,
+        total_pages=max(1, -(-total // USERS_PAGE_SIZE)),
+    )
+
+
+@router.get("/admin/users/{user_id}", response_class=HTMLResponse)
+async def admin_user_detail(
+    user_id: uuid.UUID,
+    request: Request,
+    token: str = Query(default=""),
+    saved: str = Query(default=""),
+    db: AsyncSession = Depends(get_db),
+):
+    if not _token_ok(token):
+        return Response(status_code=404)
+    user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
+    if user is None:
+        return Response(status_code=404)
+    stats = await practice_stats(db, user.id)
+    days = await total_practice_days(db, user.id)
+    streak = await streak_info(db, user.id)
+    return render(
+        request,
+        "admin_user_detail.html",
+        token=token,
+        user_row=user,
+        disciplines=DISCIPLINES,
+        stats=stats,
+        practice_days=days,
+        streak=streak["streak"],
+        saved=saved,
+    )
+
+
+@router.post("/admin/users/{user_id}")
+async def admin_user_update(
+    user_id: uuid.UUID,
+    token: str = Form(...),
+    username: str = Form(""),
+    display_name: str = Form(""),
+    discipline: str = Form(""),
+    is_public: str = Form(""),
+    reminders_enabled: str = Form(""),
+    email_verified: str = Form(""),
+    db: AsyncSession = Depends(get_db),
+):
+    if not _token_ok(token):
+        return Response(status_code=404)
+    user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
+    if user is None:
+        return Response(status_code=404)
+    user.username = username.strip() or None
+    user.display_name = display_name.strip() or None
+    if discipline in DISCIPLINES:
+        user.discipline = discipline
+    user.is_public = is_public == "on"
+    user.reminders_enabled = reminders_enabled == "on"
+    user.email_verified_at = datetime.now(UTC) if email_verified == "on" else None
+    await db.commit()
+    return RedirectResponse(f"/admin/users/{user_id}?token={token}&saved=1", status_code=303)
+
+
+@router.post("/admin/users/{user_id}/send-reset")
+async def admin_user_send_reset(
+    user_id: uuid.UUID,
+    token: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+):
+    if not _token_ok(token):
+        return Response(status_code=404)
+    user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
+    if user is None:
+        return Response(status_code=404)
+    strings = get_strings(user.lang or DEFAULT_LANG)
+    reset_token = create_reset_token(user.id, user.password_hash)
+    link = f"{settings.base_url}/reset?token={reset_token}"
+    await send_email(user.email, strings["mail_reset_subject"], strings["mail_reset_body"].format(link=link))
+    return RedirectResponse(f"/admin/users/{user_id}?token={token}&saved=reset_sent", status_code=303)
+
+
+@router.post("/admin/users/{user_id}/delete")
+async def admin_user_delete(
+    user_id: uuid.UUID,
+    token: str = Form(...),
+    confirm_email: str = Form(""),
+    db: AsyncSession = Depends(get_db),
+):
+    if not _token_ok(token):
+        return Response(status_code=404)
+    user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
+    if user is None:
+        return Response(status_code=404)
+    if confirm_email.strip().lower() != user.email.lower():
+        return RedirectResponse(f"/admin/users/{user_id}?token={token}&saved=delete_mismatch", status_code=303)
+    await db.delete(user)  # practice_logs, enrollments, subscription, push, follows cascade ile silinir
+    await db.commit()
+    return RedirectResponse(f"/admin/users?token={token}", status_code=303)
 
 
 @router.get("/admin/katas", response_class=HTMLResponse)

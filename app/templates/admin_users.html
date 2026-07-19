@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Admin — Kullanıcılar{% endblock %}
+{% block content %}
+<h1>Kullanıcılar ({{ total }})</h1>
+<p><a href="/admin?token={{ token }}">&larr; Admin</a></p>
+
+<form method="get" action="/admin/users" class="admin-row">
+  <input type="hidden" name="token" value="{{ token }}">
+  <input type="text" name="q" value="{{ q }}" placeholder="e-posta veya kullanıcı adı ara...">
+  <button type="submit">Ara</button>
+</form>
+
+<table class="admin-table">
+  <thead>
+    <tr>
+      <th>E-posta</th>
+      <th>Kullanıcı adı</th>
+      <th>Branş</th>
+      <th>Herkese açık</th>
+      <th>Doğrulanmış</th>
+      <th>Kayıt tarihi</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td><a href="/admin/users/{{ u.id }}?token={{ token }}">{{ u.email }}</a></td>
+      <td>{{ u.username or "—" }}</td>
+      <td>{{ u.discipline }}</td>
+      <td>{{ "evet" if u.is_public else "hayır" }}</td>
+      <td>{{ "evet" if u.email_verified_at else "hayır" }}</td>
+      <td>{{ u.created_at.strftime("%Y-%m-%d") }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if total_pages > 1 %}
+<p class="admin-pagination">
+  {% for p in range(1, total_pages + 1) %}
+  {% if p == page %}<strong>{{ p }}</strong>{% else %}<a href="/admin/users?token={{ token }}&q={{ q }}&page={{ p }}">{{ p }}</a>{% endif %}
+  {% endfor %}
+</p>
+{% endif %}
+{% endblock %}
