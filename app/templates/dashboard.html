@@ -28,6 +28,21 @@
     {% include "_practice_panel.html" %}
   </div>
 
+  <div class="card referral-card">
+    <span class="card-label">{{ t.referral_label }}</span>
+    <p class="muted">{{ t.referral_hint }}</p>
+    <div class="referral-row">
+      <input type="text" readonly value="{{ referral_link }}" onclick="this.select()" onfocus="this.select()">
+      <button type="button" class="button" data-share data-share-url="{{ referral_link }}"
+              data-share-title="Joryu" data-share-text="{{ t.dash_share_text.format(streak=streak) }}">
+        {{ t.referral_share_button }}
+      </button>
+    </div>
+    {% if referral_count %}
+    <p class="referral-count">{{ t.referral_count_label.format(n=referral_count) }}</p>
+    {% endif %}
+  </div>
+
 </div>
 <script src="/static/js/push.js" defer></script>
 <script src="/static/js/share.js" defer></script>

@@ -1766,6 +1766,45 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
 .push-status:empty { display: none; }
 .push-status { font-size: 0.8rem; color: var(--ink-dim); }
 
+/* Davet kutusu */
+.referral-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+}
+.referral-row input {
+  flex: 1 1 220px;
+  min-width: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+.referral-count { margin-top: 0.6rem; font-size: 0.85rem; color: var(--ink-dim); }
+
+/* Kuşak/kilometre taşı kutlaması */
+.milestone-banner {
+  text-align: center;
+  border-color: var(--accent);
+  animation: milestone-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+.milestone-text {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+@keyframes milestone-pop {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .milestone-banner { animation: none; }
+}
+
 /* Ana ekrana ekleme banner'ı — alt köşede sabit, ince bir çubuk */
 .install-bar {
   position: fixed;

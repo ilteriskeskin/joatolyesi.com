@@ -40,6 +40,10 @@ class User(Base):
     email_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Günlük hatırlatma e-postası (opt-in; scripts/send_reminders.py)
     reminders_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
+    # Kendi paylaşılabilir davet kodu (joatolyesi.com/?ref=<code>)
+    referral_code: Mapped[str] = mapped_column(String(12), unique=True, nullable=False, index=True)
+    # Bu kaydı hangi referral_code getirdi (varsa) — büyüme kanalı ölçümü
+    referred_by: Mapped[str | None] = mapped_column(String(12), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     subscription: Mapped["Subscription | None"] = relationship(back_populates="user", uselist=False)

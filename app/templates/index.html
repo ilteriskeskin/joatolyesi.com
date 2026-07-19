@@ -58,7 +58,7 @@
     <a href="/app">{{ t.nav_practice }}</a>
     {% else %}
     <a href="/login">{{ t.nav_login }}</a>
-    <a href="/register">{{ t.nav_register }}</a>
+    <a href="/register{% if ref %}?ref={{ ref }}{% endif %}">{{ t.nav_register }}</a>
     {% endif %}
     {% endif %}
   </nav>
@@ -97,7 +97,7 @@
       <div class="form-message-slot"></div>
     </form>
     {% else %}
-    <a class="button" href="/register">{{ t.cta_button_open }}</a>
+    <a class="button" href="/register{% if ref %}?ref={{ ref }}{% endif %}">{{ t.cta_button_open }}</a>
     <p class="hero__login-hint">{{ t.cta_login_hint }} <a href="/login">{{ t.nav_login }}</a></p>
     {% endif %}
   </div>
@@ -235,7 +235,7 @@
     <div class="form-message-slot"></div>
   </form>
   {% else %}
-  <a class="button" href="/register">{{ t.cta_button_open }}</a>
+  <a class="button" href="/register{% if ref %}?ref={{ ref }}{% endif %}">{{ t.cta_button_open }}</a>
   {% endif %}
 </section>
 

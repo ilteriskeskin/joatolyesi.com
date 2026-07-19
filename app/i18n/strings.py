@@ -327,6 +327,12 @@ STRINGS = {
         "dash_share_text": "{streak}-day streak on Joryu.",
         "dash_share_hint": "Make your profile public to get a shareable card and link.",
         "dash_share_cta": "Make profile public",
+        "referral_label": "Invite a friend",
+        "referral_hint": "Share your link — practitioners you bring join your circle here.",
+        "referral_share_button": "Share",
+        "referral_count_label": "{n} people joined through your link.",
+        "milestone_reached": "You just earned the {belt}!",
+        "milestone_share_hint": "Share your streak — it might be exactly the nudge a friend needs.",
     },
     "tr": {
         "html_lang": "tr",
@@ -655,6 +661,12 @@ STRINGS = {
         "dash_share_text": "Joryu'da {streak} günlük serim var.",
         "dash_share_hint": "Paylaşılabilir kart ve link için profilini herkese açık yap.",
         "dash_share_cta": "Profili herkese açık yap",
+        "referral_label": "Arkadaşını davet et",
+        "referral_hint": "Linkini paylaş — getirdiğin pratisyenler burada senin çevrende görünür.",
+        "referral_share_button": "Paylaş",
+        "referral_count_label": "{n} kişi senin linkinle katıldı.",
+        "milestone_reached": "{belt} kazandın!",
+        "milestone_share_hint": "Serini paylaş — belki bir arkadaşının ihtiyacı olan itki tam da budur.",
     },
 }
 

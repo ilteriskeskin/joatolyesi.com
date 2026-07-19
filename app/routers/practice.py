@@ -3,7 +3,7 @@ from datetime import UTC, date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -13,7 +13,7 @@ from app.db import get_db
 from app.deps import csrf_protect, require_user, waitlist_gate
 from app.models import Enrollment, PracticeLog, User
 from app.rate_limit import limiter
-from app.badges import compute_badges, compute_belts
+from app.badges import BELTS, compute_badges, compute_belts
 from app.render import render
 from app.stats import FREEZES_PER_MONTH, build_heatmap, compute_longest_streak, practice_stats, streak_info, total_practice_days, weekly_summary
 
@@ -35,6 +35,10 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         .order_by(PracticeLog.practiced_on.desc(), PracticeLog.created_at.desc())
         .limit(10)
     )
+    referral_count = (
+        await db.execute(select(func.count(User.id)).where(User.referred_by == user.referral_code))
+    ).scalar_one()
+
     enrollment = None
     current_day = None
     if settings.pro_enabled:  # Pro kapalıyken program kaydı olsa bile banner gösterilmez
@@ -54,6 +58,7 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         "longest_streak": max(longest_streak, sinfo["streak"]),
         "freezes_left": sinfo["freezes_left"],
         "freezes_total": FREEZES_PER_MONTH,
+        "practice_days": practice_days,
         "belts": belts,
         "badges": badges,
         "week": week,
@@ -64,6 +69,8 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         "today": datetime.now(UTC).date().isoformat(),
         "today_max": (datetime.now(UTC).date() + timedelta(days=1)).isoformat(),
         "disciplines": DISCIPLINES,
+        "referral_link": f"{settings.base_url}/?ref={user.referral_code}",
+        "referral_count": referral_count,
     }
 
 
@@ -102,4 +109,7 @@ async def log_practice(
     )
     await db.commit()
     ctx = await dashboard_context(db, user)
-    return render(request, "_practice_panel.html", user=user, **ctx)
+    # Bu kayıt tam bir kuşak eşiğine denk geldiyse kutlama/paylaşım anı göster
+    # (sadece bu POST cevabında — sayfayı tekrar açınca bir daha çıkmaz)
+    milestone_belt = next((belt_id for belt_id, n in BELTS if n > 0 and n == ctx["practice_days"]), None)
+    return render(request, "_practice_panel.html", user=user, milestone=milestone_belt, **ctx)

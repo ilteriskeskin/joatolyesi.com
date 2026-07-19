@@ -1,4 +1,5 @@
 import re
+import secrets
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Form, Query, Request
@@ -32,6 +33,7 @@ router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 USERNAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$")
+REF_RE = re.compile(r"^[a-f0-9]{6,12}$")
 
 
 def _session_response(user: User) -> RedirectResponse:
@@ -48,10 +50,15 @@ def _session_response(user: User) -> RedirectResponse:
 
 
 @router.get("/register", response_class=HTMLResponse)
-async def register_page(request: Request, user: User | None = Depends(get_current_user)):
+async def register_page(
+    request: Request, ref: str | None = Query(default=None), user: User | None = Depends(get_current_user)
+):
     if user:
         return RedirectResponse("/app", status_code=303)
-    return render(request, "register.html", error=None, disciplines=DISCIPLINES)
+    return render(
+        request, "register.html", error=None, disciplines=DISCIPLINES,
+        ref=ref if ref and REF_RE.match(ref) else "",
+    )
 
 
 def _send_verification(background: BackgroundTasks, user: User) -> None:
@@ -74,25 +81,32 @@ async def register(
     password: str = Form(...),
     username: str = Form(...),
     discipline: str = Form("aikijo"),
+    ref: str = Form(""),
     db: AsyncSession = Depends(get_db),
 ):
     email = email.strip().lower()
     username = username.strip().lower()
+    ref_clean = ref if ref and REF_RE.match(ref) else ""
     if not EMAIL_RE.match(email):
-        return render(request, "register.html", error="form_error_invalid", disciplines=DISCIPLINES)
+        return render(request, "register.html", error="form_error_invalid", disciplines=DISCIPLINES, ref=ref_clean)
     if not USERNAME_RE.match(username):
-        return render(request, "register.html", error="profile_error_username_invalid", disciplines=DISCIPLINES)
+        return render(request, "register.html", error="profile_error_username_invalid", disciplines=DISCIPLINES, ref=ref_clean)
     if len(password) < 8:
-        return render(request, "register.html", error="auth_error_password_short", disciplines=DISCIPLINES)
+        return render(request, "register.html", error="auth_error_password_short", disciplines=DISCIPLINES, ref=ref_clean)
     if discipline not in DISCIPLINES:
         discipline = "aikijo"
 
     existing = await db.execute(select(User.id).where(User.email == email))
     if existing.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="auth_error_exists", disciplines=DISCIPLINES)
+        return render(request, "register.html", error="auth_error_exists", disciplines=DISCIPLINES, ref=ref_clean)
     taken = await db.execute(select(User.id).where(User.username == username))
     if taken.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="profile_error_username_taken", disciplines=DISCIPLINES)
+        return render(request, "register.html", error="profile_error_username_taken", disciplines=DISCIPLINES, ref=ref_clean)
+
+    referred_by = None
+    if ref_clean:
+        referrer = await db.execute(select(User.referral_code).where(User.referral_code == ref_clean))
+        referred_by = ref_clean if referrer.scalar_one_or_none() else None
 
     user = User(
         email=email,
@@ -100,6 +114,8 @@ async def register(
         lang=resolve_lang(request),
         username=username,
         discipline=discipline,
+        referral_code=secrets.token_hex(5),
+        referred_by=referred_by,
     )
     db.add(user)
     await db.commit()

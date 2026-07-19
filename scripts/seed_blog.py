@@ -186,6 +186,7 @@ async def main() -> None:
                 bio=spec["bio"],
                 discipline=spec["discipline"],
                 is_public=True,
+                referral_code=secrets.token_hex(5),
             )
             db.add(user)
             await db.flush()

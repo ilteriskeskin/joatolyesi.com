@@ -1,3 +1,14 @@
+{% if milestone %}
+<div class="card milestone-banner">
+  <p class="milestone-text">{{ t.milestone_reached.format(belt=t["belt_" ~ milestone]) }}</p>
+  {% if user.is_public and user.username %}
+  <p class="muted">{{ t.milestone_share_hint }}</p>
+  {% else %}
+  <p class="muted"><a href="/profile">{{ t.dash_share_cta }}</a></p>
+  {% endif %}
+</div>
+{% endif %}
+
 <div class="streak-block">
   <span class="streak-number">{{ streak }}</span>
   <span class="streak-label">{{ t.dash_streak_label }}</span>
