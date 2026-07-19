@@ -193,13 +193,13 @@ a:hover { text-decoration: underline; }
 .form-message--success { color: #9bc27c; }
 .form-message--error { color: #d97a6c; }
 
-.problem, .solution, .devices, .social-proof, .cta2 {
+.problem, .solution, .showcase, .social-proof, .cta2 {
   padding: 4rem 1.5rem;
   max-width: 960px;
   margin: 0 auto;
 }
 
-.problem h2, .solution h2, .devices h2, .cta2 h2 {
+.problem h2, .solution h2, .showcase h2, .cta2 h2 {
   font-size: 1.8rem;
   text-align: center;
   margin-bottom: 2.5rem;
@@ -253,7 +253,7 @@ a:hover { text-decoration: underline; }
 
 @media (max-width: 480px) {
   .hero { min-height: 80vh; padding: 1.5rem 1.25rem 3rem; }
-  .problem, .solution, .devices, .social-proof, .cta2 { padding: 3rem 1.25rem; }
+  .problem, .solution, .showcase, .social-proof, .cta2 { padding: 3rem 1.25rem; }
 }
 
 /* --- App (Phase 1) --- */
@@ -869,137 +869,51 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
   .auth-card { margin: 1.5rem auto; padding: 1.5rem; }
 }
 
-/* ---- Cihaz mockup bölümü (telefon + bilgisayar) ---- */
+/* ---- Ürün turu: gerçek uygulama ekran görüntüleri ---- */
 
-.devices { text-align: center; }
+.showcase { max-width: 1080px; }
 
-.devices__sub {
-  color: var(--ink-dim);
-  max-width: 52ch;
-  margin: 0 auto 2.5rem;
-}
-
-.devices__stage {
+.showcase__item {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 2.5rem;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 4rem;
 }
 
-.device { margin: 0; }
+.showcase__item--reverse { flex-direction: row-reverse; }
 
-.device__label {
+.showcase__text { flex: 1 1 320px; }
+.showcase__text h2 { font-size: 1.6rem; margin-bottom: 0.8rem; text-align: left; }
+.showcase__text p { color: var(--ink-dim); line-height: 1.6; }
+
+.showcase__image {
+  flex: 1 1 420px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.showcase__image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.devices__note {
+  text-align: center;
   color: var(--ink-dim);
-  font-size: 0.85rem;
   margin-top: 1rem;
 }
 
-.device__screen {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  overflow: hidden;
-}
-
-.device--laptop .device__screen {
-  width: min(420px, 80vw);
-  aspect-ratio: 16 / 10;
-  border-radius: 8px 8px 0 0;
-  border-bottom: none;
-}
-
-.device--laptop__base {
-  height: 12px;
-  width: calc(min(420px, 80vw) * 1.12);
-  margin: 0 auto;
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: 0 0 10px 10px;
-}
-
-.device--phone .device__screen {
-  width: 150px;
-  aspect-ratio: 9 / 18;
-  border-radius: 20px;
-  border-width: 4px;
-  border-color: #1c1e21;
-}
-
-.mock-ui {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.7rem 0.8rem;
-  text-align: left;
-}
-
-.mock-ui__topbar {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.35rem;
-}
-
-.mock-ui__brand {
-  font-family: var(--font-display);
-  color: var(--accent);
-  font-size: 0.8rem;
-}
-
-.mock-ui__streak { display: flex; align-items: baseline; gap: 0.4rem; }
-
-.mock-ui__streak-num {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  color: var(--ink);
-}
-
-.mock-ui__streak-label {
-  color: var(--ink-dim);
-  font-size: 0.6rem;
-}
-
-.mock-ui__heatmap {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
-}
-
-.mock-ui__heatmap--wide { grid-template-columns: repeat(16, 1fr); }
-
-.mock-ui__heatmap i {
-  aspect-ratio: 1;
-  border-radius: 2px;
-  background: var(--accent);
-  opacity: 0.15;
-}
-
-.mock-ui__heatmap i:nth-child(2n) { opacity: 0.45; }
-.mock-ui__heatmap i:nth-child(3n) { opacity: 0.75; }
-.mock-ui__heatmap i:nth-child(5n) { opacity: 0.3; }
-.mock-ui__heatmap i:nth-child(7n) { opacity: 1; }
-
-.mock-ui__rows { display: flex; flex-direction: column; gap: 5px; margin-top: auto; }
-
-.mock-ui__rows i {
-  height: 9px;
-  border-radius: 3px;
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-}
-
-.mock-ui__rows i:first-child { width: 85%; }
-.mock-ui__rows i:nth-child(2) { width: 70%; }
-.mock-ui__rows i:last-child { width: 78%; }
-
-.mock-ui__button {
-  margin-top: auto;
-  background: var(--accent);
-  color: #0b0c0d;
-  border-radius: 4px;
-  text-align: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  padding: 0.4rem 0.3rem;
+@media (max-width: 760px) {
+  .showcase__item, .showcase__item--reverse {
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .showcase__text h2 { text-align: center; }
+  .showcase__text p { text-align: center; }
 }
 
 .devices__note {
@@ -1346,10 +1260,10 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
 @keyframes pop-in { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
 
 /* Bölüm başlıklarında fırça çizgisi */
-.problem h2, .solution h2, .devices h2, .cta2 h2, .guide-section-title {
+.problem h2, .solution h2, .showcase h2, .cta2 h2, .guide-section-title {
   position: relative;
 }
-.problem h2::after, .solution h2::after, .devices h2::after, .cta2 h2::after {
+.problem h2::after, .solution h2::after, .showcase h2::after, .cta2 h2::after {
   content: "";
   display: block;
   width: 56px;
@@ -1586,14 +1500,11 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   }
 
   /* Bölümler geniş ekranda dar şerit gibi durmasın */
-  .problem, .solution, .devices, .social-proof, .cta2 { max-width: 1100px; padding: 5rem 2rem; }
-  .problem h2, .solution h2, .devices h2, .cta2 h2 { font-size: 2.2rem; }
+  .problem, .solution, .showcase, .social-proof, .cta2 { max-width: 1100px; padding: 5rem 2rem; }
+  .problem h2, .solution h2, .showcase h2, .cta2 h2 { font-size: 2.2rem; }
   .problem__grid, .solution__grid { gap: 2rem; }
   .problem__card, .feature-card { padding: 2rem; }
   .solution__kanji { font-size: 24rem; right: 0; }
-  .devices__stage { gap: 4rem; }
-  .device--laptop .device__screen { width: 520px; }
-  .device--phone .device__screen { width: 175px; }
   .social-proof__line { font-size: 1.7rem; }
 
   /* Korlar geniş ekranda biraz daha belirgin */

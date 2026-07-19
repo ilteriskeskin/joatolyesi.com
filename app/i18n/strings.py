@@ -51,15 +51,24 @@ STRINGS = {
             "A practice heatmap, your streak, and a profile you can share — "
             "opt-in and public, like a GitHub for martial artists."
         ),
-        "devices_title": "In your pocket at the dojo, on your desk at home",
-        "devices_body": (
-            "Joryu runs in the browser — no app store. Log a session from "
-            "your phone right after practice; review your streak and "
-            "heatmap on the big screen at home."
-        ),
-        "devices_phone_label": "Log a session — on your phone",
-        "devices_desktop_label": "Streak & heatmap — on your computer",
         "devices_note": "Installable: add it to your home screen and use it like a native app.",
+        "showcase_dashboard_title": "Your streak, your heatmap, one glance",
+        "showcase_dashboard_body": (
+            "Log a session in seconds. Your streak, this week's minutes, a GitHub-style "
+            "activity heatmap, and belt progress — all on one screen, updated the moment you log."
+        ),
+        "showcase_kata_title": "A real reference library, not a placeholder",
+        "showcase_kata_body": (
+            "Kata and technique breakdowns for every discipline we cover — verified against "
+            "standard curricula, not guessed. Reference videos are added as they're filmed; "
+            "the written description is always there in the meantime."
+        ),
+        "showcase_profile_title": "A public profile — like a GitHub for martial artists",
+        "showcase_profile_body": (
+            "Opt in, and your streak, belts, and activity heatmap become a shareable page. "
+            "Follow other practitioners, see the week's leaders per discipline, and turn "
+            "consistency into something visible."
+        ),
         "social_proof": "Born from {days} days of uninterrupted jo practice.",
         "social_link_label": "Follow the practice on Instagram",
         "cta2_title": "Be first in line",
@@ -399,15 +408,24 @@ STRINGS = {
             "Pratik ısı haritası, serin ve paylaşılabilir bir profil — "
             "isteğe bağlı ve herkese açık, dövüş sanatçıları için GitHub gibi."
         ),
-        "devices_title": "Dojoda cebinde, evde masanda",
-        "devices_body": (
-            "Joryu tarayıcıda çalışır — uygulama mağazası yok. Pratikten hemen "
-            "sonra telefonundan seansını kaydet; evde serini ve ısı haritanı "
-            "büyük ekrandan incele."
-        ),
-        "devices_phone_label": "Seans kaydı — telefonda",
-        "devices_desktop_label": "Seri & ısı haritası — bilgisayarda",
         "devices_note": "Yüklenebilir: ana ekranına ekle, normal bir uygulama gibi kullan.",
+        "showcase_dashboard_title": "Serin, ısı haritan, tek bakışta",
+        "showcase_dashboard_body": (
+            "Bir seansı saniyeler içinde kaydet. Serin, bu haftanın dakikaları, GitHub tarzı "
+            "aktivite ısı haritası ve kuşak ilerlemen — hepsi tek ekranda, kaydettiğin an güncellenir."
+        ),
+        "showcase_kata_title": "Gerçek bir referans kütüphanesi, yer tutucu değil",
+        "showcase_kata_body": (
+            "Kapsadığımız her branş için kata ve teknik açıklamaları — tahmin değil, standart "
+            "müfredatlara göre doğrulanmış. Referans videolar çekildikçe eklenir; o zamana kadar "
+            "yazılı açıklama her zaman orada."
+        ),
+        "showcase_profile_title": "Herkese açık profil — dövüş sanatçıları için GitHub gibi",
+        "showcase_profile_body": (
+            "İsteğe bağlı olarak açtığında serin, kuşakların ve aktivite ısı haritan paylaşılabilir "
+            "bir sayfaya dönüşür. Diğer pratisyenleri takip et, branş başına haftanın enlerini gör, "
+            "tutarlılığını görünür kıl."
+        ),
         "social_proof": "{days} gün kesintisiz jo pratiğinden doğdu.",
         "social_link_label": "Pratiği Instagram'da takip et",
         "cta2_title": "İlk sırada yer al",

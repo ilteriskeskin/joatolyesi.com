@@ -169,45 +169,35 @@
   </div>
 </section>
 
-<section class="devices">
-  <h2>{{ t.devices_title }}</h2>
-  <p class="devices__sub">{{ t.devices_body }}</p>
+<section class="showcase">
+  <div class="showcase__item">
+    <div class="showcase__text">
+      <h2>{{ t.showcase_dashboard_title }}</h2>
+      <p>{{ t.showcase_dashboard_body }}</p>
+    </div>
+    <div class="showcase__image">
+      <img src="/static/img/screens/dashboard.png" alt="Joryu dashboard" loading="lazy" width="1280" height="560">
+    </div>
+  </div>
 
-  <div class="devices__stage">
-    <figure class="device device--laptop">
-      <div class="device__screen">
-        <div class="mock-ui">
-          <div class="mock-ui__topbar"><span class="mock-ui__brand">joryu</span></div>
-          <div class="mock-ui__streak">
-            <span class="mock-ui__streak-num">37</span>
-            <span class="mock-ui__streak-label">{{ t.dash_streak_label }}</span>
-          </div>
-          <div class="mock-ui__heatmap mock-ui__heatmap--wide" aria-hidden="true">
-            {% for _ in range(64) %}<i></i>{% endfor %}
-          </div>
-          <div class="mock-ui__rows" aria-hidden="true"><i></i><i></i><i></i></div>
-        </div>
-      </div>
-      <div class="device--laptop__base"></div>
-      <figcaption class="device__label">{{ t.devices_desktop_label }}</figcaption>
-    </figure>
+  <div class="showcase__item showcase__item--reverse">
+    <div class="showcase__text">
+      <h2>{{ t.showcase_kata_title }}</h2>
+      <p>{{ t.showcase_kata_body }}</p>
+    </div>
+    <div class="showcase__image">
+      <img src="/static/img/screens/kata.png" alt="Joryu kata library" loading="lazy" width="1280" height="480">
+    </div>
+  </div>
 
-    <figure class="device device--phone">
-      <div class="device__screen">
-        <div class="mock-ui">
-          <div class="mock-ui__topbar"><span class="mock-ui__brand">joryu</span></div>
-          <div class="mock-ui__streak">
-            <span class="mock-ui__streak-num">37</span>
-            <span class="mock-ui__streak-label">{{ t.dash_streak_label }}</span>
-          </div>
-          <div class="mock-ui__heatmap" aria-hidden="true">
-            {% for _ in range(28) %}<i></i>{% endfor %}
-          </div>
-          <div class="mock-ui__button">{{ t.dash_log_button }}</div>
-        </div>
-      </div>
-      <figcaption class="device__label">{{ t.devices_phone_label }}</figcaption>
-    </figure>
+  <div class="showcase__item">
+    <div class="showcase__text">
+      <h2>{{ t.showcase_profile_title }}</h2>
+      <p>{{ t.showcase_profile_body }}</p>
+    </div>
+    <div class="showcase__image">
+      <img src="/static/img/screens/profile.png" alt="Joryu public profile" loading="lazy" width="1280" height="700">
+    </div>
   </div>
 
   <p class="devices__note">{{ t.devices_note }}</p>
