@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="/static/css/style.css">
   <script src="/static/js/vendor/htmx.min.js" defer></script>
   <script src="/static/js/vendor/alpine.min.js" defer></script>
+  {% if not request.url.path.startswith('/admin') %}
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-54NX2S2Z01"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -23,6 +24,7 @@
     gtag('js', new Date());
     gtag('config', 'G-54NX2S2Z01');
   </script>
+  {% endif %}
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("/static/sw.js", { scope: "/" }));
