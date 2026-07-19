@@ -303,6 +303,20 @@ STRINGS = {
             '<p><a href="{link}">Log today\'s practice</a></p>'
             "<p style=\"color:#888\">You get this because reminders are on in your profile settings.</p>"
         ),
+        "mail_weekly_subject": "Your week on Joryu",
+        "mail_weekly_body": (
+            "<p>Last week you practiced <strong>{days}</strong> day(s), <strong>{minutes}</strong> minutes total.</p>"
+            "<p>Most of it was {discipline}.</p>"
+            '<p><a href="{link}">See your dashboard</a></p>'
+            "<p style=\"color:#888\">You get this because reminders are on in your profile settings.</p>"
+        ),
+        "mail_weekly_leader_subject": "You were #1 this week — Joryu",
+        "mail_weekly_leader_body": (
+            "<p>Nice work — you practiced {discipline} more than anyone else on Joryu this week.</p>"
+            '<p><a href="{link}">See the leaderboard</a></p>'
+        ),
+        "push_weekly_leader_title": "Joryu",
+        "push_weekly_leader_body": "You were #1 in {discipline} this week.",
         # Belts & badges
         "belts_title": "Belts",
         "belts_hint": "Everyone starts with the white belt. Belts advance with total practice days — 365 days of practice earns the black belt.",
@@ -637,6 +651,20 @@ STRINGS = {
             '<p><a href="{link}">Bugünün pratiğini kaydet</a></p>'
             "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun.</p>"
         ),
+        "mail_weekly_subject": "Bu haftan — Joryu",
+        "mail_weekly_body": (
+            "<p>Geçen hafta <strong>{days}</strong> gün çalıştın, toplam <strong>{minutes}</strong> dakika.</p>"
+            "<p>En çok {discipline} çalıştın.</p>"
+            '<p><a href="{link}">Panelini gör</a></p>'
+            "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun.</p>"
+        ),
+        "mail_weekly_leader_subject": "Bu hafta birincisin — Joryu",
+        "mail_weekly_leader_body": (
+            "<p>Tebrikler — bu hafta {discipline} branşında Joryu'da en çok sen çalıştın.</p>"
+            '<p><a href="{link}">Sıralamayı gör</a></p>'
+        ),
+        "push_weekly_leader_title": "Joryu",
+        "push_weekly_leader_body": "Bu hafta {discipline} branşında birincisin.",
         # Kuşaklar ve rozetler
         "belts_title": "Kuşaklar",
         "belts_hint": "Herkes beyaz kuşakla başlar. Kuşaklar toplam pratik gününle ilerler — 365 pratik gününü dolduran siyah kuşak olur.",

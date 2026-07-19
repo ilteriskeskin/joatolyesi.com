@@ -109,8 +109,12 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       dakika alanı: tek tuşla pratik kaydı. **Tekrar sayacı eklendi:**
       practice_logs.kata_slug (migration 0009) ile "bunu N kez çalıştın"
       göstergesi — kişisel süreklilik motivasyonu.
-- [x] **8. Haftalık özet (v1 — dashboard kartı).** "Bu hafta: X gün, Y dk,
-      odak branş" + geçen haftayla kıyas. E-posta versiyonu sonra.
+- [x] **8. Haftalık özet.** Dashboard kartı: "Bu hafta: X gün, Y dk, odak
+      branş" + geçen haftayla kıyas. E-posta versiyonu da yapıldı:
+      `scripts/send_weekly_digest.py` (haftada bir, Pazartesi cron) —
+      reminders_enabled açık kullanıcılara geçen haftanın özeti + her
+      branşta en çok çalışana (min. 2 gün) "haftanın birincisi" e-posta +
+      push bildirimi.
 - [x] **9. PWA kısayolu.** Manifest shortcuts: "Pratik kaydet" (/app) ve
       "Kata" (/kata).
 - [x] **11. Branş rehberi (/guide).** 10 branş için kata + teknik/vuruş
