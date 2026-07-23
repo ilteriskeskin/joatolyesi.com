@@ -1,7 +1,7 @@
 """Pratik istatistikleri: seri, toplamlar, GitHub tarzı aktivite ızgarası."""
 
 import uuid
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -93,22 +93,50 @@ async def compute_longest_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
 
 
 async def total_practice_days(db: AsyncSession, user_id: uuid.UUID) -> int:
-    """Toplam pratik günü (farklı gün sayısı) — kuşaklar buna göre ilerler."""
+    """Toplam pratik günü (farklı gün sayısı) — kuşaklar buna göre ilerler.
+    Planlı dinlenme günleri sayılmaz: seviye ilerlemesi gerçek pratik ister."""
     result = await db.execute(
-        select(func.count(func.distinct(PracticeLog.practiced_on))).where(PracticeLog.user_id == user_id)
+        select(func.count(func.distinct(PracticeLog.practiced_on))).where(
+            PracticeLog.user_id == user_id, PracticeLog.is_rest_day.is_(False)
+        )
+    )
+    return result.scalar_one()
+
+
+# Planlı dinlenme günü: haftada bu kadar hak, seriyi bozmaz. Pazartesi başlangıçlı hafta.
+REST_DAYS_PER_WEEK = 1
+
+
+def _week_start(today: date) -> date:
+    return today - timedelta(days=today.weekday())
+
+
+async def rest_days_used_this_week(db: AsyncSession, user_id: uuid.UUID) -> int:
+    today = datetime.now(UTC).date()
+    result = await db.execute(
+        select(func.count(PracticeLog.id)).where(
+            PracticeLog.user_id == user_id,
+            PracticeLog.is_rest_day.is_(True),
+            PracticeLog.practiced_on >= _week_start(today),
+        )
     )
     return result.scalar_one()
 
 
 async def weekly_summary(db: AsyncSession, user_id: uuid.UUID) -> dict:
-    """Bu hafta / geçen hafta karşılaştırması + haftanın branşı (dashboard kartı)."""
+    """Bu hafta / geçen hafta karşılaştırması + haftanın branşı (dashboard kartı).
+    Planlı dinlenme günleri pratik istatistiğine dahil edilmez."""
     today = datetime.now(UTC).date()
     week_start = today - timedelta(days=today.weekday())  # pazartesi
     prev_start = week_start - timedelta(days=7)
 
     result = await db.execute(
         select(PracticeLog.practiced_on, PracticeLog.discipline, func.sum(PracticeLog.minutes))
-        .where(PracticeLog.user_id == user_id, PracticeLog.practiced_on >= prev_start)
+        .where(
+            PracticeLog.user_id == user_id,
+            PracticeLog.practiced_on >= prev_start,
+            PracticeLog.is_rest_day.is_(False),
+        )
         .group_by(PracticeLog.practiced_on, PracticeLog.discipline)
     )
     this_days: set = set()
@@ -137,7 +165,7 @@ async def practice_day_counts(db: AsyncSession, user_ids: list[uuid.UUID]) -> di
         return {}
     result = await db.execute(
         select(PracticeLog.user_id, func.count(func.distinct(PracticeLog.practiced_on)))
-        .where(PracticeLog.user_id.in_(user_ids))
+        .where(PracticeLog.user_id.in_(user_ids), PracticeLog.is_rest_day.is_(False))
         .group_by(PracticeLog.user_id)
     )
     return dict(result.all())
@@ -146,7 +174,7 @@ async def practice_day_counts(db: AsyncSession, user_ids: list[uuid.UUID]) -> di
 async def practice_stats(db: AsyncSession, user_id: uuid.UUID) -> dict:
     result = await db.execute(
         select(func.count(PracticeLog.id), func.coalesce(func.sum(PracticeLog.minutes), 0)).where(
-            PracticeLog.user_id == user_id
+            PracticeLog.user_id == user_id, PracticeLog.is_rest_day.is_(False)
         )
     )
     sessions, minutes = result.one()
@@ -155,14 +183,19 @@ async def practice_stats(db: AsyncSession, user_id: uuid.UUID) -> dict:
 
 async def build_heatmap(db: AsyncSession, user_id: uuid.UUID) -> list[list[dict]]:
     """Sütun = hafta, satır = gün (Pzt–Paz). Her hücre: tarih, yoğunluk
-    kademesi, toplam dakika ve o gün çalışılan branşlar (tooltip için)."""
+    kademesi, toplam dakika ve o gün çalışılan branşlar (tooltip için).
+    Planlı dinlenme günleri ayrı bir desenle ("rest" kademesi) işaretlenir."""
     today = datetime.now(UTC).date()
     start = today - timedelta(days=HEATMAP_WEEKS * 7 - 1)
     start -= timedelta(days=start.weekday())  # haftanın pazartesisine hizala
 
     result = await db.execute(
         select(PracticeLog.practiced_on, PracticeLog.discipline, func.sum(PracticeLog.minutes))
-        .where(PracticeLog.user_id == user_id, PracticeLog.practiced_on >= start)
+        .where(
+            PracticeLog.user_id == user_id,
+            PracticeLog.practiced_on >= start,
+            PracticeLog.is_rest_day.is_(False),
+        )
         .group_by(PracticeLog.practiced_on, PracticeLog.discipline)
     )
     totals: dict = {}
@@ -171,9 +204,18 @@ async def build_heatmap(db: AsyncSession, user_id: uuid.UUID) -> list[list[dict]
         totals[day] = totals.get(day, 0) + minutes
         disciplines.setdefault(day, set()).add(discipline)
 
+    rest_result = await db.execute(
+        select(PracticeLog.practiced_on).where(
+            PracticeLog.user_id == user_id,
+            PracticeLog.practiced_on >= start,
+            PracticeLog.is_rest_day.is_(True),
+        )
+    )
+    rest_days = set(rest_result.scalars().all())
+
     # UTC'nin önündeki dilimlerden "yarın" tarihli kayıt gelebilir;
     # veri olan günler bugünden ilerideyse grid onları da kapsasın
-    grid_end = max([today, *totals.keys()])
+    grid_end = max([today, *totals.keys(), *rest_days])
 
     weeks = []
     week_start = start
@@ -182,7 +224,9 @@ async def build_heatmap(db: AsyncSession, user_id: uuid.UUID) -> list[list[dict]
         for i in range(7):
             day = week_start + timedelta(days=i)
             minutes = totals.get(day, 0)
-            if minutes == 0:
+            if day in rest_days:
+                level = "rest"
+            elif minutes == 0:
                 level = None if day > today else 0
             elif minutes < 15:
                 level = 1
@@ -210,7 +254,12 @@ async def weekly_leaders(db: AsyncSession) -> list[dict]:
     result = await db.execute(
         select(PracticeLog.discipline, User, func.sum(PracticeLog.minutes).label("m"))
         .join(User, PracticeLog.user_id == User.id)
-        .where(PracticeLog.practiced_on >= week_start, User.is_public, User.username.is_not(None))
+        .where(
+            PracticeLog.practiced_on >= week_start,
+            PracticeLog.is_rest_day.is_(False),
+            User.is_public,
+            User.username.is_not(None),
+        )
         .group_by(PracticeLog.discipline, User.id)
         .order_by(func.sum(PracticeLog.minutes).desc())
     )

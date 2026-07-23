@@ -2,7 +2,9 @@
   {% for week in heatmap %}
   <div class="hm-week">
     {% for day in week %}
-    {% if day.level is none %}
+    {% if day.level == "rest" %}
+    <span class="hm-cell hm-rest" tabindex="0" data-tip="{{ day.date }} · {{ t.rest_day_label }}"></span>
+    {% elif day.level is none %}
     <span class="hm-cell hm-future"></span>
     {% elif day.level > 0 %}
     <span class="hm-cell hm-{{ day.level }}" tabindex="0"

@@ -631,6 +631,24 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
 .hm-3 { background: #8a6a35; }
 .hm-4 { background: var(--accent); }
 .hm-future { background: transparent; }
+.hm-rest {
+  background: repeating-linear-gradient(45deg, #24343d, #24343d 2px, #35505c 2px, #35505c 4px);
+}
+
+.rest-day-block { margin-top: 1rem; display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+.rest-day-form { display: flex; align-items: center; gap: 0.7rem; }
+.rest-day-button {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink-dim);
+  border-radius: 4px;
+  padding: 0.55rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.rest-day-button:disabled { opacity: 0.4; cursor: not-allowed; }
+.rest-day-quota { font-size: 0.8rem; color: var(--ink-dim); }
 
 .hm-cell[data-tip]:hover::after,
 .hm-cell[data-tip]:focus::after {

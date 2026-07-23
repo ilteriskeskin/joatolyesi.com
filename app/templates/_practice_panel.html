@@ -96,6 +96,18 @@
     </label>
     <button type="submit">{{ t.dash_log_button }}</button>
   </form>
+  <div class="rest-day-block">
+    <p class="muted">{{ t.rest_day_hint }}</p>
+    <form hx-post="/app/rest-day" hx-target="#practice-panel" hx-swap="innerHTML" class="rest-day-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="practiced_on" value="{{ today }}"
+             x-data x-init="$el.value = new Date().toLocaleDateString('en-CA')">
+      <button type="submit" class="rest-day-button" {% if rest_days_left < 1 %}disabled{% endif %}>
+        {{ t.rest_day_button }}
+      </button>
+      <span class="rest-day-quota">{{ t.rest_day_left.format(left=rest_days_left, total=rest_days_total) }}</span>
+    </form>
+  </div>
 </div>
 
 <div class="card">
@@ -105,9 +117,13 @@
     {% for log in recent_logs %}
     <li>
       <span class="log-date">{{ log.practiced_on.isoformat() }}</span>
+      {% if log.is_rest_day %}
+      <span class="log-discipline">{{ t.rest_day_label }}</span>
+      {% else %}
       <span class="log-discipline">{{ t["discipline_" ~ log.discipline] }}</span>
       <span class="log-minutes">{{ log.minutes }} min</span>
       {% if log.notes %}<span class="log-notes">{{ log.notes }}</span>{% endif %}
+      {% endif %}
     </li>
     {% endfor %}
   </ul>

@@ -74,11 +74,13 @@ class PracticeLog(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     practiced_on: Mapped[date] = mapped_column(Date, nullable=False, index=True)
-    discipline: Mapped[str] = mapped_column(String(20), nullable=False)  # jo/bokken/kata/other
-    minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    discipline: Mapped[str | None] = mapped_column(String(20), nullable=True)  # jo/bokken/kata/other; rest-day'de boş
+    minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)  # rest-day'de boş
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Kata sayfasından tek tuş kayıt geldiyse dolar — kişisel tekrar sayacı için
     kata_slug: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    # Planlı dinlenme günü: seriyi bozmaz ama seviye/istatistiklere sayılmaz
+    is_rest_day: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 

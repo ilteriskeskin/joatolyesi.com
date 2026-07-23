@@ -522,3 +522,53 @@ async def test_pro_disabled_by_default(client):
         assert r.status_code == 200 and "404" not in r.text
         r = await client.get(f"/kata?d={locked_kata.discipline}&kind={locked_kata.kind}")
         assert locked_kata.title_tr in r.text
+
+
+async def test_rest_day_does_not_break_streak_and_has_weekly_quota(client):
+    email, username = f"{unique('rest')}@test.com", unique("restuser")
+    await register(client, email, username)
+    token = await get_csrf(client, "/app")
+
+    day2 = (date.today() - timedelta(days=2)).isoformat()
+    yesterday = (date.today() - timedelta(days=1)).isoformat()
+    today = date.today().isoformat()
+
+    # 2 gün önce pratik, dün dinlenme, bugün pratik: seri kırılmamalı
+    r = await client.post("/app/practice", data={"practiced_on": day2, "discipline": "aikijo",
+                                                 "minutes": "20", "csrf_token": token})
+    assert r.status_code == 200
+    r = await client.post("/app/rest-day", data={"practiced_on": yesterday, "csrf_token": token})
+    assert r.status_code == 200
+    assert "rest_day_left" not in r.text  # anahtar degil, cevrilmis metin gorunmeli
+    r = await client.post("/app/practice", data={"practiced_on": today, "discipline": "aikijo",
+                                                 "minutes": "20", "csrf_token": token})
+    assert r.status_code == 200
+    r = await client.get("/app")
+    assert 'streak-number">3' in r.text
+
+    # Dinlenme günü kuşak/seviye ilerlemesine sayılmaz: 2 gerçek pratik günü var
+    from app.db import async_session
+    from app.models import User
+    from app.stats import total_practice_days
+    async with async_session() as db:
+        user = (await db.execute(select(User).where(User.email == email))).scalar_one()
+        days = await total_practice_days(db, user.id)
+    assert days == 2
+
+    # Haftalık kota: aynı haftada ikinci dinlenme günü reddedilir (sessizce yok sayılır).
+    # Yarını dene — pazar günü hariç her zaman aynı haftanın içinde kalır.
+    today_date = date.today()
+    if today_date.weekday() == 6:  # pazar: yarın yeni haftaya geçer, kota testi anlamsızlaşır
+        pytest.skip("hafta sınırı pazar gününe denk geliyor")
+    other_day = (today_date + timedelta(days=1)).isoformat()
+    r = await client.post("/app/rest-day", data={"practiced_on": other_day, "csrf_token": token})
+    assert r.status_code == 200
+    from app.models import PracticeLog
+    async with async_session() as db:
+        user = (await db.execute(select(User).where(User.email == email))).scalar_one()
+        rest_rows = (
+            await db.execute(
+                select(PracticeLog).where(PracticeLog.user_id == user.id, PracticeLog.is_rest_day.is_(True))
+            )
+        ).scalars().all()
+    assert len(rest_rows) == 1  # ikinci istek kotayı aştığı için eklenmedi

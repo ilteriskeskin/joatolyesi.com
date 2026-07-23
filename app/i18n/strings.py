@@ -288,6 +288,11 @@ STRINGS = {
         "longest_streak_stat_label": "Best streak",
         "freeze_left": "Streak freezes this month: {left}/{total}",
         "freeze_tip": "Life happens: up to 2 single-day gaps per month are bridged automatically and your streak survives.",
+        # Rest day
+        "rest_day_hint": "Planned rest, not an injury workaround — one day a week you can mark as rest without breaking your streak.",
+        "rest_day_button": "Mark today as a rest day",
+        "rest_day_left": "Rest days this week: {left}/{total}",
+        "rest_day_label": "Planned rest",
         # Weekly leaders
         "leaders_title": "This week's leaders",
         "leaders_hint": "The practitioner with the most minutes in each discipline this week.",
@@ -645,6 +650,11 @@ STRINGS = {
         "longest_streak_stat_label": "En uzun seri",
         "freeze_left": "Bu ayki donma hakkın: {left}/{total}",
         "freeze_tip": "Hayat araya girer: ayda 2 defaya kadar tek günlük boşluk otomatik köprülenir, serin bozulmaz.",
+        # Planlı dinlenme günü
+        "rest_day_hint": "Sakatken çalışmak için değil, planlı dinlenme için: haftada bir günü dinlenme olarak işaretleyebilirsin, serini bozmaz.",
+        "rest_day_button": "Bugünü dinlenme günü olarak işaretle",
+        "rest_day_left": "Bu haftaki dinlenme hakkın: {left}/{total}",
+        "rest_day_label": "Planlı dinlenme",
         # Haftanın enleri
         "leaders_title": "Haftanın enleri",
         "leaders_hint": "Bu hafta branşında en çok dakika yapan pratisyen.",
