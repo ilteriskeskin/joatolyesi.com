@@ -15,7 +15,7 @@ STRINGS = {
             "your streak, and browse the kata & technique library — built by a "
             "practitioner who trained {days} days straight."
         ),
-        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo · Karate · Taekwondo",
+        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo",
         "cta_button": "Join the waitlist",
         "cta_button_open": "Create your free account",
         "cta2_title_open": "Start training today",
@@ -372,7 +372,7 @@ STRINGS = {
             "serini koru, kata ve teknik kütüphanesinde ilerle — {days} gün "
             "aralıksız çalışmış bir pratisyenden."
         ),
-        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo · Karate · Taekwondo",
+        "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo",
         "cta_button": "Bekleme listesine katıl",
         "cta_button_open": "Ücretsiz hesap oluştur",
         "cta2_title_open": "Bugün çalışmaya başla",

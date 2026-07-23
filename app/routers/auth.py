@@ -8,7 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
-from app.constants import DISCIPLINES
+from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
 from app.i18n.strings import get_strings
@@ -56,7 +56,7 @@ async def register_page(
     if user:
         return RedirectResponse("/app", status_code=303)
     return render(
-        request, "register.html", error=None, disciplines=DISCIPLINES,
+        request, "register.html", error=None, disciplines=SELECTABLE_DISCIPLINES,
         ref=ref if ref and REF_RE.match(ref) else "",
     )
 
@@ -88,20 +88,20 @@ async def register(
     username = username.strip().lower()
     ref_clean = ref if ref and REF_RE.match(ref) else ""
     if not EMAIL_RE.match(email):
-        return render(request, "register.html", error="form_error_invalid", disciplines=DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="form_error_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
     if not USERNAME_RE.match(username):
-        return render(request, "register.html", error="profile_error_username_invalid", disciplines=DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="profile_error_username_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
     if len(password) < 8:
-        return render(request, "register.html", error="auth_error_password_short", disciplines=DISCIPLINES, ref=ref_clean)
-    if discipline not in DISCIPLINES:
+        return render(request, "register.html", error="auth_error_password_short", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
+    if discipline not in SELECTABLE_DISCIPLINES:
         discipline = "aikijo"
 
     existing = await db.execute(select(User.id).where(User.email == email))
     if existing.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="auth_error_exists", disciplines=DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="auth_error_exists", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
     taken = await db.execute(select(User.id).where(User.username == username))
     if taken.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="profile_error_username_taken", disciplines=DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="profile_error_username_taken", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
 
     referred_by = None
     if ref_clean:
@@ -265,10 +265,10 @@ async def change_password(
     db: AsyncSession = Depends(get_db),
 ):
     if not await verify_password(current_password, user.password_hash):
-        return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+        return render(request, "profile_edit.html", user=user, disciplines=SELECTABLE_DISCIPLINES,
                       error="pw_wrong_current", saved=False)
     if len(new_password) < 8:
-        return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+        return render(request, "profile_edit.html", user=user, disciplines=SELECTABLE_DISCIPLINES,
                       error="auth_error_password_short", saved=False)
     user.password_hash = await hash_password(new_password)
     await db.commit()
@@ -288,7 +288,7 @@ async def delete_account(
     db: AsyncSession = Depends(get_db),
 ):
     if not await verify_password(password, user.password_hash):
-        return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+        return render(request, "profile_edit.html", user=user, disciplines=SELECTABLE_DISCIPLINES,
                       error="pw_wrong_current", saved=False)
     await db.delete(user)  # practice_logs, enrollments, subscription cascade ile silinir
     await db.commit()

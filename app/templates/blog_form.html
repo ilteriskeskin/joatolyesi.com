@@ -16,6 +16,9 @@
         {% for d in disciplines if d != "other" %}
         <option value="{{ d }}" {% if post and post.discipline == d %}selected{% endif %}>{{ t["discipline_" ~ d] }}</option>
         {% endfor %}
+        {% if post and post.discipline and post.discipline not in disciplines %}
+        <option value="{{ post.discipline }}" selected>{{ t["discipline_" ~ post.discipline] }}</option>
+        {% endif %}
       </select>
     </label>
 

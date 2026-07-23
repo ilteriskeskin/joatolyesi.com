@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.constants import DISCIPLINES
+from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
 from app.models import Follow, PracticeLog, User
@@ -24,7 +24,7 @@ USERNAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$")
 
 @router.get("/profile", response_class=HTMLResponse)
 async def profile_edit(request: Request, user: User = Depends(require_user)):
-    return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES, error=None, saved=False)
+    return render(request, "profile_edit.html", user=user, disciplines=SELECTABLE_DISCIPLINES, error=None, saved=False)
 
 
 @router.post("/profile", response_class=HTMLResponse, dependencies=[Depends(csrf_protect)])
@@ -42,25 +42,25 @@ async def profile_save(
     username = username.strip().lower()
     if not USERNAME_RE.match(username):
         return render(
-            request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+            request, "profile_edit.html", user=user, disciplines=SELECTABLE_DISCIPLINES,
             error="profile_error_username_invalid", saved=False,
         )
     if username != user.username:
         taken = await db.execute(select(User.id).where(User.username == username, User.id != user.id))
         if taken.scalar_one_or_none() is not None:
             return render(
-                request, "profile_edit.html", user=user, disciplines=DISCIPLINES,
+                request, "profile_edit.html", user=user, disciplines=SELECTABLE_DISCIPLINES,
                 error="profile_error_username_taken", saved=False,
             )
 
     user.username = username
     user.display_name = display_name.strip()[:80] or None
     user.bio = bio.strip()[:500] or None
-    user.discipline = discipline if discipline in DISCIPLINES else user.discipline
+    user.discipline = discipline if discipline in SELECTABLE_DISCIPLINES else user.discipline
     user.is_public = is_public == "on"
     user.reminders_enabled = reminders_enabled == "on"
     await db.commit()
-    return render(request, "profile_edit.html", user=user, disciplines=DISCIPLINES, error=None, saved=True)
+    return render(request, "profile_edit.html", user=user, disciplines=SELECTABLE_DISCIPLINES, error=None, saved=True)
 
 
 @router.get("/practitioners", response_class=HTMLResponse)

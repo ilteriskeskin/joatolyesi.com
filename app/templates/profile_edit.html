@@ -24,6 +24,9 @@
         {% for d in disciplines %}
         <option value="{{ d }}" {% if user.discipline == d %}selected{% endif %}>{{ t["discipline_" ~ d] }}</option>
         {% endfor %}
+        {% if user.discipline not in disciplines %}
+        <option value="{{ user.discipline }}" selected>{{ t["discipline_" ~ user.discipline] }}</option>
+        {% endif %}
       </select>
     </label>
     <label class="checkbox-label">

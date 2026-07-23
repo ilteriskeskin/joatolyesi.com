@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 
-from app.constants import DISCIPLINES
+from app.constants import SELECTABLE_DISCIPLINES
 from app.deps import get_current_user, waitlist_gate
 from app.guide_content import GUIDE, get_guide
 from app.models import User
@@ -22,7 +22,9 @@ RESOURCES = [
 @router.get("/guide", response_class=HTMLResponse)
 async def guide_index(request: Request, user: User | None = Depends(get_current_user)):
     """Branş rehberi — giriş istemez (SEO + üyelik öncesi değer)."""
-    disciplines = [d for d in DISCIPLINES if d in GUIDE]
+    # Karate/taekwondo rehber içeriği kalıyor (/guide/karate hâlâ erişilebilir),
+    # sadece index kartlarından gizleniyor — ürün artık silahlı pratiğe odaklı.
+    disciplines = [d for d in SELECTABLE_DISCIPLINES if d in GUIDE]
     return render(request, "guide_index.html", user=user, disciplines=disciplines, guide=GUIDE)
 
 

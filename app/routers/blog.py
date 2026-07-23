@@ -11,7 +11,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.constants import DISCIPLINES
+from app.constants import DISCIPLINES, SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
 from app.markdown_utils import markdown_excerpt, render_markdown
@@ -40,6 +40,8 @@ async def blog_list(
 ):
     q = (request.query_params.get("q") or "").strip()[:80]
     d = request.query_params.get("d")
+    # Filtre eşleşmesi tam liste üzerinden: eski karate/taekwondo etiketli
+    # yazılar dropdown'da seçenek olarak sunulmasa da doğrudan linkle filtrelenebilir.
     selected = d if d in DISCIPLINES else None
 
     stmt = select(Post).options(selectinload(Post.author)).order_by(Post.created_at.desc()).limit(30)
@@ -53,13 +55,13 @@ async def blog_list(
     excerpts = {p.id: markdown_excerpt(p.body) for p in posts}
     return render(
         request, "blog_list.html", user=user,
-        posts=posts, excerpts=excerpts, q=q, selected=selected, disciplines=DISCIPLINES,
+        posts=posts, excerpts=excerpts, q=q, selected=selected, disciplines=SELECTABLE_DISCIPLINES,
     )
 
 
 @router.get("/blog/yeni", response_class=HTMLResponse)
 async def blog_new(request: Request, user: User = Depends(require_user)):
-    return render(request, "blog_form.html", user=user, post=None, disciplines=DISCIPLINES, error=None)
+    return render(request, "blog_form.html", user=user, post=None, disciplines=SELECTABLE_DISCIPLINES, error=None)
 
 
 @router.post("/blog/yeni", dependencies=[Depends(csrf_protect)])
@@ -75,14 +77,14 @@ async def blog_create(
     title, body = title.strip()[:140], body.strip()[:20000]
     if len(title) < TITLE_MIN or len(body) < BODY_MIN:
         return render(request, "blog_form.html", user=user, post=None,
-                      disciplines=DISCIPLINES, error="blog_error_short",
+                      disciplines=SELECTABLE_DISCIPLINES, error="blog_error_short",
                       draft_title=title, draft_body=body)
     post = Post(
         user_id=user.id,
         slug=_slugify(title),
         title=title,
         body=body,
-        discipline=discipline if discipline in DISCIPLINES else None,
+        discipline=discipline if discipline in SELECTABLE_DISCIPLINES else None,
     )
     db.add(post)
     await db.commit()
@@ -114,7 +116,7 @@ async def blog_edit(
     post = result.scalar_one_or_none()
     if post is None:
         return render(request, "404.html", user=user)
-    return render(request, "blog_form.html", user=user, post=post, disciplines=DISCIPLINES, error=None)
+    return render(request, "blog_form.html", user=user, post=post, disciplines=SELECTABLE_DISCIPLINES, error=None)
 
 
 @router.post("/blog/{slug}/duzenle", dependencies=[Depends(csrf_protect)])
@@ -135,9 +137,12 @@ async def blog_update(
     title, body = title.strip()[:140], body.strip()[:20000]
     if len(title) < TITLE_MIN or len(body) < BODY_MIN:
         return render(request, "blog_form.html", user=user, post=post,
-                      disciplines=DISCIPLINES, error="blog_error_short")
+                      disciplines=SELECTABLE_DISCIPLINES, error="blog_error_short")
     post.title = title
     post.body = body
+    # Tam DISCIPLINES'a karşı doğrulanır: form yalnız SELECTABLE_DISCIPLINES +
+    # yazının zaten sahip olduğu eski değeri (varsa) seçenek olarak sunuyor,
+    # dolayısıyla legacy karate/taekwondo etiketi korunabiliyor.
     post.discipline = discipline if discipline in DISCIPLINES else None
     post.updated_at = datetime.now(UTC)
     await db.commit()

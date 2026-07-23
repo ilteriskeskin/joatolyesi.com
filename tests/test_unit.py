@@ -4,6 +4,7 @@ import time
 import uuid
 
 from app.badges import BELTS, compute_badges, compute_belts, current_belt
+from app.constants import DISCIPLINES, SELECTABLE_DISCIPLINES
 from app.i18n.strings import STRINGS, get_strings
 from app.security import (
     create_reset_token,
@@ -90,6 +91,13 @@ class TestBelts:
     def test_badges(self):
         badges = compute_badges(25)
         assert [b.earned for b in badges] == [True, True, False, False]
+
+
+class TestDisciplines:
+    def test_karate_taekwondo_not_selectable_but_preserved(self):
+        assert "karate" not in SELECTABLE_DISCIPLINES
+        assert "taekwondo" not in SELECTABLE_DISCIPLINES
+        assert "karate" in DISCIPLINES and "taekwondo" in DISCIPLINES  # eski veri hâlâ geçerli
 
 
 class TestI18n:
