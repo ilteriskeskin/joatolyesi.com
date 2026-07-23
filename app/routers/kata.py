@@ -88,7 +88,18 @@ async def kata_detail(
                 )
             )
         ).scalar_one()
-    return render(request, "kata_detail.html", user=user, kata=kata, logged=logged, repeat_count=repeat_count)
+    # İlgili katalar: aynı branş + tür, farklı slug — SEO iç linklemesi ve keşif için
+    related_result = await db.execute(
+        select(Kata)
+        .where(Kata.discipline == kata.discipline, Kata.kind == kata.kind, Kata.slug != kata.slug)
+        .order_by(Kata.sort_order, Kata.title_en)
+        .limit(6)
+    )
+    related = list(related_result.scalars().all())
+    return render(
+        request, "kata_detail.html", user=user, kata=kata, logged=logged,
+        repeat_count=repeat_count, related=related,
+    )
 
 
 @router.post("/kata/{slug}/log", dependencies=[Depends(csrf_protect)])

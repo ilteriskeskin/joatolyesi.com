@@ -49,12 +49,15 @@ async def robots():
 
 
 @router.get("/sitemap.xml")
-async def sitemap():
+async def sitemap(db: AsyncSession = Depends(get_db)):
     paths = ["/", "/privacy", "/terms"]
     if not settings.waitlist_only:
         from app.guide_content import GUIDE
+        from app.models import Kata
 
-        paths += ["/guide", "/blog", "/resources", "/tips"] + [f"/guide/{d}" for d in GUIDE]
+        paths += ["/guide", "/blog", "/resources", "/tips", "/kata"] + [f"/guide/{d}" for d in GUIDE]
+        slugs = (await db.execute(select(Kata.slug))).scalars().all()
+        paths += [f"/kata/{slug}" for slug in slugs]
     urls = "".join(f"<url><loc>{settings.base_url}{p}</loc></url>" for p in paths)
     xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
     return Response(xml, media_type="application/xml")

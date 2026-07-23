@@ -1,8 +1,42 @@
 {% extends "base.html" %}
-{% block title %}{{ kata.title_en if lang == 'en' else kata.title_tr }} — Joryu{% endblock %}
+{% set kata_title = kata.title_en if lang == 'en' else kata.title_tr %}
+{% set kata_desc = kata.description_en if lang == 'en' else kata.description_tr %}
+{% block title %}{{ kata_title }} — {{ t["discipline_" ~ kata.discipline] }} — Joryu{% endblock %}
+{% block meta_description %}{{ kata_desc | truncate(155) }}{% endblock %}
+{% block og %}
+  <meta property="og:type" content="{{ 'video.other' if kata.video_url else 'article' }}">
+  <meta property="og:title" content="{{ self.title() }}">
+  <meta property="og:description" content="{{ self.meta_description() }}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": {{ kata_title | tojson }},
+    "description": {{ kata_desc | tojson }},
+    "step": [{"@type": "HowToStep", "text": {{ kata_desc | tojson }}}]
+  }
+  </script>
+  {% if kata.video_url %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": {{ kata_title | tojson }},
+    "description": {{ kata_desc | truncate(500) | tojson }},
+    "thumbnailUrl": "https://joatolyesi.com/static/img/share.png",
+    "uploadDate": "2026-01-01",
+    "embedUrl": {{ kata.video_url | tojson }}
+  }
+  </script>
+  {% endif %}
+{% endblock %}
 {% block content %}
 <article class="kata-detail">
-  <h1>{{ kata.title_en if lang == 'en' else kata.title_tr }}</h1>
+  <p class="guide-breadcrumb">
+    <a href="/kata">{{ t.kata_title }}</a> ·
+    <a href="/kata?d={{ kata.discipline }}&kind={{ kata.kind }}">{{ t["discipline_" ~ kata.discipline] }}</a>
+  </p>
+  <h1>{{ kata_title }}</h1>
   <span class="kata-discipline">{{ t["discipline_" ~ kata.discipline] }}</span>
   <span class="badge badge--pro kata-kind-badge">{{ t.kata_kind_kata if kata.kind == 'kata' else t.kata_kind_teknik }}</span>
   {% if kata.video_url %}
@@ -12,7 +46,7 @@
   {% else %}
   <div class="video-placeholder">{{ t.kata_video_soon }}</div>
   {% endif %}
-  <p>{{ kata.description_en if lang == 'en' else kata.description_tr }}</p>
+  <p>{{ kata_desc }}</p>
 
   {% if user %}
   <div class="card kata-log-card">
@@ -32,9 +66,22 @@
   </div>
   {% else %}
   <div class="card guide-cta">
-    <p>{{ t.blog_cta_text }}</p>
+    <p>{{ t.kata_cta_text }}</p>
     <a class="button" href="/register">{{ t.nav_register }}</a>
   </div>
+  {% endif %}
+
+  {% if related %}
+  <section class="kata-related">
+    <h2>{{ t.kata_related_title }}</h2>
+    <div class="card-grid">
+      {% for r in related %}
+      <a class="card kata-card" href="/kata/{{ r.slug }}">
+        <h3>{{ r.title_en if lang == 'en' else r.title_tr }}</h3>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
   {% endif %}
 </article>
 {% endblock %}

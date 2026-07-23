@@ -572,3 +572,27 @@ async def test_rest_day_does_not_break_streak_and_has_weekly_quota(client):
             )
         ).scalars().all()
     assert len(rest_rows) == 1  # ikinci istek kotayı aştığı için eklenmedi
+
+
+async def test_kata_detail_seo_metadata(client):
+    from app.db import async_session
+    from app.models import Kata
+
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.is_free))).scalars().first()
+    if kata is None:
+        pytest.skip("seed içerik yok")
+
+    r = await client.get(f"/kata/{kata.slug}")
+    assert r.status_code == 200
+    assert '<meta name="description"' in r.text
+    assert 'application/ld+json' in r.text
+    assert '"@type": "HowTo"' in r.text
+    assert 'hreflang="tr"' in r.text and 'hreflang="en"' in r.text
+    assert f'<link rel="canonical" href="https://joatolyesi.com/kata/{kata.slug}">' in r.text
+
+    r = await client.get("/sitemap.xml")
+    assert f"/kata/{kata.slug}" in r.text
+
+    r = await client.get(f"/kata?d={kata.discipline}&kind={kata.kind}")
+    assert "kata-search__input" in r.text

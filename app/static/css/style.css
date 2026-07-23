@@ -538,6 +538,22 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
 .tab:hover { text-decoration: none; color: var(--ink); border-color: var(--accent); }
 .tab--active { color: var(--accent); border-color: var(--accent); }
 
+.kata-search__input {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.7rem 1rem;
+  color: var(--ink);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.kata-related { margin-top: 2.5rem; }
+.kata-related h2 { font-size: 1.3rem; margin-bottom: 1rem; }
+
 /* --- Profil & topluluk --- */
 
 .profile-card textarea {

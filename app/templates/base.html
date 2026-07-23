@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Joryu{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ t.default_meta_description }}{% endblock %}">
   <meta name="theme-color" content="#0b0c0d">
   <link rel="manifest" href="/static/manifest.webmanifest">
   <link rel="icon" href="/static/img/icon.svg" type="image/svg+xml">
@@ -12,7 +13,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Joryu">
   <link rel="canonical" href="https://joatolyesi.com{{ request.url.path }}">
-{% block og %}{% endblock %}
+  <link rel="alternate" hreflang="tr" href="https://joatolyesi.com{{ request.url.path }}?lang=tr">
+  <link rel="alternate" hreflang="en" href="https://joatolyesi.com{{ request.url.path }}?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://joatolyesi.com{{ request.url.path }}">
+{% block og %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ self.title() }}">
+  <meta property="og:description" content="{{ self.meta_description() }}">
+{% endblock %}
   <link rel="stylesheet" href="/static/css/style.css">
   <script src="/static/js/vendor/htmx.min.js" defer></script>
   <script src="/static/js/vendor/alpine.min.js" defer></script>

@@ -8,6 +8,7 @@ STRINGS = {
             "keep your streak, and browse the kata & technique library "
             "between dojo days."
         ),
+        "default_meta_description": "Joryu — a free practice companion for jo, bokken and kata: daily tracking, a kata & technique library, and a public practitioner profile.",
         "hero_h1": "Train every day. Even when the dojo is closed.",
         "hero_sub": (
             "For aikido, iaido, jodo and kenjutsu practitioners who train alone "
@@ -222,6 +223,9 @@ STRINGS = {
         "kata_log_button": "I practiced this today",
         "kata_logged": "Logged. Your streak is safe for today.",
         "kata_repeat_count": "You have practiced this {n} times.",
+        "kata_cta_text": "Save the days you practice this kata — create a free account.",
+        "kata_related_title": "Related kata & techniques",
+        "kata_search_placeholder": "Search kata and techniques…",
         # Weekly summary
         "week_title": "This week",
         "week_days_label": "practice days",
@@ -372,6 +376,7 @@ STRINGS = {
             "solo pratik yoldaşı: dojo dışındaki günlerde jo, bokken ve kata "
             "seanslarını kaydet, serini koru, kata ve teknik kütüphanesine göz at."
         ),
+        "default_meta_description": "Joryu — jo, bokken ve kata için ücretsiz pratik yoldaşı: günlük takip, kata & teknik kütüphanesi ve herkese açık pratisyen profili.",
         "hero_h1": "Her gün çalış. Dojo kapalıyken bile.",
         "hero_sub": (
             "Dojo günleri arasında tek başına çalışan aikido, iaido, jodo ve "
@@ -586,6 +591,9 @@ STRINGS = {
         "kata_log_button": "Bugün bunu çalıştım",
         "kata_logged": "Kaydedildi. Bugünün serisi güvende.",
         "kata_repeat_count": "Bunu {n} kez çalıştın.",
+        "kata_cta_text": "Bu kata'yı çalıştığın günleri kaydet — ücretsiz hesap oluştur.",
+        "kata_related_title": "İlgili kata ve teknikler",
+        "kata_search_placeholder": "Kata ve teknik ara…",
         # Haftalık özet
         "week_title": "Bu hafta",
         "week_days_label": "pratik günü",
