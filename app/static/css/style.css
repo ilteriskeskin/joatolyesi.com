@@ -1784,7 +1784,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
 .install-bar__text { flex: 1; font-size: 0.85rem; color: var(--ink); }
 .install-bar__install {
   background: var(--accent-red);
-  color: #0b0c0d;
+  color: var(--ink);
   border: none;
   border-radius: 999px;
   padding: 0.4rem 0.9rem;
