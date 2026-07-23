@@ -83,6 +83,7 @@
     <h1>{{ t.hero_h1 }}</h1>
     <p class="hero__sub">{{ t.hero_sub.format(days=practice_days) }}</p>
     <p class="hero__disciplines">{{ t.hero_disciplines }}</p>
+    <p class="hero__pricing">{{ t.pricing_note }}</p>
 
     {% if waitlist_only %}
     <form class="waitlist-form" hx-post="/waitlist" hx-target="find .form-message-slot" hx-swap="innerHTML">
@@ -149,6 +150,7 @@
       </svg>
       <h3>{{ t.feature_1_title }}</h3>
       <p>{{ t.feature_1_body }}</p>
+      <p class="feature-disclaimer">{{ t.belt_disclaimer }}</p>
     </div>
     <div class="feature-card">
       <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">

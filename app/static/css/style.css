@@ -148,6 +148,12 @@ a:hover { text-decoration: underline; }
   font-size: 0.85rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.hero__pricing {
+  color: var(--ink-dim);
+  font-size: 0.85rem;
   margin-bottom: 2rem;
 }
 
@@ -226,6 +232,13 @@ a:hover { text-decoration: underline; }
 .problem__card p, .feature-card p {
   color: var(--ink-dim);
   font-size: 0.95rem;
+}
+
+.feature-disclaimer {
+  font-size: 0.78rem !important;
+  font-style: italic;
+  margin-top: 0.6rem;
+  opacity: 0.75;
 }
 
 .social-proof {

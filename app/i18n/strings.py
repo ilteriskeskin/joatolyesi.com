@@ -16,6 +16,7 @@ STRINGS = {
             "practitioner who trained {days} days straight."
         ),
         "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo",
+        "pricing_note": "Free to use — no paywall, no card required.",
         "cta_button": "Join the waitlist",
         "cta_button_open": "Create your free account",
         "cta2_title_open": "Start training today",
@@ -44,7 +45,7 @@ STRINGS = {
         "feature_2_title": "Kata & technique library",
         "feature_2_body": (
             "Every kata and technique for your discipline, with clear step "
-            "descriptions. Reference videos are being added over time."
+            "descriptions and reference videos."
         ),
         "feature_3_title": "A public profile that tracks your practice",
         "feature_3_body": (
@@ -293,6 +294,7 @@ STRINGS = {
         "rest_day_button": "Mark today as a rest day",
         "rest_day_left": "Rest days this week: {left}/{total}",
         "rest_day_label": "Planned rest",
+        "belt_disclaimer": "These belts track practice consistency — they are not an official rank or grade awarded by a teacher or federation.",
         # Weekly leaders
         "leaders_title": "This week's leaders",
         "leaders_hint": "The practitioner with the most minutes in each discipline this week.",
@@ -378,6 +380,7 @@ STRINGS = {
             "aralıksız çalışmış bir pratisyenden."
         ),
         "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo",
+        "pricing_note": "Kullanımı ücretsiz — ödeme duvarı yok, kart bilgisi istenmez.",
         "cta_button": "Bekleme listesine katıl",
         "cta_button_open": "Ücretsiz hesap oluştur",
         "cta2_title_open": "Bugün çalışmaya başla",
@@ -405,8 +408,8 @@ STRINGS = {
         ),
         "feature_2_title": "Kata ve teknik kütüphanesi",
         "feature_2_body": (
-            "Branşındaki tüm kata ve teknikler, adım adım açıklamalarla. "
-            "Referans videolar zamanla eklenecek."
+            "Branşındaki tüm kata ve teknikler, adım adım açıklamalar ve "
+            "referans videolarla."
         ),
         "feature_3_title": "Pratiğini izleyen bir profil",
         "feature_3_body": (
@@ -655,6 +658,7 @@ STRINGS = {
         "rest_day_button": "Bugünü dinlenme günü olarak işaretle",
         "rest_day_left": "Bu haftaki dinlenme hakkın: {left}/{total}",
         "rest_day_label": "Planlı dinlenme",
+        "belt_disclaimer": "Bu kuşaklar pratik tutarlılığını gösterir; bir sensei veya federasyon tarafından verilen resmi bir kuşak/derece değildir.",
         # Haftanın enleri
         "leaders_title": "Haftanın enleri",
         "leaders_hint": "Bu hafta branşında en çok dakika yapan pratisyen.",
