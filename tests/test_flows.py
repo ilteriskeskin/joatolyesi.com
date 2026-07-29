@@ -365,6 +365,36 @@ async def test_kata_kind_split_and_admin(client):
     assert r.status_code == 200
 
 
+async def test_kata_hides_karate_taekwondo_but_keeps_data(client):
+    from app.db import async_session
+    from app.models import Kata
+    from sqlalchemy import select as _select
+
+    async with async_session() as db:
+        karate_kata = (
+            await db.execute(_select(Kata).where(Kata.discipline == "karate"))
+        ).scalars().first()
+    if karate_kata is None:
+        pytest.skip("seed içerik yok")
+
+    # "Tümü" görünümünde ve branş sekmelerinde karate/taekwondo hiç görünmez
+    r = await client.get("/kata?d=all")
+    assert "Karate" not in r.text and "Taekwondo" not in r.text
+    assert karate_kata.title_tr not in r.text
+
+    # ?d=karate ile zorlanırsa da branş seçilmiş sayılmaz (sekmelerde yok)
+    r = await client.get("/kata?d=karate")
+    assert karate_kata.title_tr not in r.text
+
+    # Veri silinmedi: detay sayfası hâlâ doğrudan linkle erişilebilir
+    r = await client.get(f"/kata/{karate_kata.slug}")
+    assert r.status_code == 200 and karate_kata.title_tr in r.text
+
+    # sitemap karate/taekwondo kata sayfalarını promote etmiyor
+    r = await client.get("/sitemap.xml")
+    assert f"/kata/{karate_kata.slug}" not in r.text
+
+
 async def test_waitlist_referral_and_position(client):
     email_a = f"{unique('ra')}@test.com"
     token = await get_csrf(client, "/login")
@@ -513,10 +543,15 @@ async def test_pro_disabled_by_default(client):
     # Pro kapaliyken odeme duvari yok: is_free=False isaretli kata da tamamen
     # erisilebilir olmali (listede gorunur, detay 200 doner) - aksi halde
     # kutuphanenin buyuk kismi bombos gorunur (bkz. gecmis geri bildirim).
+    from app.constants import SELECTABLE_DISCIPLINES
     from app.db import async_session
     from app.models import Kata
     async with async_session() as db:
-        locked_kata = (await db.execute(select(Kata).where(Kata.is_free.is_(False)))).scalars().first()
+        locked_kata = (
+            await db.execute(
+                select(Kata).where(Kata.is_free.is_(False), Kata.discipline.in_(SELECTABLE_DISCIPLINES))
+            )
+        ).scalars().first()
     if locked_kata is not None:
         r = await client.get(f"/kata/{locked_kata.slug}")
         assert r.status_code == 200 and "404" not in r.text

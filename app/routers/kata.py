@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.config import settings
 from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, require_user, waitlist_gate
@@ -17,7 +18,11 @@ router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 @router.get("/kata", response_class=HTMLResponse)
 async def kata_list(request: Request, user: User | None = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    available_result = await db.execute(select(Kata.discipline).distinct())
+    # Karate/taekwondo kapsam dışı: sekmelerde ve "tümü" görünümünde hiç
+    # görünmez. Veri silinmedi — sadece kütüphane gezintisinden çıkarıldı.
+    available_result = await db.execute(
+        select(Kata.discipline).where(Kata.discipline.in_(SELECTABLE_DISCIPLINES)).distinct()
+    )
     available = sorted(available_result.scalars().all())
 
     # Varsayılan görünüm kullanıcının branşı; ?d= ile diğerlerine geçilir
@@ -34,7 +39,7 @@ async def kata_list(request: Request, user: User | None = Depends(get_current_us
     if kind not in ("kata", "teknik"):
         kind = "kata"
 
-    stmt = select(Kata).order_by(Kata.sort_order, Kata.title_en)
+    stmt = select(Kata).where(Kata.discipline.in_(SELECTABLE_DISCIPLINES)).order_by(Kata.sort_order, Kata.title_en)
     if selected:
         stmt = stmt.where(Kata.discipline == selected, Kata.kind == kind)
     # Listede her zaman tüm katalog görünür (kilitliyse rozetiyle); gerçek
