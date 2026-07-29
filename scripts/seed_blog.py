@@ -26,9 +26,9 @@ USERS = [
      "bio": "Aiki-ken çalışıyorum. Yedi suburi, bin tekrar."},
     {"username": "poomsae-calismasi", "display_name": "Poomsae Çalışması", "discipline": "taekwondo",
      "bio": "Taegeuk'ten siyah kuşak poomsae'lerine giden yolun günlüğü."},
-    {"username": "seitei-calismasi", "display_name": "Seitei Çalışması", "discipline": "jodo",
+    {"username": "aksam-keiko", "display_name": "Kaan", "discipline": "jodo",
      "bio": "ZNKR Seitei Jodo çalışıyorum. Kılıca karşı sopa — hep kılıç kazanır, ta ki kazanmayana kadar."},
-    {"username": "kenjutsu-defteri", "display_name": "Kenjutsu Defteri", "discipline": "kenjutsu",
+    {"username": "yalniz-kilic", "display_name": "Ege", "discipline": "kenjutsu",
      "bio": "Koryu kenjutsu meraklısı. Kata tek başına da çalışılır, rakip her zaman hayalidir."},
 ]
 
@@ -169,7 +169,7 @@ Iaido'da gerçek hedef, düşmanı kesmeden önce görmeden hareket etmemektir (
 > Bir kılıç ustası kesişin hızından değil, kesişin gerekmediği anı bilmesinden tanınır.""",
     },
     {
-        "username": "kenshin-yolda",
+        "username": "joryu",
         "title": "Aiki-jo'nun 20 Suburi'si: Aikidoyu Sopayla Anlamak",
         "discipline": "aikijo",
         "body": """Aiki-jo'ya yeni başlayanlar genelde aynı soruyu sorar: "Bu aikido mu, jodo mu?" Cevap ikisi de değil, ikisinin kesişimi. Aikido'nun kurucusu Morihei Ueshiba, kendi prensiplerini (irimi, tenkan, kokyu) bir sopa üzerinden somutlaştırmak için jo çalışmasını geliştirdi; öğrencisi Morihiro Saito bu çalışmayı Iwama'da sistematikleştirip bugün dünyada en yaygın öğretilen aiki-jo müfredatı hâline getirdi. Bu müfredatın omurgası 20 suburi'dir.
@@ -195,7 +195,7 @@ Tam sıralama ve isimler öğrettiğiniz dojoya ve hangi çizgiyi (Iwama, Ki Soc
 Dojoya gitmeden, sadece iki metrekarelik bir alanda bile bu 20 suburi'nin ilk birkaçıyla başlamak, aikidonun gövde mantığını anlamanın en doğrudan yollarından biridir.""",
     },
     {
-        "username": "seitei-calismasi",
+        "username": "aksam-keiko",
         "title": "Jodo ve Jojutsu: Aynı Silah, İki Farklı Yol",
         "discipline": "jodo",
         "body": """Jo'nun tarihi 17. yüzyıla, samuray Muso Gonnosuke'nin Shinto Muso-ryu jojutsu'yu kurmasına dayanır — bu hikâye bu blogda daha önce de anlatıldı. Ama az bilinen şey şu: bugün "jodo" adıyla dünyada öğretilen şeyin büyük kısmı, o eski okulun kendisi değil, ondan 20. yüzyılda türetilmiş standart bir müfredat.
@@ -219,7 +219,7 @@ Jodo kata'larının en çarpıcı özelliği şudur: neredeyse tüm kata'larda j
 Kılıç ortağınız olmasa da, jo'nun tek başına attığı her adımda o hayali kılıcın nerede olduğunu hayal etmek — jodoyu koreografiden çalışan bir sisteme çevirir.""",
     },
     {
-        "username": "kenjutsu-defteri",
+        "username": "yalniz-kilic",
         "title": "Kenjutsu Nedir, Kendo'dan Farkı Ne?",
         "discipline": "kenjutsu",
         "body": """"Kenjutsu mu çalışıyorsun, kendo mu?" — bu soruyu duymayan kenjutsu pratisyeni yoktur. İkisi de kılıç sanatı, ikisi de Japon kökenli, ama amaçları ve araçları kökten farklı.
@@ -281,9 +281,19 @@ async def main() -> None:
             if existing:
                 print(f"yazı var: {spec['title']}")
                 continue
+            author = users.get(spec["username"])
+            if author is None:
+                # Bu yazının yazarı USERS listesinde değil (ör. gerçek sahip
+                # hesabı "joryu") — kendi kaydını yapmış mı diye DB'den bak.
+                author = (
+                    await db.execute(select(User).where(User.username == spec["username"]))
+                ).scalar_one_or_none()
+            if author is None:
+                print(f"atlandı (kullanıcı '{spec['username']}' henüz kayıtlı değil): {spec['title']}")
+                continue
             db.add(
                 Post(
-                    user_id=users[spec["username"]].id,
+                    user_id=author.id,
                     slug=_slugify(spec["title"]),
                     title=spec["title"],
                     body=spec["body"],
