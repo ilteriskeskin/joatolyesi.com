@@ -1,5 +1,6 @@
-"""Başlangıç blog içeriği: 3 örnek kullanıcı + 2 yazı ("Jo Nedir?",
-"Dachi Pozisyonları"). Idempotent — kullanıcı adı varsa atlar.
+"""Başlangıç blog içeriği: örnek kullanıcılar (girişi olmayan, rastgele
+şifreli profiller) + branş başına bir yazı. Idempotent — kullanıcı adı
+veya yazı başlığı zaten varsa atlar.
 
 Çalıştırma:  docker compose exec app python scripts/seed_blog.py
 """
@@ -25,6 +26,10 @@ USERS = [
      "bio": "Aiki-ken çalışıyorum. Yedi suburi, bin tekrar."},
     {"username": "poomsae-calismasi", "display_name": "Poomsae Çalışması", "discipline": "taekwondo",
      "bio": "Taegeuk'ten siyah kuşak poomsae'lerine giden yolun günlüğü."},
+    {"username": "seitei-calismasi", "display_name": "Seitei Çalışması", "discipline": "jodo",
+     "bio": "ZNKR Seitei Jodo çalışıyorum. Kılıca karşı sopa — hep kılıç kazanır, ta ki kazanmayana kadar."},
+    {"username": "kenjutsu-defteri", "display_name": "Kenjutsu Defteri", "discipline": "kenjutsu",
+     "bio": "Koryu kenjutsu meraklısı. Kata tek başına da çalışılır, rakip her zaman hayalidir."},
 ]
 
 POSTS = [
@@ -162,6 +167,82 @@ Iaido'da gerçek hedef, düşmanı kesmeden önce görmeden hareket etmemektir (
 - Chiburi ve noto'yu (kılıcı silme ve kına sokma) nukitsuke kadar ciddiye alın; iaido'da form, kesişle bitmez.
 
 > Bir kılıç ustası kesişin hızından değil, kesişin gerekmediği anı bilmesinden tanınır.""",
+    },
+    {
+        "username": "kenshin-yolda",
+        "title": "Aiki-jo'nun 20 Suburi'si: Aikidoyu Sopayla Anlamak",
+        "discipline": "aikijo",
+        "body": """Aiki-jo'ya yeni başlayanlar genelde aynı soruyu sorar: "Bu aikido mu, jodo mu?" Cevap ikisi de değil, ikisinin kesişimi. Aikido'nun kurucusu Morihei Ueshiba, kendi prensiplerini (irimi, tenkan, kokyu) bir sopa üzerinden somutlaştırmak için jo çalışmasını geliştirdi; öğrencisi Morihiro Saito bu çalışmayı Iwama'da sistematikleştirip bugün dünyada en yaygın öğretilen aiki-jo müfredatı hâline getirdi. Bu müfredatın omurgası 20 suburi'dir.
+
+## Suburi neden "sopa sallamak" değildir
+
+Yeni başlayanlar suburi'yi ısınma hareketi sanır. Oysa her suburi, boş elle yapılan bir aikido tekniğinin jo üzerinden tekrarıdır: tsuki (itiş) irimi'yi, uchi (vuruş) kesme hattını, kaeshi (dönüş) tenkan'ı öğretir. Jo elinizde olduğu için hata gizlenemez — dengesiz bir adım attığınızda sopanın ucu titrer, kalçanız geç döndüğünde vuruş hattı kayar. Boş elle fark etmeyeceğiniz bir dengesizliği jo hemen ele verir.
+
+> Jo, aikidoyu büyüten bir mercek gibidir: gövdenizin yaptığı her küçük hatayı sopanın ucunda büyütüp size gösterir.
+
+## 20'nin mantığı
+
+Saito'nun sistemleştirdiği 20 suburi, tek tek ezberlenecek 20 ayrı hareket değil, birbirinin üzerine inşa edilen gruplardır: düz itişler (tsuki), kesme vuruşları (uchi), bunların geri dönüşleri (kaeshi) ve daha ileri kombinasyonlar. Sıralama bilinçlidir — her yeni suburi, bir öncekinin gövde mekaniğini bir adım ileri taşır. Bu yüzden 14. suburi'yi 3. suburi'yi atlayarak öğrenmeye çalışmak, temelsiz inşaata benzer.
+
+Tam sıralama ve isimler öğrettiğiniz dojoya ve hangi çizgiyi (Iwama, Ki Society gibi) takip ettiğinize göre küçük farklar gösterebilir — bu yüzden burada tek tek listelemek yerine kendi hocanızın veya uygulamadaki kata kütüphanesinin verdiği sırayı esas almanızı öneririz.
+
+## Solo çalışma önerisi
+
+1. İlk beş suburi'yi bir ay boyunca günde beşer tekrar çalışın — hız değil, gövde-kalça-jo uyumu hedef
+2. Her suburi'nin sonunda bir saniye durun (zanshin): jo'nun ucu titriyorsa denge tam oturmamış demektir
+3. Ayda bir video çekip bir önceki ayla karşılaştırın; aiki-jo'da ilerleme haftalık değil aylık görülür
+
+Dojoya gitmeden, sadece iki metrekarelik bir alanda bile bu 20 suburi'nin ilk birkaçıyla başlamak, aikidonun gövde mantığını anlamanın en doğrudan yollarından biridir.""",
+    },
+    {
+        "username": "seitei-calismasi",
+        "title": "Jodo ve Jojutsu: Aynı Silah, İki Farklı Yol",
+        "discipline": "jodo",
+        "body": """Jo'nun tarihi 17. yüzyıla, samuray Muso Gonnosuke'nin Shinto Muso-ryu jojutsu'yu kurmasına dayanır — bu hikâye bu blogda daha önce de anlatıldı. Ama az bilinen şey şu: bugün "jodo" adıyla dünyada öğretilen şeyin büyük kısmı, o eski okulun kendisi değil, ondan 20. yüzyılda türetilmiş standart bir müfredat.
+
+## Koryu'dan gendai'ye
+
+Shinto Muso-ryu, klasik anlamda bir **koryu**'dur (eski okul): yüzlerce yıldır aynı hoca-öğrenci zinciriyle, değişmeden aktarılan bir gelenek. 1968'de Japonya Kendo Federasyonu (ZNKR), bu geleneğin içinden on iki temel kata seçip standartlaştırarak **Seitei Jodo**'yu oluşturdu — amaç, farklı dojolarda öğrenen kendocuların ortak bir dille jo çalışabilmesiydi. Bugün dünya çapında öğretilen jodonun büyük kısmı bu Seitei müfredatıdır; orijinal Shinto Muso-ryu'nun tamamı (60'tan fazla kata) hâlâ ayrı, daha derin bir çizgi olarak yaşıyor.
+
+## Jo neden hep kazanır
+
+Jodo kata'larının en çarpıcı özelliği şudur: neredeyse tüm kata'larda jo tarafı kazanır, kılıç tarafı kaybeder. Bu tesadüf değil — tarihsel olarak jonun kılıca karşı üstünlüğünü öğretmek üzere tasarlanmış bir sistem. Ama bu, kılıcın zayıf olduğu anlamına gelmez: kata'lardaki her hareket, jo'nun mesafe (maai) ve zamanlama avantajını nasıl kullandığını gösterir. Kılıç menzilde geç kalırsa veya açı hatası yaparsa, daha kısa ama daha çevik olan jo araya girer.
+
+> Jodo'da kazanmak hız meselesi değildir — kılıcın açılmasını beklemek ve o an araya girmek meselesidir.
+
+## Solo çalışma önerisi
+
+- Kata'ları eşsiz çalışamıyorsanız bile, jo tarafının tek başına yaptığı adım-kalça-jo koordinasyonunu (kata'nın "iskeleti") tek başına tekrar edin
+- Suburi'lerde açının netliğine odaklanın: jo'nun ucu hedefe tam kilitlenmeden vuruş bitmemelidir
+- Seitei'nin on iki kata'sını sırayla değil, hangi temel prensibi öğrettiğine göre gruplandırıp çalışmak (tsuki grubu, uchi grubu gibi) ilerlemeyi hızlandırır
+
+Kılıç ortağınız olmasa da, jo'nun tek başına attığı her adımda o hayali kılıcın nerede olduğunu hayal etmek — jodoyu koreografiden çalışan bir sisteme çevirir.""",
+    },
+    {
+        "username": "kenjutsu-defteri",
+        "title": "Kenjutsu Nedir, Kendo'dan Farkı Ne?",
+        "discipline": "kenjutsu",
+        "body": """"Kenjutsu mu çalışıyorsun, kendo mu?" — bu soruyu duymayan kenjutsu pratisyeni yoktur. İkisi de kılıç sanatı, ikisi de Japon kökenli, ama amaçları ve araçları kökten farklı.
+
+## İki farklı hedef
+
+**Kendo**, 20. yüzyılda spor olarak standartlaştırılmış bir disiplindir: bambu kılıç (shinai), koruyucu ekipman (bogu), sayılan vuruşlar ve karşılıklı serbest çalışma (jigeiko) üzerine kuruludur. Amaç, güvenli bir çerçevede rakibi "yenmek".
+
+**Kenjutsu** ise Edo öncesi dönemden kalma **koryu** okullarının (Itto-ryu, Yagyu Shinkage-ryu, Katori Shinto-ryu gibi onlarca farklı gelenek) genel adıdır — gerçek savaş alanı için geliştirilmiş, kılıcın (bokken veya gerçek kılıç) doğrudan kullanıldığı, çoğunlukla önceden belirlenmiş kata'lar üzerinden aktarılan bir sistemdir. Serbest dövüş neredeyse hiç yoktur; her hareketin bir öncekiyle ve sonrakiyle kesin bir ilişkisi vardır.
+
+## Neden kata, serbest çalışma değil
+
+Gerçek bir kılıçla (veya onun ağırlığını taklit eden bir bokkenle) serbest dövüş yapmak güvenli değildir — bu yüzden kenjutsu, bilgiyi kata aracılığıyla aktarır. Kata, ezberlenmiş bir koreografi gibi görünse de aslında iki tarafın (kılıç tutan taraflardan biri genelde "kazanan" rolündedir) belirli bir mesafe, zamanlama ve niyet senaryosunu güvenli bir çerçevede tekrar tekrar çalışmasıdır. Tekrar sayısı arttıkça, kata'nın "koreografi" hissi kaybolur ve gerçek bir karşılaşmanın refleksine dönüşür.
+
+> Kenjutsu'da rakip çoğu zaman hayalidir — ama niyetiniz gerçek olmalı. Sahte bir kesiş, kata'yı da sahteleştirir.
+
+## Solo çalışma önerisi
+
+- Suburi (tek başına kesiş tekrarı) kenjutsu'nun temelidir: her kesişte maai (mesafe) hayal edin — hayali rakip her zaman doğru mesafede olmalı
+- Zanshin'i (kesiş sonrası tetikte kalma duruşu) ihmal etmeyin; kesiş bitince gevşemek, koryu geleneklerinde en sık eleştirilen hatadır
+- Kata'nın adımlarını hızlandırmadan önce, her adımın "neden" o yönde olduğunu (hangi saldırıya karşılık geldiğini) anlamaya çalışın — anlamadan hızlandırılan kata, sadece hatayı hızlandırır
+
+Bir dojo veya eğitmen bulmak kenjutsu için özellikle önemlidir — çoğu koryu, kata'ların doğru aktarımı için canlı bir öğretmen ister. Ama temel suburi ve duruş çalışması, bir bokken ve iki metrekarelik bir alanla her gün tek başına da ilerletilebilir.""",
     },
 ]
 
