@@ -5,7 +5,7 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
 ## Sıradaki sprint (İlteriş kararı, 2026-11-04)
 
-**B-03 (b)** + **B-09 ilk seans akışı**. Gerekçe: bio linki değiştirildi, Instagram trafiği geliyor; kayıt olanın ilk gün seans kaydetmesi şu an en kritik sızıntı. PO bu ikisini seçsin.
+~~B-03 (b)~~ (2026-11-04 tamam) + **B-09 ilk seans akışı** (sıradaki sprintin ilk işi). Gerekçe: bio linki değiştirildi, Instagram trafiği geliyor; kayıt olanın ilk gün seans kaydetmesi şu an en kritik sızıntı. PO bu ikisini seçsin.
 
 ## Ölçüm (önce bunlar — ölçemediğini büyütemezsin)
 
@@ -14,7 +14,7 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
 ## Dürüstlük / güven
 
-- [ ] **B-03 Demo hesaplar — KARAR: (b), SONRAKİ SPRİNTİN İLK İŞİ.** _(Karar 2026-11-03'te başka bir Claude oturumu üzerinden iletildi; İlteriş teyit etsin.)_ `scripts/seed_blog.py` + `backfill_practice.py`, gerçek kişi gibi görünen 7 örnek profil (uydurma seri, kuşak, takip ve blog yazısı) oluşturuyor ve bunlar sitede "örnek" olarak etiketlenmiyor. Ziyaretçiyi yanıltır ve keşfedilirse güveni zedeler. Seçenekler: (a) profillerde ve yazılarda görünür "örnek profil" etiketi, (b) yazıları "Joryu Ekibi" yazarına taşıyıp profilleri gizlemek. Ekip önerisi: (b). Sorumlu: PO raporda sorar, developer uygular.
+- [x] **B-03 Demo hesaplar — KARAR: (b).** _✓ Sprint 2026-11-04 (dalda, deploy bekliyor). Kalan içerik işi B-16'da._ _(Karar 2026-11-03'te başka bir Claude oturumu üzerinden iletildi; İlteriş teyit etsin.)_ `scripts/seed_blog.py` + `backfill_practice.py`, gerçek kişi gibi görünen 7 örnek profil (uydurma seri, kuşak, takip ve blog yazısı) oluşturuyor ve bunlar sitede "örnek" olarak etiketlenmiyor. Ziyaretçiyi yanıltır ve keşfedilirse güveni zedeler. Seçenekler: (a) profillerde ve yazılarda görünür "örnek profil" etiketi, (b) yazıları "Joryu Ekibi" yazarına taşıyıp profilleri gizlemek. Ekip önerisi: (b). Sorumlu: PO raporda sorar, developer uygular.
 
 ## Büyüme
 
@@ -42,3 +42,5 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 ## İçerik düzeltmeleri
 
 - [ ] **B-15 Aiki-jo happo giri girişi.** İlteriş 2026-11-04'te teyit etti: kendi jo çizgisinde happo giri yok. Fact-checker da jo için kaynak bulamadı (bokken happo giri doğrulandı). Kaynaksız iki ifade ("kuzeyden saat yönünde", "en iyi ısınma") kaldırıldı. Kalan iş: `aikijo-happo-giri` girişini (seed + guide_content aiki-jo kata listesi) tamamen kaldırmak ya da bokken girişine yönlendirmek. Seed upsert silme yapmıyor; DB satırı ve ona bağlı pratik kayıtları için güvenli bir yol gerekiyor (gizleme bayrağı ya da migration). Ayrıca 13 no jo EN özetindeki "happo-style turns" ifadesini denetle. Sorumlu: fact-checker → developer.
+
+- [ ] **B-16 Blog gövdelerinde demo kişiye ait birinci şahıs ifadeler.** Örn. jo yazısındaki "Benim için cevap basit…" cümlesi artık "Joryu Ekibi" imzasıyla tutarsız. content-writer nötrleştirir → fact-checker → developer. Seed mevcut yazıyı güncellemediği için prod satırı için tek seferlik UPDATE gerekir (İlteriş). Ayrıca karate/taekwondo demo yazılarının yayında kalıp kalmayacağı İlteriş'e soruldu.
