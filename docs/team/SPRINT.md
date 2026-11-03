@@ -59,3 +59,37 @@ Sitede kamuya açık hiçbir yerde gerçek kişi gibi görünen uydurma profil/s
 ## Sonraki sprint
 
 B-09 ilk seans akışı (ilk iş), ardından B-05/B-06 ya da B-15.
+
+## İş 2 — B-09: İlk seans akışı
+
+**Sorumlu:** `developer` → `qa-reviewer`. İçerik üretimi yok, fact-checker gerekmez.
+
+### Teşhis (kod okuması; gerçek huni rakamı yok, ilk madde olarak `weekly_metrics.py` çıktısı istenir)
+- `POST /register` → `_session_response` → `303 /app`. Kullanıcı kayıtta branş seçiyor (`User.discipline`, varsayılan `aikijo`) ama dashboard bunu kullanmıyor.
+- Dashboard'da yeni kullanıcı için yönlendirme yok: yalnız boş "Son seanslar" (`dash_empty`) ve genel "Bugünün pratiğini kaydet" formu (tarih, branş, dakika, not). Kullanıcı neyi çalışacağına kendisi karar veriyor.
+- Program yolu ilk seans için kapalı: tek program `30-day-jo-suburi` (yalnız jo) ve `/programs/*` `require_pro` arkasında; dashboard banner'ı da `pro_enabled` kapalıyken gizli. Bu yüzden "varsayılan branş programı" fikri B-09'un tanımındaki gibi uygulanamaz (aikijo dışı branşların programı yok).
+- Mevcut doğrulanmış içerik: `GUIDE[branş]["program"]` ("Başlangıç programı", `guide_content.py`, tüm branşlar, herkese açık `/guide/<branş>#program`) ve kata kütüphanesi `/kata/<slug>` (tek tuşla `POST /kata/<slug>/log`, `minutes` alanlı).
+- Tık sayısı bugün: kayıt → /app → formu doldur (branş zaten seçili gelebilir, dakika yaz) → gönder = en az 3 etkileşim + karar yükü. Hedef: 1 tık.
+
+### Tasarım (şema/Alembic değişikliği yok)
+1. `dashboard_context`'e `first_session_card` ekle: yalnız kullanıcının hiç `PracticeLog` satırı yoksa (dinlenme günü dahil) dolu, aksi halde `None`. Tek `EXISTS`/`count` sorgusu, mevcut sorguların yanında.
+2. Kartın kata'sı: `Kata` tablosunda `discipline == user.discipline` olan mevcut satırlardan mevcut sıralamadaki ilk kayıt (`/kata` listesinin kullandığı sıra); `pro_enabled` açıksa `is_free` olanlar arasından. Branşta kata yoksa kart "kata" yerine yalnız `/guide/<branş>#program` linkiyle gösterilir ("Yaptım" düğmesi olmadan değil: genel `/app` formuna odaklanır).
+3. Kart şablonu `_practice_panel.html` üstüne (HTMX swap'ında da yenilenir, kayıttan sonra kaybolur): "Bugün 10 dk: **{kata adı}**" (kata adı `Kata.title_tr/en`, olduğu gibi), altında iki link: kata sayfası `/kata/<slug>` ve "Başlangıç programı" `/guide/<branş>#program`; tek düğme "Yaptım (10 dk)".
+4. "Yaptım" → mevcut `POST /kata/<slug>/log` (`minutes=10`, CSRF aynı). Tek eklenti: isteğe bağlı gizli alan `source=first_session`; verilirse yönlendirme `/app?logged=1` olur ve GA4 `practice_logged` bu kaynakla gider. Kullanıcı kayıt ekranına dönmeden dashboard'da serisini (1) görür.
+5. GA4: `practice_logged` olayı ve `source` parametresi korunur; `PRACTICE_SOURCES` kümesine yeni değer **`first_session`** eklenir (`app/analytics.py`); mevcut `dashboard` / `kata` değerleri değişmez.
+6. i18n (TR+EN, `strings.py`): `first_session_title` ("Bugün 10 dk: {name}"), `first_session_done` ("Yaptım (10 dk)"), `first_session_kata_link`, `first_session_guide_link`. Kart metni yalnız bu şablon + dinamik kata adı; teknik açıklama yok.
+
+**Değişecek dosyalar:** `app/routers/practice.py` (context), `app/routers/kata.py` (`source` alanı + yönlendirme), `app/analytics.py` (`PRACTICE_SOURCES`), `app/templates/_practice_panel.html`, `app/i18n/strings.py`, `tests/test_flows.py`, `static/` CSS gerekiyorsa mevcut `.card` sınıfları yeterli olmalı.
+
+### Kabul kriterleri
+1. **İçerik kuralı (fact-checker gerekmez):** kartta yeni teknik içerik/talimat/süre dışı iddia yok. Görünen her kata/program adı DB'deki `Kata.title_*` veya `guide_content` başlığından gelir; link hedefleri yalnız `/kata/<slug>` ve `/guide/<branş>#program`. i18n anahtarları yalnız şablon kalıbı ("Bugün 10 dk: …", "Yaptım") içerir. Diff'te `seed.py` / `guide_content.py` değişikliği yok.
+2. Hiç logu olmayan yeni kullanıcı `/app`'te kartı görür (TR ve EN ayrı test); 1 tıkla kaydeder, log tek satır `minutes=10`, `kata_slug` dolu.
+3. Kayıttan sonra (aynı kullanıcı) `/app`'te kart yok; log'u olan mevcut kullanıcı baştan görmez; yalnız dinlenme günü logu olan kullanıcı kartı görmez.
+4. `practice_logged` `source=first_session` ile gider; `dashboard`/`kata` kaynaklı mevcut testler değişmeden geçer; geçersiz `source` değeri sessizce yok sayılır (mevcut davranış).
+5. Branşta kata yoksa kart çökmeden guide linkine düşer. Pro kapalı/açık ikisinde de `is_free` kuralı bozulmaz.
+6. Şema/Alembic değişikliği yok; `test_weekly_metrics` dahil tüm testler geçer. Test Postgres'i yoksa açıkça raporla.
+
+**Sunucu etkisi:** ihmal edilebilir (dashboard'a 2 küçük indeksli sorgu: `practice_logs.user_id` indeksli, `kata` küçük tablo). **Emek:** ~1,5-2 saat.
+**Ölçülecek metrik:** `weekly_metrics.py` içindeki mevcut "kayıttan 24 saat içinde ilk seans" (`signup_to_first_session_24h`) oranı; deploy öncesi son 2 haftanın ortalaması taban, sonrası karşılaştırılır. Yardımcı: GA4 `practice_logged` / `source=first_session` sayısı (kart ne kadar kullanılıyor). Örneklem küçükse (hafta başı <10 kayıt) yön okunur, hüküm verilmez.
+
+**PO kararları (gözetimsiz, İlteriş teyit etsin):** (a) "Varsayılan branş programı" yerine mevcut kata + guide başlangıç programına atıf, çünkü program tablosu jo-only ve Pro arkasında; (b) kart 10 dk sabit, süre seçimi yok; (c) kayıt sonrası redirect `/app` olarak kalır, ayrı onboarding sayfası yok.
