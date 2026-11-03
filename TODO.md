@@ -216,6 +216,8 @@ eklenecekler:
       (şu an sadece ichi no suburi detaylı, kalanı videoya yönlendiriyor).
 - [ ] **Taegeuk hareket sayıları.** Kaynaklar çelişiyor; Kukkiwon resmi
       sayıları teyit edilirse geri eklenebilir.
+- [ ] **Jo happo giri: var mı, nasıl yapılır?** Iwama/Saito çizgisinde jo ile 8 yönlü bir çalışma (kesiş mi, happo-no-tsuki gibi dürtüş mü) ve sırası. Şu an seed'deki "kuzeyden saat yönünde men uchi" tarifi kaynaksız (fact-check 2026-11-03).
+- [ ] **Seitei Jōdō kata açıklamaları.** Seed'deki 12 kata için yazılmış tek satırlık açıklamalar (ör. Hissage, Rai uchi) ZNKR Jodo el kitabıyla doğrulanmalı. Ad ve sıra doğrulandı.
 - [ ] Genel: her branşın tekniklerini o branştan bir hocaya okutup
       onay almak (özellikle kendo/iaido/karate bölümleri).
 - [ ] **10. TR yerel fiyatlandırma.** Billing'de ₺59/ay yazıyor ama Lemon
