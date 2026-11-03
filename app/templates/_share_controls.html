@@ -16,11 +16,11 @@
       </svg>
     </button>
     <div class="share-menu">
-      <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={{ share_text|urlencode }}&url={{ share_url|urlencode }}">X (Twitter)</a>
-      <a target="_blank" rel="noopener" href="https://wa.me/?text={{ (share_text ~ ' ' ~ share_url)|urlencode }}">WhatsApp</a>
+      <a data-share-method="x" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={{ share_text|urlencode }}&url={{ share_url|urlencode }}">X (Twitter)</a>
+      <a data-share-method="whatsapp" target="_blank" rel="noopener" href="https://wa.me/?text={{ (share_text ~ ' ' ~ share_url)|urlencode }}">WhatsApp</a>
     </div>
   </div>
-  <a class="icon-btn" href="{{ card_url }}" download data-tip="{{ t.share_download }}" aria-label="{{ t.share_download }}">
+  <a class="icon-btn" data-share-method="download" href="{{ card_url }}" download data-tip="{{ t.share_download }}" aria-label="{{ t.share_download }}">
     <svg viewBox="0 0 24 24" class="icon-btn__svg" aria-hidden="true">
       <path d="M12 3.5v11M7.5 10.5 12 15l4.5-4.5"/>
       <path d="M5 18.5h14"/>

@@ -1,3 +1,4 @@
+import json
 import uuid
 from datetime import UTC, date, datetime, timedelta
 
@@ -7,6 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.analytics import practice_logged_params
 from app.config import settings
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
@@ -125,7 +127,12 @@ async def log_practice(
     # Bu kayıt tam bir kuşak eşiğine denk geldiyse kutlama/paylaşım anı göster
     # (sadece bu POST cevabında — sayfayı tekrar açınca bir daha çıkmaz)
     milestone_belt = next((belt_id for belt_id, n in BELTS if n > 0 and n == ctx["practice_days"]), None)
-    return render(request, "_practice_panel.html", user=user, milestone=milestone_belt, **ctx)
+    response = render(request, "_practice_panel.html", user=user, milestone=milestone_belt, **ctx)
+    # GA4 practice_logged: HTMX bu başlığı olay olarak tetikler, analytics.js gönderir
+    params = practice_logged_params(discipline, minutes, "dashboard")
+    if params:
+        response.headers["HX-Trigger"] = json.dumps({"joryu:practice-logged": params})
+    return response
 
 
 @router.post("/app/rest-day", response_class=HTMLResponse, dependencies=[Depends(csrf_protect)])

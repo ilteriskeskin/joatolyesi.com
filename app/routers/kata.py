@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.analytics import practice_logged_params, set_pending_event
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.config import settings
@@ -135,4 +136,9 @@ async def kata_quick_log(
         )
     )
     await db.commit()
-    return RedirectResponse(f"/kata/{slug}?logged=1", status_code=303)
+    response = RedirectResponse(f"/kata/{slug}?logged=1", status_code=303)
+    # GA4 practice_logged: ?logged=1 yenilense de olay yalnız bir kez gider
+    params = practice_logged_params(kata.discipline, minutes, "kata")
+    if params:
+        set_pending_event(response, "practice_logged", params)
+    return response

@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.analytics import set_pending_event, sign_up_params
 from app.config import settings
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
@@ -120,7 +121,12 @@ async def register(
     db.add(user)
     await db.commit()
     _send_verification(background, user)
-    return _session_response(user)
+    response = _session_response(user)
+    # GA4 sign_up: redirect sonrası ilk sayfa bir kez gönderir (app/analytics.py)
+    params = sign_up_params(discipline)
+    if params:
+        set_pending_event(response, "sign_up", params)
+    return response
 
 
 @router.get("/login", response_class=HTMLResponse)

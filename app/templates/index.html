@@ -40,6 +40,9 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-54NX2S2Z01');
+    {% if ga_event %}
+    if (typeof gtag === "function") gtag("event", {{ ga_event.name|tojson }}, {{ ga_event.params|tojson }});
+    {% endif %}
   </script>
   <script>
     if ("serviceWorker" in navigator) {
@@ -245,6 +248,7 @@
 </footer>
 
 <script src="/static/js/motion.js" defer></script>
+<script src="/static/js/analytics.js" defer></script>
 <script src="/static/js/install-prompt.js" defer></script>
 </body>
 </html>

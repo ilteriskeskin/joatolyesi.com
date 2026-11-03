@@ -2,6 +2,13 @@
 // tetikler; iOS Safari'de (beforeinstallprompt hiç yok) elle talimat
 // gösterir. Kullanıcı kapatırsa bir daha gösterilmez (localStorage).
 (function () {
+  // GA4 pwa_install: yalnız tarayıcının "appinstalled" olayıyla, bir kez.
+  // Banner kapatılmış olsa da (menüden yükleme) sayılsın diye en başta.
+  // iOS Safari bu olayı hiç vermez; oradaki yüklemeler ölçülemez.
+  window.addEventListener("appinstalled", () => {
+    if (typeof window.joryuTrack === "function") window.joryuTrack("pwa_install");
+  });
+
   const DISMISS_KEY = "joryu_install_dismissed";
   if (localStorage.getItem(DISMISS_KEY)) return;
 

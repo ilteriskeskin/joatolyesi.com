@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
+from app.analytics import PENDING_EVENT_COOKIE, read_pending_event
 from app.config import settings
 from app.deps import CSRF_COOKIE, is_pro
 from app.i18n.strings import DEFAULT_LANG, SUPPORTED_LANGS, get_strings
@@ -38,6 +39,14 @@ def resolve_lang(request: Request, lang_param: str | None = None) -> str:
 def render(request: Request, template: str, user: User | None = None, **context):
     lang = resolve_lang(request, request.query_params.get("lang"))
     csrf_token = request.cookies.get(CSRF_COOKIE) or secrets.token_urlsafe(32)
+    # Bekleyen GA4 olayı yalnız tam sayfada ve admin dışında tüketilir;
+    # HTMX partial'ları (_*.html) cookie'yi yutup olayı kaybetmesin
+    consume_event = (
+        PENDING_EVENT_COOKIE in request.cookies
+        and not template.startswith("_")
+        and not request.url.path.startswith("/admin")
+    )
+    ga_event = read_pending_event(request) if consume_event else None
     response = templates.TemplateResponse(
         request,
         template,
@@ -51,6 +60,7 @@ def render(request: Request, template: str, user: User | None = None, **context)
             "pro_enabled": settings.pro_enabled,
             "practice_days": practice_days(),
             "csrf_token": csrf_token,
+            "ga_event": ga_event,
             **context,
         },
     )
@@ -62,4 +72,6 @@ def render(request: Request, template: str, user: User | None = None, **context)
         samesite="lax",
         secure=settings.env == "production",
     )
+    if consume_event:
+        response.delete_cookie(PENDING_EVENT_COOKIE)
     return response

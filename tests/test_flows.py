@@ -1,5 +1,6 @@
 """Uçtan uca akış testleri — çalışan bir test Postgres'i gerektirir (conftest'e bak)."""
 
+import json
 import re
 import uuid
 from datetime import date, timedelta
@@ -631,3 +632,91 @@ async def test_kata_detail_seo_metadata(client):
 
     r = await client.get(f"/kata?d={kata.discipline}&kind={kata.kind}")
     assert "kata-search__input" in r.text
+
+
+# --- GA4 dönüşüm olayları (B-01) ---
+
+GA_EVENT_RE = re.compile(r'gtag\("event", "([a-z_]+)", (\{[^}]*\})\)')
+
+
+def ga_events(html):
+    return [(name, json.loads(params)) for name, params in GA_EVENT_RE.findall(html)]
+
+
+async def test_sign_up_event_rendered_once(client):
+    email, username = f"{unique('ga')}@test.com", unique("gauser")
+    r = await register(client, email, username)
+    assert r.status_code == 303
+    assert "ga_evt" in r.headers.get("set-cookie", "")
+
+    r = await client.get("/app")
+    events = ga_events(r.text)
+    assert events == [("sign_up", {"method": "email", "discipline": "aikijo"})]
+    # PII yok: e-posta / kullanıcı adı olay satırında geçmiyor
+    event_line = GA_EVENT_RE.search(r.text).group(0)
+    assert email not in event_line and username not in event_line
+
+    # Yenilemede tekrar gönderilmez
+    r = await client.get("/app")
+    assert ga_events(r.text) == []
+
+
+async def test_practice_logged_hx_trigger(client):
+    await register(client, f"{unique('gp')}@test.com", unique("gaprac"))
+    token = await get_csrf(client, "/app")
+    r = await client.post("/app/practice", data={"practiced_on": date.today().isoformat(),
+                                                 "discipline": "bokken", "minutes": "15",
+                                                 "notes": "gizli not", "csrf_token": token})
+    assert r.status_code == 200
+    trigger = json.loads(r.headers["hx-trigger"])
+    assert trigger == {"joryu:practice-logged": {"discipline": "bokken", "minutes": 15, "source": "dashboard"}}
+    assert "gizli not" not in r.headers["hx-trigger"]
+
+    # Geçersiz kayıt: olay yok
+    r = await client.post("/app/practice", data={"practiced_on": date.today().isoformat(),
+                                                 "discipline": "bokken", "minutes": "0",
+                                                 "csrf_token": token})
+    assert r.status_code == 200
+    assert "hx-trigger" not in r.headers
+
+
+async def test_kata_practice_logged_event_once(client):
+    from app.db import async_session
+    from app.models import Kata
+    from app.seed import seed_content
+
+    await seed_content()
+    await register(client, f"{unique('gk')}@test.com", unique("gakata"))
+    await client.get("/app")  # sign_up olayını tüket
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.is_free))).scalars().first()
+    token = await get_csrf(client, f"/kata/{kata.slug}")
+    r = await client.post(f"/kata/{kata.slug}/log", data={"minutes": "25", "csrf_token": token})
+    assert r.status_code == 303
+
+    r = await client.get(f"/kata/{kata.slug}?logged=1")
+    assert ga_events(r.text) == [
+        ("practice_logged", {"discipline": kata.discipline, "minutes": 25, "source": "kata"})
+    ]
+    r = await client.get(f"/kata/{kata.slug}?logged=1")  # yenileme
+    assert ga_events(r.text) == []
+
+
+async def test_admin_has_no_ga_and_keeps_pending_event(client):
+    client.cookies.set("ga_evt", "sign_up|aikijo")
+    r = await client.get("/admin?token=test-admin-token")
+    assert r.status_code == 200
+    assert "gtag" not in r.text and "googletagmanager" not in r.text
+    assert "analytics.js" not in r.text
+    # Admin olayı tüketmez; sonraki normal sayfa gönderir
+    r = await client.get("/privacy")
+    assert ga_events(r.text) == [("sign_up", {"method": "email", "discipline": "aikijo"})]
+    client.cookies.clear()
+
+
+async def test_tampered_pending_event_ignored(client):
+    client.cookies.set("ga_evt", 'sign_up|<script>alert(1)</script>')
+    r = await client.get("/privacy")
+    assert ga_events(r.text) == []
+    assert "alert(1)" not in r.text
+    client.cookies.clear()
