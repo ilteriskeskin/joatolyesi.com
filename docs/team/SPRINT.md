@@ -1,162 +1,61 @@
-# Aktif Sprint — 2026-11-03
+# Aktif Sprint — 2026-11-04
 
-Dal: `team/sprint-2026-11-03` · İlk sprint (önceki rapor yok, devreden iş yok).
-Çalıştırma: otomatik, gözetimsiz. Push/deploy/prod erişimi yok, dışarıya gönderi yok, `.env` okunmaz.
+Dal: `team/sprint-2026-11-04` (main'den; 2026-11-03 dalı merge edilmiş) · Otomatik, gözetimsiz koşu.
+Push/deploy/prod erişimi yok, `.env` okunmaz, kod bu belgede yazılmaz (uygulama developer'da).
 
 ## Hedef (tek cümle)
 
-Kayıt → ilk pratik → geri dönüş hunisini ve Instagram trafiğini **ölçülebilir** hale getirmek; bir sonraki sprintin kararı tahminle değil rakamla verilsin.
+Sitede kamuya açık hiçbir yerde gerçek kişi gibi görünen uydurma profil/seri/takip kalmasın; demo yazılar "Joryu Ekibi" imzasıyla yayında kalsın.
 
-## Teşhis (2026-11-02 başlangıç verisi, `METRICS.md`)
+## Kısa teşhis
 
-- GA4 son 28 gün: 40 aktif kullanıcı, 38 yeni, ort. etkileşim 20 sn, geri gelen kullanıcı ≈ 0. Trafiğin bir kısmı muhtemelen bot/veri merkezi (Ashburn, Altoona, San Jose, Dublin).
-- Kaynak: google/organic 17, direct 14, instagram ~5. Instagram'daki büyük izlenmeler (138k'ya ulaşan videolar) siteye yansımıyor.
-- **Kuzey yıldızı metrik (haftalık aktif pratisyen) bilinmiyor.** Yeni kayıt sayısı bilinmiyor. GA4'te özel olay yok; DB'den metrik üreten bir script yok. Bu yüzden hiçbir dönüşüm/elde tutma hipotezi şu an test edilemez.
-- Önceki sprint hipotezi: yok (ilk sprint).
-- Sonuç: Bu sprint yeni özellik değil, **ölçüm + en ucuz dağıtım kaldıracı**. Elde tutma işleri (B-09) ölçüm geldikten sonra.
+- İlteriş kararı (BACKLOG): sıradaki sprint B-03 (b) + B-09. **Kullanım tasarrufu için bu sprintte yalnız B-03 (b)**; B-09 sonraki sprintin ilk işi.
+- 2026-11-03 raporu: B-01/B-02/B-04 QA'dan geçti, deploy bekliyor. Yeni rakam yok; metrik kararı yine ölçüm sonrası.
+- Sızıntı kaynağı: `seed_blog.py` 7 demo kullanıcı (`@demo.joatolyesi.com`, `is_public=True`) + `backfill_practice.py` `DEMO_STREAKS` (8-400 günlük sahte seri, sahte kuşak) + `FOLLOW_CHAIN` (sahte takip). Görünür yerler: `/practitioners` (liste, "haftanın enleri", takip akışı), `/u/<username>` (+ `/card`, `/avatar.png`, takip POST'u, takipçi/takip listeleri), `/blog` ve `/blog/<slug>` yazar satırı + link.
+- Demo e-posta soneki iki yerde ayrı yazılı (`seed_blog.py` f-string, `weekly_metrics.py::DEMO_EMAIL_SUFFIX`); tek sabite bağlanmalı.
+- Global (kullanıcıdan bağımsız) sayaç yok (`stats.py` sorguları kullanıcı bazlı); sitemap profil içermiyor. Yani gizlenecek yer yukarıdakilerle sınırlı.
+- Şema: Alembic var (`alembic/versions`, son `0011_rest_day`; `CMD` her açılışta `alembic upgrade head`). **Bu işte şema değişikliği gerekmiyor.**
 
-## Önceliklendirme (Etki × Güven / Emek)
+## Seçilen yaklaşım (şema değişikliksiz, silmesiz, prod komutsuz)
 
-| İş | Puan | Karar |
-|---|---|---|
-| B-01 GA4 dönüşüm olayları | 5×5/1 = 25 | **Seçildi** |
-| B-04 Instagram → site hunisi (taslak) | 5×4/1 = 20 | **Seçildi** |
-| B-02 `scripts/weekly_metrics.py` | 5×5/2 = 12.5 | **Seçildi** |
-| B-05 SEO anahtar kelime haritası | 4×4/2 = 8 | Sonraki sprint |
-| B-06 Teknik SEO | 4×4/2 = 8 | Sonraki sprint |
-| B-09 İlk seans akışı | 4×3/3 = 4 | Ölçüm sonrası |
-| B-03 Demo hesaplar | — | Karar İlteriş'te → raporda sorulacak |
-| B-10 Resend domain doğrulaması | 5×3/1 | İlteriş'in 10 dk kontrolü → raporda |
+1. **Tek ortak sabit:** `app/constants.py` içine `DEMO_EMAIL_SUFFIX = "@demo.joatolyesi.com"` ve SQLAlchemy yardımcısı `demo_user_clause()` (`lower(User.email) LIKE '%suffix'`) + Jinja/Python tarafı için `is_demo_user(user)`. `weekly_metrics.py` ve `seed_blog.py` buradan import eder (OWNER_EMAIL ile aynı kalıp). `weekly_metrics.py`'deki yerel tanım kaldırılır, mevcut test import'u bozulmasın diye aynı isim yeniden dışa aktarılır.
+2. **Gizleme = sorgu seviyesinde filtre** (mevcut prod satırları için bayrak/komut gerekmez, deploy ile anında etkili, idempotent, hiçbir satır silinmez/değişmez). `User.is_public` kontrolü olan her yere `~demo_user_clause()` eklenir; tek yerde `public_user_clause()` (= `is_public AND username IS NOT NULL AND NOT demo`) olarak toplanır.
+3. **"Joryu Ekibi" = gösterim katmanında**, ayrı sistem kullanıcısı yok. Gerekçe: ekip kullanıcısı `is_public` filtrelerine takılır/yeni satır ister, yazı `user_id` taşımak veri yazmayı gerektirir. `blog_list.html` / `blog_post.html` içinde yazar demo ise: etiket `t.blog_team_author` ("Joryu Ekibi" TR/EN, `app/i18n/strings.py`), avatar ve `/u/...` linki yok. Yazı sahibi demo kullanıcı giriş yapamadığı için düzenle/sil zaten erişilemez. Not: sahip hesabı `joryu`'nun aiki-jo yazısı gerçek hesaptır, etkilenmez.
+4. **Seed tekrar çalışınca:** `seed_blog.py` demo kullanıcıları `is_public=False` ile oluşturur (FK sahibi olarak gerekli); `backfill_practice.py`'den `DEMO_STREAKS`, `FOLLOW_CHAIN` ve ilgili döngüler **tamamen kaldırılır** (sahip hesabı backfill'i kalır). Böylece script'i yeniden çalıştırmak sahte aktivite üretmez. Prod'daki mevcut sahte `practice_logs`/`follows` satırları silinmez; hiçbir public yüzde görünmezler, metrik script'i zaten demo'yu hariç tutar.
 
-Tahmini toplam emek: ~2,5-3,5 saat agent işi.
-
----
-
-## İş 1 — B-01: GA4 dönüşüm olayları
+## İş — B-03 (b): Demo profilleri gizle, yazıları "Joryu Ekibi"ne taşı
 
 **Sorumlu:** `developer` → `qa-reviewer`
 
-**Neden:** Huniyi (kayıt, ilk seans, paylaşım, PWA yükleme) GA4'te görmeden hiçbir büyüme deneyini değerlendiremeyiz. Kaynak bazlı (instagram/google) kayıt dönüşümü ancak bu olaylarla görünür.
-
-**Kapsam:** Mevcut GA4 (G-54NX2S2Z01, `app/templates/base.html` ve `app/templates/index.html` içindeki gtag) üzerine 4 olay. Yeni tracker, yeni paket, yeni servis yok.
-
-| Olay | Ne zaman | Parametreler (PII yok) |
-|---|---|---|
-| `sign_up` | Kayıt başarılı olduktan sonraki ilk sayfa yüklemesinde, **bir kez** | `method: "email"`, `discipline` |
-| `practice_logged` | `/app/practice` POST başarılı olduğunda (HTMX yanıtı) ve kata sayfasındaki "Bugün bunu çalıştım" kaydında | `discipline`, `minutes`, `source: "dashboard"\|"kata"` |
-| `share_card` | `app/static/js/share.js` paylaş veya indir tıklaması | `method: "native"\|"download"\|"x"\|"whatsapp"`, `context: "profile"\|"dashboard"` |
-| `pwa_install` | `app/static/js/install-prompt.js` içinde `appinstalled` olayı (ve/veya prompt kabul sonucu `accepted`) | — |
-
-**Uygulama notları:**
-- `register` (`app/routers/auth.py`) redirect ile bitiyor; sunucu tarafında gtag çağrılamaz. Önerilen yol: kısa ömürlü bir işaret (ör. tek seferlik cookie ya da `?welcome=1`), `base.html` bunu görünce `sign_up` gönderir ve işareti temizler. Yenilemede tekrar göndermemeli.
-- `practice_logged` için HTMX yanıtına `HX-Trigger` başlığı eklemek ya da dönen partial'a (`app/templates/_practice_panel.html`) küçük bir inline script koymak; hangisi mevcut yapıyla uyumluysa.
-- Her çağrı `typeof gtag === "function"` korumalı olsun; GA yüklenmezse (adblock) JS hatası vermesin.
-- **Admin sayfalarında GA kapalı kalmalı** (commit b0c68f0'daki token sızıntısı düzeltmesi bozulmasın).
-- Olay parametrelerinde e-posta, kullanıcı adı, kullanıcı id'si, not metni **olmayacak**.
-- Kod tekrarını azaltmak için küçük bir yardımcı (ör. `app/static/js/analytics.js` içinde `track(name, params)`) kabul edilebilir.
+**Değişecek dosyalar:** `app/constants.py`, `app/stats.py` (`weekly_leaders`), `app/routers/profile.py` (liste, takip akışı, public profil, card, avatar, takip, takipçi/takip listeleri), `app/routers/blog.py` (gerekirse yazar bilgisini şablona hazırlama), `app/templates/blog_list.html`, `app/templates/blog_post.html`, `app/i18n/strings.py`, `scripts/seed_blog.py`, `scripts/backfill_practice.py`, `scripts/weekly_metrics.py`, `tests/` (yeni `tests/test_demo_hidden.py` ya da `test_flows.py`'ye ekleme).
 
 **Kabul kriterleri:**
-1. 4 olayın her biri yukarıdaki tetikleyicide tam bir kez çağrılıyor (kod incelemesi + mümkünse yerel tarayıcıda `dataLayer` kontrolü).
-2. `sign_up` sayfa yenilemesinde tekrar gönderilmiyor.
-3. Hiçbir olay parametresinde PII yok.
-4. `/admin*` şablonlarında gtag hâlâ yok.
-5. GA yüklenmediğinde konsolda hata yok.
-6. Mevcut `pytest` testleri geçiyor; register sonrası işaretin bir kez render edildiğini doğrulayan en az 1 yeni test (`tests/test_flows.py`). Test Postgres'i ayağa kalkamıyorsa bunu açıkça raporla, testi yine de yaz.
-7. `docs/team/METRICS.md`'ye kısa bir "GA4 olayları" bölümü: olay adları + İlteriş'in GA4'te `sign_up` ve `practice_logged`'ı "Key event" olarak işaretlemesi gerektiği notu.
+1. Demo kullanıcı `/practitioners` listesinde (arama dahil) görünmüyor; "haftanın enleri"nde ve takip akışında yok.
+2. `/u/<demo-username>`, `/u/<demo>/card`, `/u/<demo>/avatar.png` 404; demo'yu takip etme POST'u reddediliyor; gerçek kullanıcının takipçi/takip listelerinde demo çıkmıyor.
+3. Demo yazarlı blog yazısı `/blog` ve `/blog/<slug>`'da "Joryu Ekibi" ile gösteriliyor; demo `display_name`/`username` HTML'de geçmiyor; yazar linki ve avatar yok. Sahip hesabı `joryu` yazısı eskisi gibi.
+4. **Testler:** en az 1 test demo kullanıcının practitioners + liderlik + public profilde görünmediğini, 1 test blog yazısının "Joryu Ekibi" ile gösterildiğini doğrular; gerçek is_public kullanıcı hâlâ görünür (karşı-test). Mevcut testler geçer (`test_weekly_metrics` dahil). Test Postgres'i yoksa açıkça raporla.
+5. `DEMO_EMAIL_SUFFIX` repo genelinde tek tanım (`grep` ile doğrulanır; `seed_blog.py` ve `weekly_metrics.py` import eder).
+6. `backfill_practice.py` içinde demo seri/takip üreten kod yok; script yalnız sahip hesabını doldurur. Hiçbir script/migration silme yapmaz.
+7. Şema/Alembic değişikliği yok (diff'te `alembic/versions` boş).
 
-**Ölçülecek metrik:** GA4 → `sign_up` / oturum (kaynak bazında: google/organic, instagram, direct), `practice_logged` / `sign_up`. İlk veri deploy'dan ≥1 hafta sonra.
+**Sunucu etkisi:** ihmal edilebilir (mevcut sorgulara bir LIKE koşulu; 512 MB / 1 vCPU'yu etkilemez). **Emek:** ~1,5-2 saat.
+**Ölçülecek metrik:** doğrudan büyüme metriği değil, güven/dürüstlük işi. Doğrulama: deploy sonrası `/practitioners` ve 7 demo `/u/...` URL'sinin 404/gizli olması. Dolaylı: `weekly_metrics.py` "hariç tutulan demo" sayısı 7 kalır, gerçek kullanıcı sayıları değişmez.
 
-**Emek:** ~1-1,5 saat. **Sunucu etkisi:** yok (yalnız istemci JS + 1 küçük cookie/param).
+## Teşhis: blog gövdelerinde uydurma deneyim iddiası
 
----
+- `seed_blog.py` yazı gövdeleri çoğunlukla bilgi/talimat dilinde ve ekip sesiyle ("öneririz"). **Birinci tekil şahıs deneyim iddiası yalnız bir yerde:** "Jo Nedir?" yazısında "Benim için cevap basit: jo affedicidir…" (kenshin-yolda). "Joryu Ekibi" imzası altında tek kişi anlatıcı sesi yanıltıcı; tek cümlelik nötrleştirme gerekir.
+- Yazarlara bağlı uydurma deneyim iddiaları (bio: "İki yıldır her sabah jo…", "Aiki-ken çalışıyorum") yalnız gizlenen profillerde; gizleme sonrası görünmez. Seed'deki bio metinleri yeni DB'ye yazılmaya devam eder ama görünmez; temizlik gerekmez.
+- Karate ve taekwondo yazıları (dachi, poomsae) ürün kapsamı dışı (BRIEF) ve `/blog` listesinde hâlâ yayında. Kapsam kararı İlteriş'te.
+- Bu sprintte içerik değiştirilmez (içerik işi: content-writer → fact-checker). Sonraki işe bırakılan liste: (a) "Benim için…" cümlesinin ekip sesine çevrilmesi; (b) prod'daki yazı satırı güncellenmeli (seed yalnız başlık yoksa ekler, mevcut satırı güncellemez) → tek seferlik güvenli UPDATE; (c) B-12 kapsamında ZNKR 1968 / "on iki kata" gibi iddiaların denetimi.
 
-## İş 2 — B-02: `scripts/weekly_metrics.py`
+## Raporda İlteriş'e sorulacaklar
 
-**Sorumlu:** `developer` → `qa-reviewer`
+1. **Prod'da çalıştırılacak komut yok.** Deploy yeterli (filtre sorgu seviyesinde). Teyit: demo satırları ve sahte seri verileri silinmeden kalsın mı, yoksa ileride tek seferlik temizlik ister misin?
+2. Karate/taekwondo blog yazıları yayında kalsın mı, gizlensin mi?
+3. "Benim için cevap basit" cümlesi ekip sesine çevrilsin mi (kısa içerik işi, sonraki sprint)?
+4. B-03 kararı (b)'yi teyit et (başka oturumdan iletilmişti).
+5. Hâlâ bekleyenler: 2026-11-03 dalını merge/deploy, GA4 key event, `weekly_metrics.py` ilk çalıştırma, Instagram bio linki.
 
-**Neden:** Kuzey yıldızı metrik (haftalık aktif pratisyen) GA4'te ölçülemez; gerçek kaynak DB. İlteriş'in haftada 30 dk'sını korumak için tek komut, yapıştırılabilir çıktı.
+## Sonraki sprint
 
-**Çalıştırma hedefi:** `docker compose exec app python scripts/weekly_metrics.py [--week-start YYYY-MM-DD]` (varsayılan: son tamamlanan Pazartesi-Pazar haftası). Mevcut `scripts/send_weekly_digest.py` / `app/db.py::async_session` kalıbını izle.
-
-**Hesaplanacaklar (hafta penceresi Pazartesi başlangıçlı, `weekly_leaders()` ile aynı tanım):**
-1. **Haftalık aktif pratisyen:** hafta içinde `practice_logs.practiced_on` ≥1 olan farklı kullanıcı sayısı.
-2. **Yeni kayıt:** `users.created_at` hafta içinde.
-3. **Kayıttan ilk seansa dönüşüm:** o hafta kayıt olanlardan ≥1 practice_log'u olanların oranı (ve 24 saat içinde olanların oranı, ayrı).
-4. **7. gün geri dönüş:** hafta başından 7-13 gün önce kayıt olan kohorttan, kayıt gününden sonraki 7.-13. günler arasında ≥1 pratik kaydı olanların oranı. Kohort boşsa "n=0" yaz, oran uydurma.
-5. Toplam kullanıcı ve toplam pratik kaydı (bağlam için).
-
-**Hariç tutma (zorunlu):**
-- Demo hesaplar: `scripts/seed_blog.py` ile oluşturulan, e-postası `@demo.joatolyesi.com` ile biten hesaplar. Hariç tutma kuralı tek bir sabitte/fonksiyonda dursun.
-- Sahip hesabı (`scripts/backfill_practice.py::OWNER_EMAIL`): geçmişi backfill ile doldurulduğu için metrikleri şişirir. Ana sayıdan hariç tut, çıktıda "sahip hesabı dahil edilmedi" notu düş. E-postayı koda yeniden yazma; mevcut sabiti import et ya da ortak bir sabite taşı.
-- Hariç tutulan hesap sayısı çıktıda görünsün (şeffaflık).
-
-**Çıktı:** stdout'a, `docs/team/METRICS.md` haftalık tablosuna doğrudan yapıştırılabilir bir Markdown satırı + altında okunur bir özet bloğu. GA sütunları script tarafından doldurulamaz; `—` bırak.
-
-**Kısıtlar:**
-- Salt okuma: hiçbir INSERT/UPDATE/DELETE yok.
-- Yalnız SQL agregasyonları (COUNT/DISTINCT); tüm satırları Python belleğine çekme. Yeni bağımlılık yok. 512 MB prod'da birkaç saniyede biten tek seferlik komut.
-- Kişisel veri (e-posta, kullanıcı adı) yazdırma.
-
-**Kabul kriterleri:**
-1. Script yukarıdaki 5 metriği hesaplıyor, demo + sahip hesaplarını hariç tutuyor ve hariç tutulan sayıyı yazıyor.
-2. Hesaplama mantığı test edilebilir bir fonksiyonda; `tests/` altında en az 1 test: demo hesabı ve gerçek hesap oluştur, demo'nun sayılmadığını ve haftalık aktif sayısının doğru olduğunu doğrula. Test Postgres'i ayağa kalkamıyorsa açıkça raporla.
-3. Yazma sorgusu yok (diff incelemesinde doğrulanır).
-4. Çıktı satırının sütun sırası `METRICS.md` tablosuyla birebir aynı.
-5. `docs/team/METRICS.md` başındaki açıklamaya çalıştırma komutu eklendi.
-6. Script yerelde gerçek prod verisi olmadan çalıştırıldıysa, örnek çıktı rapora "yerel test DB'si, gerçek rakam değil" etiketiyle konur. **METRICS.md tablosuna hiçbir rakam yazılmaz** — onu İlteriş prod'da çalıştırıp yapıştırır.
-
-**Ölçülecek metrik:** Bu işin kendisi metriği üretir; başarı = İlteriş'in ilk çalıştırmada tabloya kuzey yıldızı rakamını yapıştırabilmesi.
-
-**Emek:** ~1-1,5 saat. **Sunucu etkisi:** haftada bir, saniyeler süren birkaç COUNT sorgusu; ihmal edilebilir.
-
----
-
-## İş 3 — B-04: Instagram → site hunisi (taslak)
-
-**Sorumlu:** `growth-marketer` (taslak) → teknik dövüş sanatı iddiası içeren metinler için `fact-checker`. Paylaşım: İlteriş.
-
-**Neden:** En büyük varlık dağıtım; Instagram izlenmeleri siteye ~5 oturum olarak düşüyor. Bütçe 0, kod gerektirmeyen en ucuz kaldıraç.
-
-**Çıktı dosyası:** `docs/team/marketing/2026-11-03-instagram-hunisi.md`
-
-**İçerik:**
-1. **Teşhis:** Instagram trafiği GA4'te neden düşük görünüyor olabilir (bio'da link yok/yanlış, Instagram uygulama içi tarayıcının referrer'ı kaybedip trafiği "direct"e yazması, reels'ta CTA yok). Her olasılık için "nasıl doğrulanır" adımı. Doğrulanmamış şeyi kesin gibi yazma.
-2. **Link şeması:** GA4'ün tanıdığı UTM'li linkler (`utm_source=instagram&utm_medium=social&utm_campaign=<bio|reel-...|story>`). Not: kullanıcı kaydında `?src=` saklanmıyor, yalnız waitlist'te var (`WAITLIST_GROWTH.md`); bu yüzden UTM + İş 1'deki `sign_up` olayı asıl ölçüm yolu. Linkler **yalnız var olan sayfalara** gitsin: `/`, `/kata`, `/kata?d=<branş>`, `/kata/<slug>`, `/guide`, `/guide/<branş>`, `/register`. Her URL'nin route olarak var olduğunu kontrol et (`app/routers/kata.py`, `app/routers/guide.py`, slug'lar için `app/seed.py`).
-3. **Bio metni:** TR ve EN, 150 karakter sınırına uygun 2 seçenek + bio link.
-4. **İçerik ↔ sayfa eşleme tablosu:** İlteriş'in video türleri (jo suburi, bokken, kata) için "bu tür videonun altında şu CTA, şu sayfaya" — en az 5 satır. Sayfa, videoda görülenle eşleşmeli (jo videosu → `/kata?d=aikijo` ya da ilgili kata sayfası).
-5. **5 reels/story CTA + açıklama taslağı** (TR, mümkünse EN): kısa, abartısız. "Binlerce kullanıcı", uydurma sayı, sahte sosyal kanıt yok. Tek kişiyle 15-45 sn çekilebilir fikirler.
-6. **İlteriş'in tek somut adımları:** en fazla 3 madde, toplam ≤10 dk.
-7. **Ölçüm planı:** GA4'te nereye bakılacak (Edinme → Trafik edinme, oturum kaynağı/aracı = instagram/social; `sign_up` kaynak bazında). 2 haftalık başarı eşiği **hipotez olarak** yazılsın, hacim tahmini uydurmadan.
-8. Teknik iddia içeren her metin (kata adı, teknik tarifi) `[fact-check]` ile işaretli.
-
-**Kabul kriterleri:**
-1. Dosya yukarıdaki 8 bölümü içeriyor.
-2. Her link var olan bir route'a gidiyor ve UTM şeması tutarlı.
-3. Uydurma rakam/kullanıcı/yorum yok; bilinmeyen değerler "bilinmiyor" diye yazılmış.
-4. İlteriş'in aksiyonu ≤3 madde, ≤10 dk.
-5. `[fact-check]` işaretli metinler fact-checker'dan geçti ya da raporda "doğrulanmadı, kullanma" diye listelendi.
-6. Hiçbir yere gönderi/mesaj atılmadı.
-
-**Ölçülecek metrik:** GA4 instagram kaynaklı oturum (başlangıç ~5 / 28 gün) ve instagram kaynaklı `sign_up` (başlangıç: ölçülmüyor).
-
-**Emek:** ~1 saat. **Sunucu etkisi:** yok.
-
----
-
-## Bağımlılıklar
-
-- İş 1, İş 2, İş 3 **birbirinden bağımsız**, paralel yürütülebilir.
-- Dosya çakışma riski: İş 1 ve İş 2 ikisi de `docs/team/METRICS.md`'ye ekleme yapar (farklı bölümler). İkisi de `developer`'daysa sırayla yapılsın ya da METRICS.md düzenlemesi en sonda tek seferde birleştirilsin. Kod dosyaları çakışmıyor (İş 1: şablonlar/JS/`auth.py`/`practice.py`; İş 2: yeni script + test).
-- İş 3'ün ölçüm planı İş 1'deki `sign_up` olayına atıf yapar ama yazımı İş 1'in bitmesini beklemez.
-
-## Raporda İlteriş'e sorulacaklar (bu sprintte uygulanmayacak)
-
-1. **B-03 demo hesaplar:** 7 demo profil uydurma seri/kuşak/takip gösteriyor ve "örnek" etiketi yok. Ekip önerisi (b): yazıları "Joryu Ekibi" yazarına taşı, profilleri gizle. Onay?
-2. **B-10:** Resend panelinde joatolyesi.com domain'i doğrulandı mı (SPF/DKIM)? Doğrulanmadıysa hatırlatma ve haftalık özet mailleri hiç gitmiyor.
-3. Deploy sonrası GA4'te `sign_up` ve `practice_logged`'ı Key event olarak işaretle.
-4. Prod'da `scripts/weekly_metrics.py`'yi çalıştırıp çıktıyı `METRICS.md`'ye yapıştır — **kuzey yıldızı rakamı şu an yok.**
-5. Instagram bio linkini taslaktaki UTM'li linkle değiştir.
-
-## Metrik veri durumu (açık not)
-
-Kuzey yıldızı (haftalık aktif pratisyen), yeni kayıt, 7. gün geri dönüş ve kayıttan ilk seansa dönüşüm için **hiç veri yok**. Bu sprintte hiçbir agent bu alanlara rakam yazmaz; rakamlar ancak İlteriş deploy edip script'i prod'da çalıştırınca ve GA4 olayları ≥1 hafta veri toplayınca gelir.
+B-09 ilk seans akışı (ilk iş), ardından B-05/B-06 ya da B-15.
