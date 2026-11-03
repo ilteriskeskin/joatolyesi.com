@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.constants import SELECTABLE_DISCIPLINES
+from app.constants import SELECTABLE_DISCIPLINES, is_demo_user, public_user_clause
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
 from app.models import Follow, PracticeLog, User
@@ -71,7 +71,7 @@ async def practitioners(
     db: AsyncSession = Depends(get_db),
 ):
     q = (request.query_params.get("q") or "").strip()[:80]
-    stmt = select(User).where(User.is_public, User.username.is_not(None))
+    stmt = select(User).where(public_user_clause())
     if q:
         like = f"%{q.lower()}%"
         stmt = stmt.where(or_(User.username.ilike(like), User.display_name.ilike(like)))
@@ -88,7 +88,7 @@ async def practitioners(
             select(PracticeLog, User)
             .join(User, PracticeLog.user_id == User.id)
             .join(Follow, Follow.followee_id == User.id)
-            .where(Follow.follower_id == user.id, User.is_public)
+            .where(Follow.follower_id == user.id, public_user_clause())
             .order_by(PracticeLog.practiced_on.desc(), PracticeLog.created_at.desc())
             .limit(15)
         )
@@ -108,7 +108,7 @@ async def public_profile(
     result = await db.execute(select(User).where(User.username == username.lower()))
     person = result.scalar_one_or_none()
     is_owner = viewer is not None and person is not None and viewer.id == person.id
-    if person is None or (not person.is_public and not is_owner):
+    if person is None or is_demo_user(person) or (not person.is_public and not is_owner):
         return render(request, "404.html", user=viewer)
 
     is_following = False
@@ -126,14 +126,14 @@ async def public_profile(
     followers = list((
         await db.execute(
             select(User).join(Follow, Follow.follower_id == User.id)
-            .where(Follow.followee_id == person.id, User.is_public, User.username.is_not(None))
+            .where(Follow.followee_id == person.id, public_user_clause())
             .order_by(Follow.created_at.desc()).limit(24)
         )
     ).scalars().all())
     following = list((
         await db.execute(
             select(User).join(Follow, Follow.followee_id == User.id)
-            .where(Follow.follower_id == person.id, User.is_public, User.username.is_not(None))
+            .where(Follow.follower_id == person.id, public_user_clause())
             .order_by(Follow.created_at.desc()).limit(24)
         )
     ).scalars().all())
@@ -175,7 +175,7 @@ async def toggle_follow(
 ):
     result = await db.execute(select(User).where(User.username == username.lower()))
     person = result.scalar_one_or_none()
-    if person is None or not person.is_public or person.id == viewer.id:
+    if person is None or is_demo_user(person) or not person.is_public or person.id == viewer.id:
         return RedirectResponse(f"/u/{username}", status_code=303)
     existing = (
         await db.execute(
@@ -200,7 +200,7 @@ async def profile_avatar(
     """Yüklemesiz avatar — profil herkese açıksa herkes görebilir."""
     result = await db.execute(select(User).where(User.username == username.lower()))
     person = result.scalar_one_or_none()
-    if person is None or not person.is_public:
+    if person is None or is_demo_user(person) or not person.is_public:
         return Response(status_code=404)
 
     size = 256
@@ -230,7 +230,7 @@ async def profile_card(
     """OG paylaşım kartı — profil herkese açıksa herkes görebilir."""
     result = await db.execute(select(User).where(User.username == username.lower()))
     person = result.scalar_one_or_none()
-    if person is None or not person.is_public:
+    if person is None or is_demo_user(person) or not person.is_public:
         return Response(status_code=404)
 
     strings = get_strings(person.lang or "tr")

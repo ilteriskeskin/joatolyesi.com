@@ -1,5 +1,5 @@
 """Başlangıç blog içeriği: örnek kullanıcılar (girişi olmayan, rastgele
-şifreli profiller) + branş başına bir yazı. Idempotent — kullanıcı adı
+şifreli, gizli profiller; yazılar sitede "Joryu Ekibi" olarak görünür) + branş başına bir yazı. Idempotent — kullanıcı adı
 veya yazı başlığı zaten varsa atlar.
 
 Çalıştırma:  docker compose exec app python scripts/seed_blog.py
@@ -10,6 +10,7 @@ import secrets
 
 from sqlalchemy import select
 
+from app.constants import DEMO_EMAIL_SUFFIX
 from app.db import async_session
 from app.models import Post, User
 from app.routers.blog import _slugify
@@ -259,14 +260,14 @@ async def main() -> None:
                 print(f"var: {spec['username']}")
                 continue
             user = User(
-                email=f"{spec['username']}@demo.joatolyesi.com",
+                email=f"{spec['username']}{DEMO_EMAIL_SUFFIX}",
                 password_hash=await hash_password(secrets.token_urlsafe(24)),  # giriş yapılamaz
                 lang="tr",
                 username=spec["username"],
                 display_name=spec["display_name"],
                 bio=spec["bio"],
                 discipline=spec["discipline"],
-                is_public=True,
+                is_public=False,  # yazı sahibi (FK) olarak gerekli; kamuya açık gösterilmez
                 referral_code=secrets.token_hex(5),
             )
             db.add(user)

@@ -10,7 +10,9 @@
   <p class="guide-breadcrumb"><a href="/blog">{{ t.blog_title }}</a></p>
   <h1>{{ post.title }}</h1>
   <p class="post-meta">
-    {% if post.author.is_public and post.author.username %}
+    {% if is_demo_user(post.author) %}
+    <span>{{ t.blog_team_author }}</span>
+    {% elif post.author.is_public and post.author.username %}
     <img class="author-avatar" src="/u/{{ post.author.username }}/avatar.png?size=64" alt="" width="28" height="28">
     <a href="/u/{{ post.author.username }}">{{ post.author.display_name or post.author.username }}</a>
     {% else %}

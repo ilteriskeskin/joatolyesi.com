@@ -22,17 +22,9 @@ from datetime import UTC, date, datetime, time, timedelta
 from sqlalchemy import Date, and_, cast, exists, func, not_, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.constants import OWNER_EMAIL
+from app.constants import DEMO_EMAIL_SUFFIX, OWNER_EMAIL, demo_user_clause  # noqa: F401 (test import eder)
 from app.db import async_session
 from app.models import PracticeLog, User
-
-# scripts/seed_blog.py'nin oluşturduğu demo hesapların e-posta soneki
-DEMO_EMAIL_SUFFIX = "@demo.joatolyesi.com"
-
-
-def demo_user_clause():
-    return func.lower(User.email).like(f"%{DEMO_EMAIL_SUFFIX}")
-
 
 def owner_user_clause():
     return func.lower(User.email) == OWNER_EMAIL.lower()

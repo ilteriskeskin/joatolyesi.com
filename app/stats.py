@@ -247,6 +247,7 @@ async def build_heatmap(db: AsyncSession, user_id: uuid.UUID) -> list[list[dict]
 
 async def weekly_leaders(db: AsyncSession) -> list[dict]:
     """Haftanın enleri: bu hafta branşında en çok dakika yapan (açık profil)."""
+    from app.constants import public_user_clause
     from app.models import User
 
     today = datetime.now(UTC).date()
@@ -257,8 +258,7 @@ async def weekly_leaders(db: AsyncSession) -> list[dict]:
         .where(
             PracticeLog.practiced_on >= week_start,
             PracticeLog.is_rest_day.is_(False),
-            User.is_public,
-            User.username.is_not(None),
+            public_user_clause(),
         )
         .group_by(PracticeLog.discipline, User.id)
         .order_by(func.sum(PracticeLog.minutes).desc())

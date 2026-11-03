@@ -7,11 +7,13 @@ from fastapi.templating import Jinja2Templates
 
 from app.analytics import PENDING_EVENT_COOKIE, read_pending_event
 from app.config import settings
+from app.constants import is_demo_user
 from app.deps import CSRF_COOKIE, is_pro
 from app.i18n.strings import DEFAULT_LANG, SUPPORTED_LANGS, get_strings
 from app.models import User
 
 templates = Jinja2Templates(directory="app/templates")
+templates.env.globals["is_demo_user"] = is_demo_user  # blog yazar satırı: demo -> "Joryu Ekibi"
 
 # Kesintisiz pratik serisinin başlangıcı — landing'deki gün sayacı buradan türer
 PRACTICE_START = date(2025, 8, 11)
