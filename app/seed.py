@@ -37,9 +37,8 @@ AIKIJO = [
        "The 13-count solo kata; compact and rhythm-focused.",
        "13 sayılık solo kata; kompakt ve ritim odaklı.", True),
     _k("aikijo-happo-giri", "Happo giri",
-       "Cutting to eight directions in sequence — the best warm-up for footwork and balance.",
-       "8 yöne kesiş çalışması: kuzeyden başlayıp saat yönünde 8 yöne sırayla men uchi. "
-       "Ayak çalışması ve denge için en iyi ısınma.", True),
+       "Cutting to eight directions in sequence; works footwork and balance.",
+       "8 yöne sırayla kesiş çalışması; ayak çalışması ve dengeyi geliştirir.", True),
     # Teknik — Tsuki serisi (suburi 1-5)
     _k("choku-tsuki", "Choku tsuki",
        "Straight thrust; rear hand drives, front hand aims. Target chudan.",

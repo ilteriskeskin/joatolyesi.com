@@ -85,13 +85,12 @@ GUIDE: dict = {
                 "diagram": "happo",
                 "summary": {
                     "tr": (
-                        "8 yöne kesiş çalışması: kuzeyden başlayıp saat yönünde 8 yöne "
-                        "sırayla men uchi. Ayak çalışması ve denge için en iyi ısınma; "
-                        "her seansın başına 2 tur koy."
+                        "8 yöne sırayla kesiş çalışması; ayak çalışması ve dengeyi "
+                        "geliştirir."
                     ),
                     "en": (
-                        "Cutting to eight directions in sequence — the best warm-up "
-                        "for footwork and balance."
+                        "Cutting to eight directions in sequence; works footwork "
+                        "and balance."
                     ),
                 },
             },

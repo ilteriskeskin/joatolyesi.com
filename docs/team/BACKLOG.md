@@ -34,3 +34,7 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 ## Arama
 
 - [ ] **B-14 Site içi arama.** `/kata?q=` üzerinden kata + teknik + rehber + blog araması; Postgres full-text (unaccent / `simple` config). Yeni servis ya da bağımlılık yok. Sorumlu: developer → qa-reviewer.
+
+## İçerik düzeltmeleri
+
+- [ ] **B-15 Aiki-jo happo giri girişi.** İlteriş 2026-11-04'te teyit etti: kendi jo çizgisinde happo giri yok. Fact-checker da jo için kaynak bulamadı (bokken happo giri doğrulandı). Kaynaksız iki ifade ("kuzeyden saat yönünde", "en iyi ısınma") kaldırıldı. Kalan iş: `aikijo-happo-giri` girişini (seed + guide_content aiki-jo kata listesi) tamamen kaldırmak ya da bokken girişine yönlendirmek. Seed upsert silme yapmıyor; DB satırı ve ona bağlı pratik kayıtları için güvenli bir yol gerekiyor (gizleme bayrağı ya da migration). Ayrıca 13 no jo EN özetindeki "happo-style turns" ifadesini denetle. Sorumlu: fact-checker → developer.
