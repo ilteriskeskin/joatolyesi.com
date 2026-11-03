@@ -62,3 +62,18 @@ locale, ?lang= query param + cookie. No heavyweight i18n library.
 - Analytics is Google Analytics 4 (G-54NX2S2Z01), gtag in base + landing;
   don't add other trackers
 - Don't add features not in BRIEF.md without asking
+
+## Ekip (agent'lar)
+Büyüme çalışması `docs/team/` altındaki ekip düzeniyle yürür (`/sprint`).
+Roller `.claude/agents/`, kurallar `docs/team/README.md` ve
+`docs/team/CONTENT_STANDARDS.md`. Uydurma kullanıcı/aktivite/istatistik yok;
+kaynaksız teknik içerik yayına girmez; push/deploy yalnız İlteriş yapar.
+
+## Sunucu kısıtı (bağlayıcı)
+Prod: **512 MB RAM, 1 vCPU** tek droplet; joatolyesi.com dışında **4 statik site**
+daha aynı makinede (nginx). Bu yüzden:
+- Yeni servis/container ekleme (Redis, worker, arama motoru, headless tarayıcı yok).
+- Yeni Python bağımlılığı yalnız zorunluysa; ağır kütüphane (pandas, ML, Pillow dışı görsel işleme) yok.
+- Ağır işler istek anında değil, ya build/deploy sırasında ya da düşük frekanslı cron ile.
+- Bellek ve CPU etkisi olan her değişiklik (yeni sorgu, cache, arka plan işi) raporda tahmini maliyetiyle yazılır.
+- DB pool ve Postgres ayarları (`app/db.py`, `compose.yml`) küçültülmüş durumda; büyütme önerme.
