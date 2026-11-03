@@ -19,11 +19,11 @@ from datetime import date, timedelta
 
 from sqlalchemy import select
 
+from app.constants import OWNER_EMAIL  # metrik script'i de aynı sabiti kullanır
 from app.db import async_session
 from app.models import Follow, PracticeLog, User
 from app.render import PRACTICE_START
 
-OWNER_EMAIL = "aliilteriskeskin@gmail.com"
 OWNER_DISCIPLINE = "aikijo"
 
 # username -> (son N gün kesintisiz seri, sonuçta hangi kuşağa denk geldiği)

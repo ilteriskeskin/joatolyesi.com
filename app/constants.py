@@ -17,3 +17,7 @@ DISCIPLINES = (
 # DISCIPLINES üzerinden hâlâ okunabilir — silinmedi, sadece yeni seçimden
 # çıkarıldı.
 SELECTABLE_DISCIPLINES = tuple(d for d in DISCIPLINES if d not in ("karate", "taekwondo"))
+
+# Sahibin gerçek hesabı: geçmişi scripts/backfill_practice.py ile doldurulduğu
+# için scripts/weekly_metrics.py ana metriklerden hariç tutar. Tek kaynak burası.
+OWNER_EMAIL = "aliilteriskeskin@gmail.com"
