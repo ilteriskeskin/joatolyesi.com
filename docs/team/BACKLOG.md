@@ -3,6 +3,10 @@
 PO önceliklendirir. Puan = (Etki × Güven) / Emek, her biri 1-5. Yeni fikir
 eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
+## Sıradaki sprint (İlteriş kararı, 2026-11-04)
+
+**B-03 (b)** + **B-09 ilk seans akışı**. Gerekçe: bio linki değiştirildi, Instagram trafiği geliyor; kayıt olanın ilk gün seans kaydetmesi şu an en kritik sızıntı. PO bu ikisini seçsin.
+
 ## Ölçüm (önce bunlar — ölçemediğini büyütemezsin)
 
 - [x] **B-01 GA4 dönüşüm olayları.** `sign_up`, `practice_logged`, `share_card`, `pwa_install` olaylarını gtag ile gönder (yeni tracker yok, mevcut GA4). Sorumlu: developer. Puan 5×5/1. _✓ Sprint 2026-11-03 (dalda, deploy bekliyor)._
