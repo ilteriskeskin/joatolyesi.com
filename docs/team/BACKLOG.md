@@ -5,7 +5,7 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
 ## Sıradaki sprint (İlteriş kararı, 2026-11-04)
 
-~~B-03 (b)~~ (2026-11-04 tamam) + **B-09 ilk seans akışı** (sıradaki sprintin ilk işi). Gerekçe: bio linki değiştirildi, Instagram trafiği geliyor; kayıt olanın ilk gün seans kaydetmesi şu an en kritik sızıntı. PO bu ikisini seçsin.
+~~B-03 (b)~~ (2026-11-04 tamam) + ~~B-09~~ (2026-11-04 tamam). Gerekçe: bio linki değiştirildi, Instagram trafiği geliyor; kayıt olanın ilk gün seans kaydetmesi şu an en kritik sızıntı. PO bu ikisini seçsin.
 
 ## Ölçüm (önce bunlar — ölçemediğini büyütemezsin)
 
@@ -26,7 +26,7 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
 ## Elde tutma (geri gelen kullanıcı ≈ 0)
 
-- [ ] **B-09 İlk seans akışı.** Kayıttan sonra 60 saniyede ilk pratik kaydı: varsayılan branş programı, "bugün 10 dk şunu çalış" kartı. Sorumlu: PO (tasarım) + developer. Puan 4×3/3.
+- [x] **B-09 İlk seans akışı.** _✓ Sprint 2026-11-04 (dalda, deploy bekliyor)._ Kayıttan sonra 60 saniyede ilk pratik kaydı: varsayılan branş programı, "bugün 10 dk şunu çalış" kartı. Sorumlu: PO (tasarım) + developer. Puan 4×3/3.
 - [x] **B-10 Hatırlatmalar gerçekten gidiyor mu?** _✓ 2026-11-03: Resend domain doğrulanmış, mailler geliyor (başka bir Claude oturumu üzerinden iletildi; İlteriş teyit etsin)._ TODO.md'ye göre Resend domain doğrulaması (SPF/DKIM) bekliyor olabilir. Doğrulanmadıysa hatırlatma ve haftalık özet mailleri hiç gitmiyor. Sorumlu: İlteriş (10 dk kontrol). Puan 5×3/1.
 
 ## İçerik (her biri: content-writer → fact-checker → developer)
@@ -43,4 +43,4 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
 - [ ] **B-15 Aiki-jo happo giri girişi.** İlteriş 2026-11-04'te teyit etti: kendi jo çizgisinde happo giri yok. Fact-checker da jo için kaynak bulamadı (bokken happo giri doğrulandı). Kaynaksız iki ifade ("kuzeyden saat yönünde", "en iyi ısınma") kaldırıldı. Kalan iş: `aikijo-happo-giri` girişini (seed + guide_content aiki-jo kata listesi) tamamen kaldırmak ya da bokken girişine yönlendirmek. Seed upsert silme yapmıyor; DB satırı ve ona bağlı pratik kayıtları için güvenli bir yol gerekiyor (gizleme bayrağı ya da migration). Ayrıca 13 no jo EN özetindeki "happo-style turns" ifadesini denetle. Sorumlu: fact-checker → developer.
 
-- [ ] **B-16 Blog gövdelerinde demo kişiye ait birinci şahıs ifadeler.** Örn. jo yazısındaki "Benim için cevap basit…" cümlesi artık "Joryu Ekibi" imzasıyla tutarsız. content-writer nötrleştirir → fact-checker → developer. Seed mevcut yazıyı güncellemediği için prod satırı için tek seferlik UPDATE gerekir (İlteriş). Ayrıca karate/taekwondo demo yazılarının yayında kalıp kalmayacağı İlteriş'e soruldu.
+- [x] **B-16 Blog gövdelerinde demo kişiye ait birinci şahıs ifadeler.** Örn. jo yazısındaki "Benim için cevap basit…" cümlesi artık "Joryu Ekibi" imzasıyla tutarsız. content-writer nötrleştirir → fact-checker → developer. Seed mevcut yazıyı güncellemediği için prod satırı için tek seferlik UPDATE gerekir (İlteriş). _✓ 2026-11-04 jo yazısı (a571ef9); prod SQL İlteriş'te. Karate/taekwondo yazıları kalıyor (İlteriş kararı)._ Kapsam dışı jo iddiaları (128 cm, 20 suburi vb.) audit-log'da sonraki denetim adayı.
