@@ -49,7 +49,7 @@ Jo'nun en bilinen hikâyesi 17. yüzyıla dayanır. Rivayete göre samuray Muso 
 
 ## Neden jo ile başlamalı?
 
-Benim için cevap basit: **jo affedicidir ama yalan söylemez.** Kılıçta kesişin doğru olup olmadığını başta göremezsiniz; jo'da dengesiz bir tsuki attığınızda sopa elinizde kımıldar, hemen söyler.
+Jo ile başlamanın bir gerekçesi şu görüşle özetlenebilir: **jo affedicidir ama yalan söylemez.** Bu bakışa göre kılıçta kesişin doğru olup olmadığı başlangıçta her zaman kolay fark edilmez; jo'da ise dengesiz bir tsuki çoğu zaman sopanın elinizde kımıldamasıyla kendini belli eder.
 
 > Jo, vücudunuzun iki tarafını da eşit çalıştıran nadir silahlardandır — sol elinizle de vurursunuz, sağ elinizle de.
 
