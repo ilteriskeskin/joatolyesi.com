@@ -18,6 +18,7 @@ Ekip bu dosyayı **okur**, rakam uydurmaz. Bir hafta boşsa PO raporda ister.
 
 | Hafta | GA aktif kull. (28g) | Yeni kull. | Ort. etkileşim | Google organik oturum | Instagram oturum | Yeni kayıt | Haftalık aktif pratisyen | Not |
 |---|---|---|---|---|---|---|---|---|
+| 2026-10-26 (DB) | — | — | — | — | — | 0 | 0 | weekly_metrics.py: ilk seans n=0, D7 n=0. Tüm zamanlar: 10 gerçek kullanıcı, 19 pratik kaydı (demo 7 + sahip hariç). |
 | 2026-11-02 (başlangıç) | 40 | 38 | 20 sn | 17 | ~5 | ? | ? | Geri gelen kullanıcı ≈ 0. Ashburn/Altoona/San Jose/Dublin büyük ihtimalle bot veya veri merkezi. "Pratik" sayfası 3 kullanıcı. |
 
 ## Başlangıç notları (2026-11-02, son 28 gün GA4)
