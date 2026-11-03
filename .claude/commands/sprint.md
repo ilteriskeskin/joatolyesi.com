@@ -7,7 +7,7 @@ kurallar orada ve `docs/team/CONTENT_STANDARDS.md`'de. Sen orkestratörsün:
 işi alt agentlara (Agent tool, ilgili `subagent_type`) dağıt, çıktıları
 birbirine aktar, kendin içerik uydurma.
 
-1. **Hazırlık.** `git status` temiz değilse dur ve raporla (başkasının yarım işini ezme). `main`'den `team/sprint-$(date +%F)` dalını aç; dal zaten varsa onu kullan.
+1. **Hazırlık.** `git status` temiz değilse dur ve raporla (başkasının yarım işini ezme). `team/sprint-$(date +%F)` dalını aç: `main`'e merge edilmemiş bir önceki sprint dalı varsa onun üstünden, yoksa `main`'den (dallar zincirlenir; İlteriş en sonuncuyu merge edince hepsi gelir). Dal zaten varsa onu kullan.
 2. **PO (`product-owner`).** Durumu teşhis etsin, BACKLOG'dan 1-3 iş seçip `docs/team/SPRINT.md`'yi yazsın. Önceki sprintin tamamlanmamış işleri varsa önce onlar.
 3. **Uygulama.** SPRINT.md'deki işleri sahiplerine ver:
    - Pazarlama işleri → `growth-marketer`
