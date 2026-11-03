@@ -12,8 +12,9 @@ from app.analytics import practice_logged_params
 from app.config import settings
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
+from app.guide_content import get_guide
 from app.deps import csrf_protect, require_user, waitlist_gate
-from app.models import Enrollment, PracticeLog, User
+from app.models import Enrollment, Kata, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import BELTS, compute_badges, compute_belts
 from app.render import render
@@ -30,6 +31,30 @@ from app.stats import (
 )
 
 router = APIRouter(dependencies=[Depends(waitlist_gate)])
+
+
+async def _first_session_card(db: AsyncSession, user: User) -> dict | None:
+    """Hiç PracticeLog satırı (dinlenme günü dahil) olmayan kullanıcıya tek
+    tıklık ilk seans kartı. Kata, kullanıcının branşındaki /kata listesi
+    sırasının ilk kaydı; Pro açıksa yalnız ücretsizler. Branşta kata yoksa
+    yalnız guide linki döner."""
+    has_log = (
+        await db.execute(select(select(PracticeLog.id).where(PracticeLog.user_id == user.id).exists()))
+    ).scalar_one()
+    if has_log:
+        return None
+    stmt = select(Kata).where(Kata.discipline == user.discipline)
+    if settings.pro_enabled:
+        stmt = stmt.where(Kata.is_free)
+    # Liste varsayılanı gibi önce tür=kata, sonra sort_order/title_en
+    stmt = stmt.order_by((Kata.kind != "kata"), Kata.sort_order, Kata.title_en).limit(1)
+    kata = (await db.execute(stmt)).scalar_one_or_none()
+    guide = get_guide(user.discipline)
+    return {
+        "kata": kata,
+        "discipline": user.discipline,
+        "has_guide": bool(guide and guide.get("program")),
+    }
 
 
 async def dashboard_context(db: AsyncSession, user: User) -> dict:
@@ -66,7 +91,10 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         if enrollment:
             current_day = min(len(enrollment.completed_days) + 1, enrollment.program.duration_days)
 
+    first_session_card = await _first_session_card(db, user)
+
     return {
+        "first_session_card": first_session_card,
         "streak": sinfo["streak"],
         "longest_streak": max(longest_streak, sinfo["streak"]),
         "freezes_left": sinfo["freezes_left"],

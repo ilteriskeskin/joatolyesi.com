@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.analytics import practice_logged_params, set_pending_event
+from app.analytics import PRACTICE_SOURCES, practice_logged_params, set_pending_event
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.config import settings
@@ -114,6 +114,7 @@ async def kata_quick_log(
     slug: str,
     request: Request,
     minutes: int = Form(20, ge=1, le=600),
+    source: str = Form(""),
     user: User = Depends(require_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -136,9 +137,13 @@ async def kata_quick_log(
         )
     )
     await db.commit()
-    response = RedirectResponse(f"/kata/{slug}?logged=1", status_code=303)
+    # İlk seans kartından gelen kayıt dashboard'a döner (seri hemen görünür);
+    # geçersiz source sessizce yok sayılır
+    first_session = source == "first_session" and source in PRACTICE_SOURCES
+    target = "/app?logged=1" if first_session else f"/kata/{slug}?logged=1"
+    response = RedirectResponse(target, status_code=303)
     # GA4 practice_logged: ?logged=1 yenilense de olay yalnız bir kez gider
-    params = practice_logged_params(kata.discipline, minutes, "kata")
+    params = practice_logged_params(kata.discipline, minutes, "first_session" if first_session else "kata")
     if params:
         set_pending_event(response, "practice_logged", params)
     return response

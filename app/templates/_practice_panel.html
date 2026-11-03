@@ -1,3 +1,29 @@
+{% if first_session_card %}
+{% set fs = first_session_card %}
+<div class="card first-session-card">
+  {% if fs.kata %}
+  {% set fs_name = fs.kata.title_en if lang == 'en' else fs.kata.title_tr %}
+  <h2>{{ t.first_session_title.format(name=fs_name) }}</h2>
+  <p class="muted">
+    <a href="/kata/{{ fs.kata.slug }}">{{ t.first_session_kata_link }}</a>
+    {% if fs.has_guide %} · <a href="/guide/{{ fs.discipline }}#program">{{ t.first_session_guide_link }}</a>{% endif %}
+  </p>
+  <form method="post" action="/kata/{{ fs.kata.slug }}/log">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="minutes" value="10">
+    <input type="hidden" name="source" value="first_session">
+    <button type="submit">{{ t.first_session_done }}</button>
+  </form>
+  {% else %}
+  <h2>{{ t["discipline_" ~ fs.discipline] }}</h2>
+  <p class="muted">
+    {% if fs.has_guide %}<a href="/guide/{{ fs.discipline }}#program">{{ t.first_session_guide_link }}</a> · {% endif %}
+    <a href="#log-form">{{ t.dash_log_title }}</a>
+  </p>
+  {% endif %}
+</div>
+{% endif %}
+
 {% if milestone %}
 <div class="card milestone-banner">
   <p class="milestone-text">{{ t.milestone_reached.format(belt=t["belt_" ~ milestone]) }}</p>
@@ -71,7 +97,7 @@
   {% include "_badges.html" %}
 </div>
 
-<div class="card">
+<div class="card" id="log-form">
   <h2>{{ t.dash_log_title }}</h2>
   <form hx-post="/app/practice" hx-target="#practice-panel" hx-swap="innerHTML" class="practice-form">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">

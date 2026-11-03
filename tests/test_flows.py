@@ -720,3 +720,81 @@ async def test_tampered_pending_event_ignored(client):
     assert ga_events(r.text) == []
     assert "alert(1)" not in r.text
     client.cookies.clear()
+
+
+async def test_first_session_card_flow(client):
+    from app.db import async_session
+    from app.models import Kata, PracticeLog, User
+    from app.seed import seed_content
+
+    await seed_content()
+    await register(client, f"{unique('fs')}@test.com", unique("fsuser"))
+    await client.get("/app")  # sign_up olayını tüket
+    r = await client.get("/app")
+    assert "first-session-card" in r.text
+    assert "Bugün 10 dk:" in r.text
+    r_en = await client.get("/app?lang=en")
+    assert "first-session-card" in r_en.text and "Today, 10 min:" in r_en.text
+
+    slug = re.search(r'action="/kata/([^"/]+)/log"', r.text).group(1)
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.slug == slug))).scalar_one()
+    assert f'href="/kata/{slug}"' in r.text and "#program" in r.text
+
+    token = re.search(r'name="csrf_token" value="([^"]+)"', r.text).group(1)
+    r = await client.post(f"/kata/{slug}/log",
+                          data={"minutes": "10", "source": "first_session", "csrf_token": token})
+    assert r.status_code == 303 and r.headers["location"] == "/app?logged=1"
+    r = await client.get("/app?logged=1")
+    assert ga_events(r.text) == [
+        ("practice_logged", {"discipline": kata.discipline, "minutes": 10, "source": "first_session"})
+    ]
+    assert "first-session-card" not in r.text
+    assert 'streak-number">1' in r.text
+
+    async with async_session() as db:
+        logs = (await db.execute(
+            select(PracticeLog).join(User, User.id == PracticeLog.user_id)
+            .where(User.email.like("fs-%"), PracticeLog.kata_slug == slug)
+        )).scalars().all()
+    assert any(log.minutes == 10 for log in logs)
+
+
+async def test_first_session_invalid_source_ignored(client):
+    from app.db import async_session
+    from app.models import Kata
+    from app.seed import seed_content
+
+    await seed_content()
+    await register(client, f"{unique('fi')}@test.com", unique("fiuser"))
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.is_free))).scalars().first()
+    token = await get_csrf(client, "/app")
+    r = await client.post(f"/kata/{kata.slug}/log",
+                          data={"minutes": "10", "source": "evil", "csrf_token": token})
+    assert r.headers["location"] == f"/kata/{kata.slug}?logged=1"
+
+
+async def test_first_session_card_hidden_with_rest_day_log_and_existing_logs(client):
+    await register(client, f"{unique('fr')}@test.com", unique("fruser"))
+    token = await get_csrf(client, "/app")
+    r = await client.get("/app")
+    assert "first-session-card" in r.text
+    r = await client.post("/app/rest-day", data={"practiced_on": date.today().isoformat(), "csrf_token": token})
+    assert "first-session-card" not in r.text
+    assert "first-session-card" not in (await client.get("/app")).text
+
+
+async def test_first_session_card_without_kata_falls_back_to_guide(client):
+    from app.db import async_session
+    from app.models import Kata
+    from app.routers.practice import _first_session_card
+
+    await register(client, f"{unique('fg')}@test.com", unique("fguser"))
+    async with async_session() as db:
+        from app.models import User
+        user = (await db.execute(select(User).order_by(User.created_at.desc()))).scalars().first()
+        user.discipline = "nokata_disc"  # kata'sı olmayan branş
+        card = await _first_session_card(db, user)
+        await db.rollback()
+    assert card is not None and card["kata"] is None and card["has_guide"] is False
