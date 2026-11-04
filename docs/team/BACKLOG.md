@@ -19,8 +19,8 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 ## Büyüme
 
 - [x] **B-04 Instagram → site hunisi.** @joryu.art büyük izlenmeler alıyor ama GA'da Instagram'dan yalnız ~5 oturum geliyor. Bio link (`?src=ig`) + reels CTA'sı + linkin açıldığı sayfanın içerikle eşleşmesi (ör. bir jo videosu → `/kata` aiki-jo). Sorumlu: growth-marketer (taslak) → İlteriş (paylaşım). Puan 5×4/1. _✓ Taslak: docs/team/marketing/2026-11-03-instagram-hunisi.md._
-- [ ] **B-05 SEO anahtar kelime haritası.** Mevcut kata/teknik/rehber sayfaları için hedef sorgu (TR+EN), rakip durumu, title/meta/H1 önerisi. Sorumlu: growth-marketer. Puan 4×4/2.
-- [ ] **B-06 Teknik SEO.** Kata detay sayfalarında title/meta/canonical/hreflang, JSON-LD (Article/BreadcrumbList), iç linkleme (blog → kata, rehber → kata). Sorumlu: developer. Puan 4×4/2.
+- [x] **B-05 SEO anahtar kelime haritası.** _✓ Taslak 2026-11-04: docs/team/marketing/2026-11-04-seo-haritasi.md (title önerileri sonraki developer işinde uygulanacak)._ Mevcut kata/teknik/rehber sayfaları için hedef sorgu (TR+EN), rakip durumu, title/meta/H1 önerisi. Sorumlu: growth-marketer. Puan 4×4/2.
+- [x] **B-06 Teknik SEO.** _✓ 2026-11-04 (f6a0cd4, dalda). Kalan: B-05 title önerileri, sitemap'e blog yazıları (B-18)._ Kata detay sayfalarında title/meta/canonical/hreflang, JSON-LD (Article/BreadcrumbList), iç linkleme (blog → kata, rehber → kata). Sorumlu: developer. Puan 4×4/2.
 - [ ] **B-07 Landing hemen çıkma oranı (%66-75).** Hero'yu ziyaretçinin geldiği niyete göre bölmek, kayıt olmadan denenebilen bir "bugünün antrenmanı" demosu. Sorumlu: growth-marketer (copy) + developer. Puan 3×3/2.
 - [ ] **B-08 Reddit/forum fayda gönderileri.** r/aikido, r/kendo, r/iaido için kurallara uygun, değer odaklı 3 gönderi taslağı. Sorumlu: growth-marketer → İlteriş. Puan 3×3/1.
 
@@ -44,3 +44,8 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 - [ ] **B-15 Aiki-jo happo giri girişi.** İlteriş 2026-11-04'te teyit etti: kendi jo çizgisinde happo giri yok. Fact-checker da jo için kaynak bulamadı (bokken happo giri doğrulandı). Kaynaksız iki ifade ("kuzeyden saat yönünde", "en iyi ısınma") kaldırıldı. Kalan iş: `aikijo-happo-giri` girişini (seed + guide_content aiki-jo kata listesi) tamamen kaldırmak ya da bokken girişine yönlendirmek. Seed upsert silme yapmıyor; DB satırı ve ona bağlı pratik kayıtları için güvenli bir yol gerekiyor (gizleme bayrağı ya da migration). Ayrıca 13 no jo EN özetindeki "happo-style turns" ifadesini denetle. Sorumlu: fact-checker → developer.
 
 - [x] **B-16 Blog gövdelerinde demo kişiye ait birinci şahıs ifadeler.** Örn. jo yazısındaki "Benim için cevap basit…" cümlesi artık "Joryu Ekibi" imzasıyla tutarsız. content-writer nötrleştirir → fact-checker → developer. Seed mevcut yazıyı güncellemediği için prod satırı için tek seferlik UPDATE gerekir (İlteriş). _✓ 2026-11-04 jo yazısı (a571ef9); prod SQL İlteriş'te. Karate/taekwondo yazıları kalıyor (İlteriş kararı)._ Kapsam dışı jo iddiaları (128 cm, 20 suburi vb.) audit-log'da sonraki denetim adayı.
+
+## Bakım
+
+- [ ] **B-17 Test izolasyonu.** `tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Sorumlu: developer.
+- [ ] **B-18 Sitemap'e blog yazıları.** Sitemap blog yazılarını içermiyor; karate/taekwondo kata sayfaları da yok (İlteriş kararı bekliyor). Sorumlu: developer. Puan 4×4/1.
