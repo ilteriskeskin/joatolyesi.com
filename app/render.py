@@ -1,5 +1,7 @@
+import hashlib
 import secrets
 from datetime import date, datetime
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from fastapi import Request
@@ -14,6 +16,10 @@ from app.models import User
 
 templates = Jinja2Templates(directory="app/templates")
 templates.env.globals["is_demo_user"] = is_demo_user  # blog yazar satırı: demo -> "Joryu Ekibi"
+
+# style.css içerik hash'i: link'e ?v= olarak eklenir; CSS değişince tarayıcı
+# önbelleği ve SW eski stili sunmaz (açılışta bir kez okunur)
+templates.env.globals["css_v"] = hashlib.sha256(Path("app/static/css/style.css").read_bytes()).hexdigest()[:10]
 
 # Kesintisiz pratik serisinin başlangıcı — landing'deki gün sayacı buradan türer
 PRACTICE_START = date(2025, 8, 11)

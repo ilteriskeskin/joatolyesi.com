@@ -732,9 +732,9 @@ async def test_first_session_card_flow(client):
     await client.get("/app")  # sign_up olayını tüket
     r = await client.get("/app")
     assert "first-session-card" in r.text
-    assert "Bugün 10 dk:" in r.text
+    assert "Bugün 10 dakika:" in r.text and "İlk antrenmanın" in r.text
     r_en = await client.get("/app?lang=en")
-    assert "first-session-card" in r_en.text and "Today, 10 min:" in r_en.text
+    assert "first-session-card" in r_en.text and "Today, 10 minutes:" in r_en.text
 
     slug = re.search(r'action="/kata/([^"/]+)/log"', r.text).group(1)
     async with async_session() as db:

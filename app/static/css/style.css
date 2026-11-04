@@ -1919,3 +1919,71 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
 @media (max-width: 560px) {
   .follow-lists { grid-template-columns: 1fr; }
 }
+
+/* İlk seans kartı (B-09): yeni kullanıcıya ne yapacağını adım adım anlatır */
+.first-session-card {
+  border-color: var(--accent);
+  border-left-width: 3px;
+  padding: 1.75rem;
+}
+.first-session-card__label { color: var(--accent); }
+.first-session-card .first-session-card__title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1.25;
+  margin: 0.35rem 0 0.6rem;
+}
+.first-session-card__intro {
+  color: var(--ink-dim);
+  line-height: 1.6;
+  max-width: 38rem;
+  margin-bottom: 1.1rem;
+}
+.first-session-steps {
+  list-style: none;
+  counter-reset: fs-step;
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 0 1.4rem;
+  padding: 0;
+}
+.first-session-steps li {
+  counter-increment: fs-step;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  line-height: 1.5;
+}
+.first-session-steps li::before {
+  content: counter(fs-step);
+  flex: 0 0 1.6rem;
+  height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transform: translateY(-0.1rem);
+}
+.first-session-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+.first-session-card__actions form { margin: 0; }
+.first-session-card__actions .button { margin-top: 0; }
+.first-session-card__alt {
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+}
+@media (max-width: 560px) {
+  .first-session-card { padding: 1.25rem; }
+  .first-session-card .first-session-card__title { font-size: 1.35rem; }
+  .first-session-card__actions { flex-direction: column; align-items: stretch; }
+  .first-session-card__actions .button { width: 100%; text-align: center; }
+}

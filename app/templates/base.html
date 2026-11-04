@@ -22,7 +22,7 @@
   <meta property="og:description" content="{{ self.meta_description() }}">
 {% endblock %}
 {% block jsonld %}{% endblock %}
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/style.css?v={{ css_v }}">
   <script src="/static/js/vendor/htmx.min.js" defer></script>
   <script src="/static/js/vendor/alpine.min.js" defer></script>
   {% if not request.url.path.startswith('/admin') %}

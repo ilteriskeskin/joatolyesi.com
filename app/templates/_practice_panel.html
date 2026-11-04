@@ -1,27 +1,39 @@
 {% if first_session_card %}
 {% set fs = first_session_card %}
-<div class="card first-session-card">
+<section class="card first-session-card" aria-labelledby="first-session-title">
+  <span class="card-label first-session-card__label">{{ t.first_session_label }}</span>
   {% if fs.kata %}
   {% set fs_name = fs.kata.title_en if lang == 'en' else fs.kata.title_tr %}
-  <h2>{{ t.first_session_title.format(name=fs_name) }}</h2>
-  <p class="muted">
-    <a href="/kata/{{ fs.kata.slug }}">{{ t.first_session_kata_link }}</a>
-    {% if fs.has_guide %} · <a href="/guide/{{ fs.discipline }}#program">{{ t.first_session_guide_link }}</a>{% endif %}
-  </p>
-  <form method="post" action="/kata/{{ fs.kata.slug }}/log">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <input type="hidden" name="minutes" value="10">
-    <input type="hidden" name="source" value="first_session">
-    <button type="submit">{{ t.first_session_done }}</button>
-  </form>
+  <h2 id="first-session-title" class="first-session-card__title">{{ t.first_session_title.format(name=fs_name) }}</h2>
+  <p class="first-session-card__intro">{{ t.first_session_intro }}</p>
+  <ol class="first-session-steps">
+    <li>{{ t.first_session_step_open }}</li>
+    <li>{{ t.first_session_step_practice }}</li>
+    <li>{{ t.first_session_step_log }}</li>
+  </ol>
+  <div class="first-session-card__actions">
+    <form method="post" action="/kata/{{ fs.kata.slug }}/log">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="minutes" value="10">
+      <input type="hidden" name="source" value="first_session">
+      <button type="submit" class="button">{{ t.first_session_done }}</button>
+    </form>
+    <a class="button button--outline" href="/kata/{{ fs.kata.slug }}">{{ t.first_session_kata_link }}</a>
+  </div>
   {% else %}
-  <h2>{{ t["discipline_" ~ fs.discipline] }}</h2>
-  <p class="muted">
-    {% if fs.has_guide %}<a href="/guide/{{ fs.discipline }}#program">{{ t.first_session_guide_link }}</a> · {% endif %}
-    <a href="#log-form">{{ t.dash_log_title }}</a>
+  <h2 id="first-session-title" class="first-session-card__title">{{ t.first_session_title_nokata }}</h2>
+  <p class="first-session-card__intro">{{ t.first_session_intro }}</p>
+  <div class="first-session-card__actions">
+    <a class="button" href="#log-form">{{ t.first_session_other_link }}</a>
+  </div>
+  {% endif %}
+  {% if fs.kata or fs.has_guide %}
+  <p class="first-session-card__alt">
+    {% if fs.kata %}{{ t.first_session_other }} <a href="#log-form">{{ t.first_session_other_link }}</a>{% endif %}
+    {% if fs.has_guide %}{% if fs.kata %} · {% endif %}<a href="/guide/{{ fs.discipline }}#program">{{ t.first_session_guide_link }}</a>{% endif %}
   </p>
   {% endif %}
-</div>
+</section>
 {% endif %}
 
 {% if milestone %}
