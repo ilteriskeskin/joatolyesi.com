@@ -740,6 +740,11 @@ async def test_first_session_card_flow(client):
     async with async_session() as db:
         kata = (await db.execute(select(Kata).where(Kata.slug == slug))).scalar_one()
     assert f'href="/kata/{slug}"' in r.text and "#program" in r.text
+    # Yeni başlayana önce temel teknik (aiki-jo'da suburi 1 = choku tsuki)
+    assert kata.kind == "teknik"
+    if kata.discipline == "aikijo":
+        assert slug == "choku-tsuki"
+    assert "Tekniği aç" in r.text and "Katayı aç" not in r.text
 
     token = re.search(r'name="csrf_token" value="([^"]+)"', r.text).group(1)
     r = await client.post(f"/kata/{slug}/log",

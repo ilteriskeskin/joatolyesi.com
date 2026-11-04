@@ -35,8 +35,8 @@ router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 async def _first_session_card(db: AsyncSession, user: User) -> dict | None:
     """Hiç PracticeLog satırı (dinlenme günü dahil) olmayan kullanıcıya tek
-    tıklık ilk seans kartı. Kata, kullanıcının branşındaki /kata listesi
-    sırasının ilk kaydı; Pro açıksa yalnız ücretsizler. Branşta kata yoksa
+    tıklık ilk seans kartı. Önce branşın ilk temel tekniği (aiki-jo'da suburi 1,
+    bokken'de ichi no suburi), teknik yoksa ilk kata; Pro açıksa yalnız ücretsizler. Branşta kata yoksa
     yalnız guide linki döner."""
     has_log = (
         await db.execute(select(select(PracticeLog.id).where(PracticeLog.user_id == user.id).exists()))
@@ -46,8 +46,8 @@ async def _first_session_card(db: AsyncSession, user: User) -> dict | None:
     stmt = select(Kata).where(Kata.discipline == user.discipline)
     if settings.pro_enabled:
         stmt = stmt.where(Kata.is_free)
-    # Liste varsayılanı gibi önce tür=kata, sonra sort_order/title_en
-    stmt = stmt.order_by((Kata.kind != "kata"), Kata.sort_order, Kata.title_en).limit(1)
+    # Yeni başlayana uzun bir kata yerine temel teknik (İlteriş kararı 2026-11-04)
+    stmt = stmt.order_by((Kata.kind != "teknik"), Kata.sort_order, Kata.title_en).limit(1)
     kata = (await db.execute(stmt)).scalar_one_or_none()
     guide = get_guide(user.discipline)
     return {

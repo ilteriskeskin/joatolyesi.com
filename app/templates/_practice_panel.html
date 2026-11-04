@@ -4,11 +4,12 @@
   <span class="card-label first-session-card__label">{{ t.first_session_label }}</span>
   {% if fs.kata %}
   {% set fs_name = fs.kata.title_en if lang == 'en' else fs.kata.title_tr %}
+  {% set fs_sfx = "_teknik" if fs.kata.kind == "teknik" else "" %}
   <h2 id="first-session-title" class="first-session-card__title">{{ t.first_session_title.format(name=fs_name) }}</h2>
   <p class="first-session-card__intro">{{ t.first_session_intro }}</p>
   <ol class="first-session-steps">
-    <li>{{ t.first_session_step_open }}</li>
-    <li>{{ t.first_session_step_practice }}</li>
+    <li>{{ t["first_session_step_open" ~ fs_sfx] }}</li>
+    <li>{{ t["first_session_step_practice" ~ fs_sfx] }}</li>
     <li>{{ t.first_session_step_log }}</li>
   </ol>
   <div class="first-session-card__actions">
@@ -18,7 +19,7 @@
       <input type="hidden" name="source" value="first_session">
       <button type="submit" class="button">{{ t.first_session_done }}</button>
     </form>
-    <a class="button button--outline" href="/kata/{{ fs.kata.slug }}">{{ t.first_session_kata_link }}</a>
+    <a class="button button--outline" href="/kata/{{ fs.kata.slug }}">{{ t["first_session_kata_link" ~ fs_sfx] }}</a>
   </div>
   {% else %}
   <h2 id="first-session-title" class="first-session-card__title">{{ t.first_session_title_nokata }}</h2>
