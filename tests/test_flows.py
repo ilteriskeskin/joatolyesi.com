@@ -391,9 +391,9 @@ async def test_kata_hides_karate_taekwondo_but_keeps_data(client):
     r = await client.get(f"/kata/{karate_kata.slug}")
     assert r.status_code == 200 and karate_kata.title_tr in r.text
 
-    # sitemap karate/taekwondo kata sayfalarını promote etmiyor
+    # sitemap karate/taekwondo kata sayfalarını da içerir (İlteriş kararı 2026-11-04)
     r = await client.get("/sitemap.xml")
-    assert f"/kata/{karate_kata.slug}" not in r.text
+    assert f"/kata/{karate_kata.slug}" in r.text
 
 
 async def test_waitlist_referral_and_position(client):
@@ -929,7 +929,7 @@ async def test_sitemap_includes_blog_posts(client):
     })
     slug = r.headers["location"].split("/blog/")[1]
 
-    # karate yazısı sitemap'e girmez (kata ile aynı kural)
+    # karate yazısı da sitemap'e girer
     karate_slug = unique("karate-yazi")
     async with async_session() as db:
         user = (await db.execute(select(User).order_by(User.created_at.desc()))).scalars().first()
@@ -939,4 +939,4 @@ async def test_sitemap_includes_blog_posts(client):
     r = await client.get("/sitemap.xml")
     assert r.status_code == 200
     assert re.search(rf"<loc>https://joatolyesi\.com/blog/{re.escape(slug)}</loc><lastmod>\d{{4}}-\d{{2}}-\d{{2}}</lastmod>", r.text)
-    assert f"/blog/{karate_slug}" not in r.text
+    assert f"/blog/{karate_slug}" in r.text

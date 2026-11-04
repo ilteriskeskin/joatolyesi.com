@@ -6,7 +6,7 @@ from xml.sax.saxutils import escape
 
 from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -53,23 +53,15 @@ async def robots():
 async def sitemap(db: AsyncSession = Depends(get_db)):
     paths = ["/", "/privacy", "/terms"]
     if not settings.waitlist_only:
-        from app.constants import SELECTABLE_DISCIPLINES
         from app.guide_content import GUIDE
         from app.models import Kata
 
         paths += ["/guide", "/blog", "/resources", "/tips", "/kata"] + [f"/guide/{d}" for d in GUIDE]
-        slugs = (
-            await db.execute(select(Kata.slug).where(Kata.discipline.in_(SELECTABLE_DISCIPLINES)))
-        ).scalars().all()
+        # Tüm branşlar, karate/taekwondo dahil (İlteriş kararı 2026-11-04):
+        # listede gizli olsalar da sayfaları yayında ve aranabilir olmalı
+        slugs = (await db.execute(select(Kata.slug))).scalars().all()
         paths += [f"/kata/{slug}" for slug in slugs]
-        # Blog yazıları; kata ile aynı kural: karate/taekwondo promote edilmez
-        posts = (
-            await db.execute(
-                select(Post.slug, Post.created_at, Post.updated_at).where(
-                    or_(Post.discipline.is_(None), Post.discipline.in_(SELECTABLE_DISCIPLINES))
-                )
-            )
-        ).all()
+        posts = (await db.execute(select(Post.slug, Post.created_at, Post.updated_at))).all()
         lastmod = {f"/blog/{slug}": (updated or created).date().isoformat() for slug, created, updated in posts}
         paths += list(lastmod)
     else:
