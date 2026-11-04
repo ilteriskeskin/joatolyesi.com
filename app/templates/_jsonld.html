@@ -1,0 +1,10 @@
+{# JSON-LD yardımcıları. Tüm değerler tojson ile üretilir (<, >, & kaçışlı) — XSS yok. #}
+{% macro breadcrumb(items) %}
+<script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": items
+} | tojson }}
+</script>
+{% endmacro %}

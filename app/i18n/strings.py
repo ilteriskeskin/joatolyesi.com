@@ -117,6 +117,9 @@ STRINGS = {
         "blog_delete_confirm": "This post will be permanently deleted. Are you sure?",
         "blog_updated": "updated",
         "blog_team_author": "Joryu Team",
+        "blog_guide_link": "{d} guide",
+        "blog_kata_link": "{d} kata library",
+        "kata_guide_link": "{d} guide",
         "blog_cta_text": "Written by a practitioner tracking their practice on Joryu. Join and share your own journey.",
         # Guide
         "guide_title": "Discipline Guide",
@@ -490,6 +493,9 @@ STRINGS = {
         "blog_delete_confirm": "Bu yazı kalıcı olarak silinecek. Emin misin?",
         "blog_updated": "güncellendi",
         "blog_team_author": "Joryu Ekibi",
+        "blog_guide_link": "{d} rehberi",
+        "blog_kata_link": "{d} kata kütüphanesi",
+        "kata_guide_link": "{d} rehberi",
         "blog_cta_text": "Bu yazı, pratiğini Joryu'da takip eden bir pratisyenden. Katıl, sen de yolculuğunu paylaş.",
         # Rehber
         "guide_title": "Branş Rehberi",

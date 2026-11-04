@@ -14,6 +14,7 @@ from sqlalchemy.orm import selectinload
 from app.constants import DISCIPLINES, SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user, require_user, waitlist_gate
+from app.guide_content import GUIDE
 from app.markdown_utils import markdown_excerpt, render_markdown
 from app.models import Post, User
 from app.rate_limit import limiter
@@ -105,7 +106,9 @@ async def blog_read(
     is_owner = user is not None and user.id == post.user_id
     return render(request, "blog_post.html", user=user, post=post,
                   body_html=render_markdown(post.body),
-                  excerpt=markdown_excerpt(post.body, 150), is_owner=is_owner)
+                  excerpt=markdown_excerpt(post.body, 150), is_owner=is_owner,
+                  guide_available=post.discipline in GUIDE,
+                  kata_link_available=post.discipline in SELECTABLE_DISCIPLINES)
 
 
 @router.get("/blog/{slug}/duzenle", response_class=HTMLResponse)

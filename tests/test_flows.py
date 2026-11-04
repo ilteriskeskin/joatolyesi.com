@@ -623,7 +623,7 @@ async def test_kata_detail_seo_metadata(client):
     assert r.status_code == 200
     assert '<meta name="description"' in r.text
     assert 'application/ld+json' in r.text
-    assert '"@type": "HowTo"' in r.text
+    assert '"@type": "HowTo"' not in r.text and "uploadDate" not in r.text
     assert 'hreflang="tr"' in r.text and 'hreflang="en"' in r.text
     assert f'<link rel="canonical" href="https://joatolyesi.com/kata/{kata.slug}">' in r.text
 
@@ -798,3 +798,118 @@ async def test_first_session_card_without_kata_falls_back_to_guide(client):
         card = await _first_session_card(db, user)
         await db.rollback()
     assert card is not None and card["kata"] is None and card["has_guide"] is False
+
+
+# --- Teknik SEO: title / meta / JSON-LD (B-06) ---
+
+JSONLD_RE = re.compile(r'<script type="application/ld\+json">\s*(.*?)\s*</script>', re.S)
+
+
+def jsonld_blocks(html):
+    return [json.loads(b) for b in JSONLD_RE.findall(html)]
+
+
+def page_meta(html):
+    title = re.search(r"<title>(.*?)</title>", html, re.S).group(1)
+    desc = re.search(r'<meta name="description" content="([^"]*)">', html).group(1)
+    return title, desc
+
+
+def assert_breadcrumb(blocks, last_url):
+    crumbs = [b for b in blocks if b["@type"] == "BreadcrumbList"]
+    assert len(crumbs) == 1
+    items = crumbs[0]["itemListElement"]
+    assert [i["position"] for i in items] == list(range(1, len(items) + 1))
+    assert items[0]["item"] == "https://joatolyesi.com/"
+    assert items[-1]["item"] == last_url
+    assert all(i["name"] for i in items)
+
+
+def assert_canonical_clean(html, path):
+    assert f'<link rel="canonical" href="https://joatolyesi.com{path}">' in html
+    assert "?lang=" not in re.search(r'<link rel="canonical"[^>]*>', html).group(0)
+
+
+async def test_seo_kata_detail_jsonld(client):
+    from app.db import async_session
+    from app.models import Kata
+
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.is_free))).scalars().first()
+    if kata is None:
+        pytest.skip("seed içerik yok")
+    r = await client.get(f"/kata/{kata.slug}?lang=tr")
+    assert r.status_code == 200
+    title, desc = page_meta(r.text)
+    assert kata.title_tr in title and title.endswith("Joryu")
+    assert 0 < len(desc) <= 160
+    blocks = jsonld_blocks(r.text)
+    assert not any(b["@type"] in ("HowTo", "VideoObject") for b in blocks)
+    assert_breadcrumb(blocks, f"https://joatolyesi.com/kata/{kata.slug}")
+    assert_canonical_clean(r.text, f"/kata/{kata.slug}")
+
+
+async def test_seo_guide_discipline_jsonld(client):
+    from app.guide_content import GUIDE
+
+    d = next(iter(GUIDE))
+    r = await client.get(f"/guide/{d}?lang=tr")
+    assert r.status_code == 200
+    title, desc = page_meta(r.text)
+    assert "Joryu" in title
+    assert 0 < len(desc) <= 160
+    assert desc != "Joryu"  # varsayılan değil, rehber girişinden türer
+    assert desc[:20] in GUIDE[d]["intro"]["tr"]
+    assert_breadcrumb(jsonld_blocks(r.text), f"https://joatolyesi.com/guide/{d}")
+    assert_canonical_clean(r.text, f"/guide/{d}")
+
+
+async def test_seo_blog_post_jsonld_and_links(client):
+    email, username = f"{unique('s')}@test.com", unique("seoyazar")
+    assert (await register(client, email, username)).status_code in (200, 303)
+    csrf = await get_csrf(client, "/blog/yeni")
+    body = "Bugün omuz hareketliliği üzerine çalıştım. " * 6 + "<b>x</b> & </script>"
+    r = await client.post("/blog/yeni", data={
+        "title": 'SEO "deneme" yazısı <i>', "body": body,
+        "discipline": "aikijo", "csrf_token": csrf,
+    })
+    slug = r.headers["location"].split("/blog/")[1]
+
+    r = await client.get(f"/blog/{slug}?lang=tr")
+    assert r.status_code == 200
+    title, desc = page_meta(r.text)
+    assert "SEO" in title and "Joryu" in title
+    assert desc.startswith("Bugün omuz")
+    assert len(desc) <= 160
+    blocks = jsonld_blocks(r.text)  # geçerli JSON: </script> enjeksiyonu kaçışlandı
+    article = next(b for b in blocks if b["@type"] == "Article")
+    assert article["headline"] == 'SEO "deneme" yazısı <i>'
+    assert article["datePublished"]
+    assert article["author"]["name"]
+    assert "dateModified" not in article
+    assert_breadcrumb(blocks, f"https://joatolyesi.com/blog/{slug}")
+    assert_canonical_clean(r.text, f"/blog/{slug}")
+    # iç linkler: aynı branşın rehberi ve kata listesi
+    assert 'href="/guide/aikijo"' in r.text
+    assert 'href="/kata?d=aikijo"' in r.text
+
+    # düzenleme sonrası dateModified gelir
+    csrf = await get_csrf(client, f"/blog/{slug}/duzenle")
+    await client.post(f"/blog/{slug}/duzenle", data={
+        "title": "Güncel başlık yazısı", "body": body, "discipline": "aikijo", "csrf_token": csrf,
+    })
+    article = next(b for b in jsonld_blocks((await client.get(f"/blog/{slug}")).text) if b["@type"] == "Article")
+    assert article["dateModified"]
+
+
+async def test_seo_kata_detail_links_to_guide(client):
+    from app.db import async_session
+    from app.guide_content import GUIDE
+    from app.models import Kata
+
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.is_free, Kata.discipline.in_(list(GUIDE))))).scalars().first()
+    if kata is None:
+        pytest.skip("rehberli branşta seed kata yok")
+    r = await client.get(f"/kata/{kata.slug}")
+    assert f'href="/guide/{kata.discipline}"' in r.text

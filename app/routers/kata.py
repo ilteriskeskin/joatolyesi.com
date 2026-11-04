@@ -9,6 +9,7 @@ from app.analytics import PRACTICE_SOURCES, practice_logged_params, set_pending_
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.config import settings
+from app.guide_content import GUIDE
 from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, require_user, waitlist_gate
 from app.models import Kata, PracticeLog, User
 from app.rate_limit import limiter
@@ -105,6 +106,7 @@ async def kata_detail(
     return render(
         request, "kata_detail.html", user=user, kata=kata, logged=logged,
         repeat_count=repeat_count, related=related,
+        guide_available=kata.discipline in GUIDE,
     )
 
 

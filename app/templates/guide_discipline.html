@@ -1,5 +1,14 @@
 {% extends "base.html" %}
+{% from "_jsonld.html" import breadcrumb %}
 {% block title %}{{ t["discipline_" ~ d] }} — {{ t.guide_title }} — Joryu{% endblock %}
+{% block meta_description %}{{ (g.intro[lang] if lang in g.intro else g.intro.tr) | truncate(155) }}{% endblock %}
+{% block jsonld %}
+  {{ breadcrumb([
+    {"@type": "ListItem", "position": 1, "name": "Joryu", "item": "https://joatolyesi.com/"},
+    {"@type": "ListItem", "position": 2, "name": t.guide_title, "item": "https://joatolyesi.com/guide"},
+    {"@type": "ListItem", "position": 3, "name": t["discipline_" ~ d], "item": "https://joatolyesi.com/guide/" ~ d}
+  ]) }}
+{% endblock %}
 {% block content %}
 <article class="guide-page">
   <p class="guide-breadcrumb"><a href="/guide">{{ t.guide_title }}</a> / {{ t["discipline_" ~ d] }}</p>

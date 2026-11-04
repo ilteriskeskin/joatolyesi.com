@@ -1,9 +1,35 @@
 {% extends "base.html" %}
+{% from "_jsonld.html" import breadcrumb %}
 {% block title %}{{ post.title }} — Joryu{% endblock %}
+{% block meta_description %}{{ excerpt }}{% endblock %}
 {% block og %}
   <meta property="og:type" content="article">
   <meta property="og:title" content="{{ post.title }} — Joryu">
   <meta property="og:description" content="{{ excerpt }}">
+{% endblock %}
+{% block jsonld %}
+  {% set author_demo = is_demo_user(post.author) %}
+  {% set article = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title | truncate(110, True, ""),
+    "description": excerpt,
+    "datePublished": post.created_at.isoformat(),
+    "mainEntityOfPage": "https://joatolyesi.com/blog/" ~ post.slug,
+    "author": {
+      "@type": "Organization" if author_demo else "Person",
+      "name": t.blog_team_author if author_demo else (post.author.display_name or post.author.username)
+    }
+  } %}
+  {% if post.updated_at %}{% set _ = article.update({"dateModified": post.updated_at.isoformat()}) %}{% endif %}
+  <script type="application/ld+json">
+  {{ article | tojson }}
+  </script>
+  {{ breadcrumb([
+    {"@type": "ListItem", "position": 1, "name": "Joryu", "item": "https://joatolyesi.com/"},
+    {"@type": "ListItem", "position": 2, "name": t.blog_title, "item": "https://joatolyesi.com/blog"},
+    {"@type": "ListItem", "position": 3, "name": post.title | truncate(110, True, ""), "item": "https://joatolyesi.com/blog/" ~ post.slug}
+  ]) }}
 {% endblock %}
 {% block content %}
 <article class="blog-post">
@@ -24,6 +50,13 @@
   </p>
 
   <div class="post-body">{{ body_html | safe }}</div>
+
+  {% if post.discipline %}
+  <p class="post-related-links">
+    {% if guide_available %}<a href="/guide/{{ post.discipline }}">{{ t.blog_guide_link.format(d=t["discipline_" ~ post.discipline]) }} →</a>{% endif %}
+    {% if kata_link_available %}<a href="/kata?d={{ post.discipline }}">{{ t.blog_kata_link.format(d=t["discipline_" ~ post.discipline]) }} →</a>{% endif %}
+  </p>
+  {% endif %}
 
   {% if is_owner %}
   <div class="post-actions">
