@@ -2,10 +2,11 @@ import csv
 import io
 import re
 import secrets
+from xml.sax.saxutils import escape
 
 from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,7 +14,7 @@ from app.config import settings
 from app.db import get_db
 from app.deps import csrf_protect, get_current_user
 from app.i18n.strings import DEFAULT_LANG, SUPPORTED_LANGS, get_strings
-from app.models import User, Waitlist
+from app.models import Post, User, Waitlist
 from app.rate_limit import limiter
 from app.render import render
 
@@ -61,7 +62,24 @@ async def sitemap(db: AsyncSession = Depends(get_db)):
             await db.execute(select(Kata.slug).where(Kata.discipline.in_(SELECTABLE_DISCIPLINES)))
         ).scalars().all()
         paths += [f"/kata/{slug}" for slug in slugs]
-    urls = "".join(f"<url><loc>{settings.base_url}{p}</loc></url>" for p in paths)
+        # Blog yazıları; kata ile aynı kural: karate/taekwondo promote edilmez
+        posts = (
+            await db.execute(
+                select(Post.slug, Post.created_at, Post.updated_at).where(
+                    or_(Post.discipline.is_(None), Post.discipline.in_(SELECTABLE_DISCIPLINES))
+                )
+            )
+        ).all()
+        lastmod = {f"/blog/{slug}": (updated or created).date().isoformat() for slug, created, updated in posts}
+        paths += list(lastmod)
+    else:
+        lastmod = {}
+    urls = "".join(
+        f"<url><loc>{escape(settings.base_url + p)}</loc>"
+        + (f"<lastmod>{lastmod[p]}</lastmod>" if p in lastmod else "")
+        + "</url>"
+        for p in paths
+    )
     xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
     return Response(xml, media_type="application/xml")
 

@@ -913,3 +913,30 @@ async def test_seo_kata_detail_links_to_guide(client):
         pytest.skip("rehberli branşta seed kata yok")
     r = await client.get(f"/kata/{kata.slug}")
     assert f'href="/guide/{kata.discipline}"' in r.text
+
+
+# --- Sitemap'te blog yazıları (B-18) ---
+
+async def test_sitemap_includes_blog_posts(client):
+    from app.db import async_session
+    from app.models import Post, User
+
+    await register(client, f"{unique('sm')}@test.com", unique("smuser"))
+    csrf = await get_csrf(client, "/blog/yeni")
+    r = await client.post("/blog/yeni", data={
+        "title": "Sitemap deneme yazısı", "body": "Jo suburi notları. " * 10,
+        "discipline": "aikijo", "csrf_token": csrf,
+    })
+    slug = r.headers["location"].split("/blog/")[1]
+
+    # karate yazısı sitemap'e girmez (kata ile aynı kural)
+    karate_slug = unique("karate-yazi")
+    async with async_session() as db:
+        user = (await db.execute(select(User).order_by(User.created_at.desc()))).scalars().first()
+        db.add(Post(user_id=user.id, slug=karate_slug, title="Karate", body="x" * 50, discipline="karate"))
+        await db.commit()
+
+    r = await client.get("/sitemap.xml")
+    assert r.status_code == 200
+    assert re.search(rf"<loc>https://joatolyesi\.com/blog/{re.escape(slug)}</loc><lastmod>\d{{4}}-\d{{2}}-\d{{2}}</lastmod>", r.text)
+    assert f"/blog/{karate_slug}" not in r.text
