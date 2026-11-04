@@ -48,4 +48,4 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 ## Bakım
 
 - [ ] **B-17 Test izolasyonu.** `tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Sorumlu: developer.
-- [x] **B-18 Sitemap'e blog yazıları.** _✓ 2026-11-04 (81facbd, dalda); karate/taekwondo kararı bekliyor._ Sitemap blog yazılarını içermiyor; karate/taekwondo kata sayfaları da yok (İlteriş kararı bekliyor). Sorumlu: developer. Puan 4×4/1.
+- [x] **B-18 Sitemap'e blog yazıları.** _✓ 2026-11-04 (81facbd, dalda); karate/taekwondo da dahil edildi (132e99a, İlteriş kararı)._ Sitemap blog yazılarını içermiyor; karate/taekwondo kata sayfaları da yok (İlteriş kararı bekliyor). Sorumlu: developer. Puan 4×4/1.
