@@ -42,7 +42,7 @@ POSTS = [
 
 ## Kısa tarih
 
-Jo'nun en bilinen hikâyesi 17. yüzyıla dayanır. Rivayete göre samuray Muso Gonnosuke, efsanevi kılıç ustası Miyamoto Musashi'ye yenildikten sonra inzivaya çekilir, daha kısa ve daha çevik bir sopa üzerine çalışır ve Shinto Muso-ryu jojutsu'yu kurar. Bugün jo iki büyük gelenekte yaşar:
+Jo'nun en bilinen hikâyesi 17. yüzyılın başına dayanır. Rivayete göre samuray Muso Gonnosuke, efsanevi kılıç ustası Miyamoto Musashi'ye yenildikten sonra inzivaya çekilir, yeni bir sopa tekniği geliştirir ve Shinto Muso-ryu jojutsu'yu kurar. Okulun kendi aktarımına göre Gonnosuke daha sonra Musashi'yle yeniden karşılaşıp onu yenmiştir; bu ikinci karşılaşma okul dışındaki kaynaklarla doğrulanamaz. Bugün jo iki büyük gelenekte yaşar:
 
 - **Jodo / jojutsu:** kılıca karşı jo — Shinto Muso-ryu ve ZNKR'nin standartlaştırdığı Seitei Jodo
 - **Aiki-jo:** aikidonun kurucusu Morihei Ueshiba'nın geliştirdiği, Iwama müfredatıyla (20 suburi, 13'lü ve 31'li kata) yayılan çalışma
@@ -51,11 +51,11 @@ Jo'nun en bilinen hikâyesi 17. yüzyıla dayanır. Rivayete göre samuray Muso 
 
 Jo ile başlamanın bir gerekçesi şu görüşle özetlenebilir: **jo affedicidir ama yalan söylemez.** Bu bakışa göre kılıçta kesişin doğru olup olmadığı başlangıçta her zaman kolay fark edilmez; jo'da ise dengesiz bir tsuki çoğu zaman sopanın elinizde kımıldamasıyla kendini belli eder.
 
-> Jo, vücudunuzun iki tarafını da eşit çalıştıran nadir silahlardandır — sol elinizle de vurursunuz, sağ elinizle de.
+> Jo, özellikle jododa, vücudun iki yanında da kullanılır: temel teknikler hem sağdan hem soldan çalışılır, eller yer değiştirir. Kılıç çalışmasında bu kadar iki taraflı bir kullanım daha az görülür.
 
 ## İlk jo'nuzu seçerken
 
-- **Uzunluk:** klasik ölçü 128 cm (4 shaku 2 sun 1 bu). Boyunuz kısaysa koltuk altı hizası da kabul görür.
+- **Uzunluk:** geleneksel ölçü yaklaşık 128 cm (4 shaku 2 sun 1 bu). Boyunuza uygun ölçü dojodan dojoya değişebilir; satın almadan önce hocanıza danışın.
 - **Ağaç:** Japonya'da beyaz meşe (shiro kashi) standarttır. Türkiye'de dişbudak veya gürgen iyi iş görür; budaksız ve düz olsun.
 - **Çap:** 24-26 mm arası. İnce jo hızlıdır ama kumijo'da (eşli çalışma) darbe yer.
 
@@ -199,7 +199,7 @@ Dojoya gitmeden, sadece iki metrekarelik bir alanda bile bu 20 suburi'nin ilk bi
         "username": "aksam-keiko",
         "title": "Jodo ve Jojutsu: Aynı Silah, İki Farklı Yol",
         "discipline": "jodo",
-        "body": """Jo'nun tarihi 17. yüzyıla, samuray Muso Gonnosuke'nin Shinto Muso-ryu jojutsu'yu kurmasına dayanır — bu hikâye bu blogda daha önce de anlatıldı. Ama az bilinen şey şu: bugün "jodo" adıyla dünyada öğretilen şeyin büyük kısmı, o eski okulun kendisi değil, ondan 20. yüzyılda türetilmiş standart bir müfredat.
+        "body": """Jojutsu'nun en bilinen geleneği, okulun kendi aktarımına göre 17. yüzyıl başında samuray Muso Gonnosuke'nin kurduğu Shinto Muso-ryu'dur — bu hikâye bu blogda daha önce de anlatıldı. Ama az bilinen şey şu: bugün "jodo" adıyla dünyada öğretilen şeyin büyük kısmı, o eski okulun kendisi değil, ondan 20. yüzyılda türetilmiş standart bir müfredat.
 
 ## Koryu'dan gendai'ye
 
