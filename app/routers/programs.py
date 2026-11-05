@@ -25,11 +25,10 @@ router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 # Haftalık tema bloğu yalnız bu programda gösterilir (seed.WEEKS tek kaynak)
 JO_SUBURI_SLUG = "30-day-jo-suburi"
-# Seed'deki odak adı -> aiki-jo teknik/kata slug'ı. Slug doğrudan eşleşmiyorsa buradan;
-# burada olmayan ve katalogda da bulunmayan odaklara (ör. "free flow combinations") link verilmez.
+# Seed'deki odak adı -> aiki-jo teknik slug'ı. Slug doğrudan eşleşmiyorsa buradan;
+# burada olmayan ve katalogda da bulunmayan odaklara link verilmez.
 FOCUS_SLUG_OVERRIDES = {
-    "31-count kata (sections)": "sanjuichi-no-jo",
-    "full kata runs": "sanjuichi-no-jo",
+    "men uchi gedan gaeshi": "menuchi-gedan-gaeshi",
 }
 
 

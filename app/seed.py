@@ -769,15 +769,17 @@ CATALOG: dict[str, list[dict]] = {
 }
 
 # Hafta temaları: (EN tema, TR tema, o haftanın odak suburi listesi)
+# Sıra, (day_num - 1) % len ile her haftanın ilk günü resmi sıradaki ilk suburi
+# olacak şekilde döndürülmüştür (Saito/Iwama 20 jo suburi numaralandırması).
 WEEKS = [
     ("Tsuki fundamentals", "Tsuki temelleri",
      ["choku tsuki", "kaeshi tsuki", "ushiro tsuki"]),
     ("Uchikomi — striking week", "Uchikomi — vuruş haftası",
-     ["shomen uchikomi", "renzoku uchikomi", "menuchi gedan gaeshi"]),
+     ["men uchi gedan gaeshi", "shomen uchikomi", "renzoku uchikomi"]),
     ("Katate & hasso gaeshi", "Katate & hasso gaeshi",
-     ["katate gedan gaeshi", "hasso gaeshi uchi", "hasso gaeshi tsuki"]),
-    ("Flow — toward the 31 kata", "Akış — 31'lik kataya doğru",
-     ["31-count kata (sections)", "free flow combinations", "full kata runs"]),
+     ["hasso gaeshi uchi", "hasso gaeshi tsuki", "katate gedan gaeshi"]),
+    ("Nagare gaeshi — flowing forms", "Nagare gaeshi — akış formları",
+     ["migi nagare gaeshi tsuki", "hidari nagare gaeshi uchi"]),
 ]
 
 
@@ -790,13 +792,15 @@ def _build_program_days() -> list[dict]:
         if day_num % 7 == 0:
             title_en, title_tr = "Review & light flow", "Tekrar & hafif akış"
             content_en = (
-                f"Week theme: {theme_en}. Today is a review day. 10 minutes of slow, "
-                "deliberate repetition of everything from this week. Half speed, full attention. "
+                f"Week theme: {theme_en}. Today is a review day. Warm up 5 minutes "
+                "(wrists, shoulders, hips). Then 10 minutes of slow, deliberate repetition "
+                "of everything from this week. Half speed, full attention. "
                 "Finish with 5 minutes of free movement."
             )
             content_tr = (
-                f"Hafta teması: {theme_tr}. Bugün tekrar günü. Bu haftanın tüm çalışmasını "
-                "10 dakika yavaş ve bilinçli tekrar et. Yarı hız, tam dikkat. "
+                f"Hafta teması: {theme_tr}. Bugün tekrar günü. 5 dakika ısın "
+                "(bilek, omuz, kalça). Sonra bu haftanın tüm çalışmasını 10 dakika yavaş "
+                "ve bilinçli tekrar et. Yarı hız, tam dikkat. "
                 "5 dakika serbest hareketle bitir."
             )
         else:
@@ -806,12 +810,14 @@ def _build_program_days() -> list[dict]:
                 f"Week theme: {theme_en}. Warm up 5 minutes (wrists, shoulders, hips). "
                 f"Main work: {focus} — 3 sets of 20 repetitions, rest between sets. "
                 "Last set slower than the first: precision over speed. "
+                "If you haven't learned this movement from a teacher yet, ask yours first. "
                 "Log your session when you're done."
             )
             content_tr = (
                 f"Hafta teması: {theme_tr}. 5 dakika ısın (bilek, omuz, kalça). "
                 f"Ana çalışma: {focus} — 3 set x 20 tekrar, setler arası dinlen. "
                 "Son set ilkinden yavaş: hızdan önce isabet. "
+                "Bu hareketi henüz hocandan öğrenmediysen önce ona danış. "
                 "Bitirince seansını kaydet."
             )
         days.append({
@@ -849,13 +855,13 @@ async def seed_content() -> None:
                 title_tr="30 Günlük Jo Suburi Programı",
                 description_en=(
                     "One month of daily, structured jo suburi practice. "
-                    "Four weekly themes: thrusts, strikes, turning forms, and flow. "
-                    "15–25 minutes a day."
+                    "Four weekly themes: thrusts, strikes, one-handed and hasso forms, "
+                    "and flowing forms. About 10–20 minutes a day."
                 ),
                 description_tr=(
                     "Bir ay boyunca her gün yapılandırılmış jo suburi çalışması. "
-                    "Dört haftalık tema: saplamalar, vuruşlar, dönüş formları ve akış. "
-                    "Günde 15–25 dakika."
+                    "Dört haftalık tema: dürtüşler, vuruşlar, tek el ve hasso formları, "
+                    "akış formları. Günde yaklaşık 10–20 dakika."
                 ),
                 duration_days=30,
             )
