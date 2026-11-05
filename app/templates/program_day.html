@@ -14,6 +14,9 @@
   </div>
   {% endif %}
   <p class="day-content">{{ day.content_en if lang == 'en' else day.content_tr }}</p>
+  {% if focus_kata %}
+  <p><a href="/kata/{{ focus_kata.slug }}">{{ t.program_day_kata_link.format(name=focus_kata.title_en if lang == 'en' else focus_kata.title_tr) }}</a></p>
+  {% endif %}
 
   {% if is_completed %}
   <p class="form-message form-message--success">{{ t.program_completed }}</p>

@@ -7,6 +7,7 @@
   <form method="post" action="/register">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <input type="hidden" name="ref" value="{{ ref }}">
+    <input type="hidden" name="next" value="{{ next }}">
     <label>{{ t.auth_email }}
       <input type="email" name="email" required autocomplete="email">
     </label>
@@ -27,6 +28,6 @@
     </label>
     <button type="submit">{{ t.auth_register_button }}</button>
   </form>
-  <p class="auth-alt">{{ t.auth_have_account }} <a href="/login">{{ t.nav_login }}</a></p>
+  <p class="auth-alt">{{ t.auth_have_account }} <a href="/login{% if next %}?next={{ next|urlencode }}{% endif %}">{{ t.nav_login }}</a></p>
 </div>
 {% endblock %}

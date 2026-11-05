@@ -37,8 +37,19 @@ USERNAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$")
 REF_RE = re.compile(r"^[a-f0-9]{6,12}$")
 
 
-def _session_response(user: User) -> RedirectResponse:
-    response = RedirectResponse("/app", status_code=303)
+def safe_next(value: str | None) -> str:
+    """Kayıt/girişten sonra dönülecek iç yol. Yalnız tek '/' ile başlayan yollar
+    kabul edilir; '//host', '/\\host', şema, kontrol karakteri ve çok uzun değerler
+    reddedilir (open redirect yok). Geçersizse boş string."""
+    if not value or len(value) > 200 or not value.startswith("/") or value.startswith(("//", "/\\")):
+        return ""
+    if "\\" in value or any(ord(c) < 32 or ord(c) == 127 for c in value):
+        return ""
+    return value
+
+
+def _session_response(user: User, next_path: str = "") -> RedirectResponse:
+    response = RedirectResponse(next_path or "/app", status_code=303)
     response.set_cookie(
         SESSION_COOKIE,
         create_session_token(user.id, user.password_hash),
@@ -52,13 +63,17 @@ def _session_response(user: User) -> RedirectResponse:
 
 @router.get("/register", response_class=HTMLResponse)
 async def register_page(
-    request: Request, ref: str | None = Query(default=None), user: User | None = Depends(get_current_user)
+    request: Request,
+    ref: str | None = Query(default=None),
+    next: str | None = Query(default=None),
+    user: User | None = Depends(get_current_user),
 ):
+    next_clean = safe_next(next)
     if user:
-        return RedirectResponse("/app", status_code=303)
+        return RedirectResponse(next_clean or "/app", status_code=303)
     return render(
         request, "register.html", error=None, disciplines=SELECTABLE_DISCIPLINES,
-        ref=ref if ref and REF_RE.match(ref) else "",
+        ref=ref if ref and REF_RE.match(ref) else "", next=next_clean,
     )
 
 
@@ -83,26 +98,28 @@ async def register(
     username: str = Form(...),
     discipline: str = Form("aikijo"),
     ref: str = Form(""),
+    next: str = Form(""),
     db: AsyncSession = Depends(get_db),
 ):
     email = email.strip().lower()
     username = username.strip().lower()
+    next_clean = safe_next(next)
     ref_clean = ref if ref and REF_RE.match(ref) else ""
     if not EMAIL_RE.match(email):
-        return render(request, "register.html", error="form_error_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="form_error_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
     if not USERNAME_RE.match(username):
-        return render(request, "register.html", error="profile_error_username_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="profile_error_username_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
     if len(password) < 8:
-        return render(request, "register.html", error="auth_error_password_short", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="auth_error_password_short", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
     if discipline not in SELECTABLE_DISCIPLINES:
         discipline = "aikijo"
 
     existing = await db.execute(select(User.id).where(User.email == email))
     if existing.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="auth_error_exists", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="auth_error_exists", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
     taken = await db.execute(select(User.id).where(User.username == username))
     if taken.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="profile_error_username_taken", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean)
+        return render(request, "register.html", error="profile_error_username_taken", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
 
     referred_by = None
     if ref_clean:
@@ -121,7 +138,7 @@ async def register(
     db.add(user)
     await db.commit()
     _send_verification(background, user)
-    response = _session_response(user)
+    response = _session_response(user, next_clean)
     # GA4 sign_up: redirect sonrası ilk sayfa bir kez gönderir (app/analytics.py)
     params = sign_up_params(discipline)
     if params:
@@ -130,10 +147,13 @@ async def register(
 
 
 @router.get("/login", response_class=HTMLResponse)
-async def login_page(request: Request, user: User | None = Depends(get_current_user)):
+async def login_page(
+    request: Request, next: str | None = Query(default=None), user: User | None = Depends(get_current_user)
+):
+    next_clean = safe_next(next)
     if user:
-        return RedirectResponse("/app", status_code=303)
-    return render(request, "login.html", error=None)
+        return RedirectResponse(next_clean or "/app", status_code=303)
+    return render(request, "login.html", error=None, next=next_clean)
 
 
 @router.post("/login", dependencies=[Depends(csrf_protect)])
@@ -142,14 +162,16 @@ async def login(
     request: Request,
     email: str = Form(...),
     password: str = Form(...),
+    next: str = Form(""),
     db: AsyncSession = Depends(get_db),
 ):
     email = email.strip().lower()
+    next_clean = safe_next(next)
     result = await db.execute(select(User).where(User.email == email))
     user = result.scalar_one_or_none()
     if user is None or not await verify_password(password, user.password_hash):
-        return render(request, "login.html", error="auth_error_invalid")
-    return _session_response(user)
+        return render(request, "login.html", error="auth_error_invalid", next=next_clean)
+    return _session_response(user, next_clean)
 
 
 @router.post("/logout", dependencies=[Depends(csrf_protect)])

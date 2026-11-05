@@ -53,8 +53,8 @@ app.include_router(practice.router)
 app.include_router(kata.router)
 app.include_router(profile.router)
 app.include_router(push.router)
+app.include_router(programs.router)  # Pro kapalıyken giriş yapan herkese açık; Pro açıksa require_program_access kapatır
 if settings.pro_enabled:
-    app.include_router(programs.router)  # kapalıyken programlar tamamen gizli
     app.include_router(billing.router)  # kapalıyken /billing ve webhook da kapanır
 
 

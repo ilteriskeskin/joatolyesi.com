@@ -9,6 +9,8 @@ Olay parametrelerinde kişisel veri (e-posta, kullanıcı adı, id, not) yok:
 yalnız beyaz listedeki olay adları ve branş/dakika/kaynak değerleri.
 """
 
+import re
+
 from fastapi import Request, Response
 
 from app.constants import DISCIPLINES
@@ -17,6 +19,7 @@ PENDING_EVENT_COOKIE = "ga_evt"
 PENDING_EVENT_MAX_AGE = 300  # 5 dk: redirect sonrası ilk sayfaya yeter
 
 PRACTICE_SOURCES = ("dashboard", "kata", "first_session")
+PROGRAM_SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")  # program slug'ı: küçük harf, rakam, tire
 
 
 def _clean_minutes(value: int | str) -> int | None:
@@ -40,6 +43,23 @@ def practice_logged_params(discipline: str, minutes: int | str, source: str) -> 
     return {"discipline": discipline, "minutes": clean_minutes, "source": source}
 
 
+def program_enroll_params(program: str) -> dict | None:
+    if len(program) > 60 or not PROGRAM_SLUG_RE.match(program):
+        return None
+    return {"program": program}
+
+
+def program_day_complete_params(program: str, day: int | str) -> dict | None:
+    base = program_enroll_params(program)
+    try:
+        day_number = int(day)
+    except (TypeError, ValueError):
+        return None
+    if base is None or not 1 <= day_number <= 366:
+        return None
+    return {**base, "day": day_number}
+
+
 def set_pending_event(response: Response, name: str, params: dict) -> None:
     """Olayı tek seferlik cookie'ye yazar. Değerler cookie-güvenli karakterler
     (küçük harf, rakam, alt çizgi) olduğundan '|' ile ayrılır."""
@@ -47,6 +67,10 @@ def set_pending_event(response: Response, name: str, params: dict) -> None:
         value = f"sign_up|{params['discipline']}"
     elif name == "practice_logged":
         value = f"practice_logged|{params['discipline']}|{params['minutes']}|{params['source']}"
+    elif name == "program_enroll":
+        value = f"program_enroll|{params['program']}"
+    elif name == "program_day_complete":
+        value = f"program_day_complete|{params['program']}|{params['day']}"
     else:
         return
     response.set_cookie(
@@ -66,6 +90,10 @@ def read_pending_event(request: Request) -> dict | None:
         params = sign_up_params(parts[1])
     elif parts[0] == "practice_logged" and len(parts) == 4:
         params = practice_logged_params(parts[1], parts[2], parts[3])
+    elif parts[0] == "program_enroll" and len(parts) == 2:
+        params = program_enroll_params(parts[1])
+    elif parts[0] == "program_day_complete" and len(parts) == 3:
+        params = program_day_complete_params(parts[1], parts[2])
     if params is None:
         return None
     return {"name": parts[0], "params": params}

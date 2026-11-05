@@ -534,12 +534,12 @@ async def test_pro_disabled_by_default(client):
     email, username = f"{unique('nopro')}@test.com", unique("noprouser")
     await register(client, email, username)
 
-    # Pro nav linki, Programlar linki ve /billing tamamen kapali
+    # Pro nav linki ve /billing tamamen kapali; Programlar (B-20) giris yapana acik
     r = await client.get("/app")
-    assert "/billing" not in r.text and "/programs" not in r.text
+    assert "/billing" not in r.text and 'href="/programs"' in r.text
 
     assert (await client.get("/billing")).status_code == 404
-    assert (await client.get("/programs")).status_code == 404
+    assert (await client.get("/programs")).status_code == 200
 
     # Pro kapaliyken odeme duvari yok: is_free=False isaretli kata da tamamen
     # erisilebilir olmali (listede gorunur, detay 200 doner) - aksi halde
@@ -945,3 +945,107 @@ async def test_sitemap_includes_blog_posts(client):
     assert r.status_code == 200
     assert re.search(rf"<loc>https://joatolyesi\.com/blog/{re.escape(slug)}</loc><lastmod>\d{{4}}-\d{{2}}-\d{{2}}</lastmod>", r.text)
     assert f"/blog/{karate_slug}" in r.text
+
+
+# --- B-20: ucretsiz 30 gunluk jo suburi programi ---
+
+PROGRAM = "/programs/30-day-jo-suburi"
+
+
+async def test_program_detail_public_for_visitor(client):
+    r = await client.get(PROGRAM)
+    assert r.status_code == 200
+    assert "Ücretsiz kaydol, 1. güne başla" in r.text
+    assert "/register?next=/programs/30-day-jo-suburi" in r.text
+    assert "30 Günlük Jo Suburi Programı" in r.text
+    assert "Tsuki temelleri" in r.text  # haftalik temalar
+    assert r.text.count("day-cell--preview") == 30
+    # programa ozel meta/OG
+    assert 'property="og:title" content="30 Günlük Jo Suburi Programı' in r.text
+    title, desc = page_meta(r.text)
+    assert title.startswith("30 Günlük Jo Suburi") and desc.startswith("Bir ay boyunca her gün")
+    en = await client.get(PROGRAM + "?lang=en")
+    assert "Sign up free, start Day 1" in en.text and "Weekly themes" in en.text
+    assert "One month of daily" in en.text
+
+
+async def test_program_day_and_enroll_require_login_for_visitor(client):
+    r = await client.get(PROGRAM + "/day/1")
+    assert r.status_code == 303 and r.headers["location"] == "/login"
+    token = await get_csrf(client, "/login")
+    r = await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    assert r.status_code == 303 and r.headers["location"] == "/login"
+    r = await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    assert r.status_code == 303 and r.headers["location"] == "/login"
+
+
+async def test_free_user_enrolls_and_completes_day_one(client):
+    await register(client, f"{unique('pg')}@test.com", unique("pguser"))
+    r = await client.get("/app")
+    assert 'href="/programs"' in r.text
+
+    token = await get_csrf(client, PROGRAM)
+    r = await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    assert r.status_code == 303 and r.headers["location"] == PROGRAM + "/day/1"
+    r = await client.get(PROGRAM + "/day/1")
+    assert r.status_code == 200
+    assert ga_events(r.text) == [("program_enroll", {"program": "30-day-jo-suburi"})]
+    # odak suburi katalogda var -> teknik sayfasina link; metin ayni kaldi
+    assert 'href="/kata/choku-tsuki"' in r.text
+    # 2. gun kilitli
+    assert "program_locked_day" not in r.text
+    r2 = await client.get(PROGRAM + "/day/2")
+    assert 'href="/kata/' not in r2.text.split("<article")[1]
+
+    # tekrar enroll olay uretmez
+    r = await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    r = await client.get(PROGRAM + "/day/1")
+    assert ga_events(r.text) == []
+
+    r = await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    assert r.status_code == 303
+    r = await client.get(PROGRAM)
+    assert ga_events(r.text) == [("program_day_complete", {"program": "30-day-jo-suburi", "day": 1})]
+    assert "2" in r.text and "day-cell--done" in r.text
+    # ayni gun tekrar tamamlanirsa olay yok
+    await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    assert ga_events((await client.get(PROGRAM)).text) == []
+    # dashboard banner'i Pro kapaliyken gorunur
+    r = await client.get("/app")
+    assert 'href="/programs/30-day-jo-suburi/day/2"' in r.text
+
+
+async def test_register_next_redirect_and_open_redirect_rejected(client):
+    token = await get_csrf(client, "/register?next=/programs/30-day-jo-suburi")
+    assert 'name="next" value="/programs/30-day-jo-suburi"' in (
+        await client.get("/register?next=/programs/30-day-jo-suburi")).text
+    r = await client.post("/register", data={
+        "email": f"{unique('nx')}@test.com", "password": "password123", "username": unique("nxuser"),
+        "discipline": "aikijo", "csrf_token": token, "next": "/programs/30-day-jo-suburi"})
+    assert r.status_code == 303 and r.headers["location"] == "/programs/30-day-jo-suburi"
+
+    for bad in ("https://evil.com", "//evil.com", "/\\evil.com", "evil.com", "javascript:alert(1)", "/a\r\nb"):
+        async with httpx.AsyncClient(transport=client._transport, base_url="http://test") as c2:
+            r = await c2.get("/register", params={"next": bad})
+            assert 'name="next" value=""' in r.text
+            t2 = await get_csrf(c2, "/register")
+            r = await c2.post("/register", data={
+                "email": f"{unique('nb')}@test.com", "password": "password123", "username": unique("nbuser"),
+                "discipline": "aikijo", "csrf_token": t2, "next": bad})
+            assert r.status_code == 303 and r.headers["location"] == "/app", bad
+
+
+async def test_login_next_safe(client):
+    email, username = f"{unique('ln')}@test.com", unique("lnuser")
+    await register(client, email, username)
+    for nxt, expected in (("/programs/30-day-jo-suburi", "/programs/30-day-jo-suburi"), ("//evil.com", "/app")):
+        async with httpx.AsyncClient(transport=client._transport, base_url="http://test") as c2:
+            t = await get_csrf(c2, "/login")
+            r = await c2.post("/login", data={"email": email, "password": "password123", "csrf_token": t, "next": nxt})
+            assert r.status_code == 303 and r.headers["location"] == expected
+
+
+async def test_program_event_cookie_tampering_ignored(client):
+    client.cookies.set("ga_evt", "program_day_complete|x y|abc")
+    r = await client.get(PROGRAM)
+    assert ga_events(r.text) == []

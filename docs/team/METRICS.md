@@ -38,5 +38,7 @@ Deploy sonrası GA4'e düşen özel olaylar (parametrelerde kişisel veri yok; a
 | `practice_logged` | Dashboard'dan pratik kaydı (HTMX) veya kata sayfasında "Bugün bunu çalıştım" | `discipline`, `minutes`, `source: dashboard \| kata` |
 | `share_card` | Paylaş (native), X, WhatsApp veya kart indirme tıklaması | `method: native \| x \| whatsapp \| download`, `context: dashboard \| profile` |
 | `pwa_install` | Tarayıcının `appinstalled` olayı (iOS Safari bu olayı vermez, oradaki yüklemeler ölçülmez) | — |
+| `program_enroll` | Programa ilk kayıtta (`/programs/<slug>/enroll`), yönlendirilen gün sayfasında bir kez; tekrar POST'ta gönderilmez | `program` (slug, ör. `30-day-jo-suburi`) |
+| `program_day_complete` | Bir günün ilk kez tamamlanmasında, ardından açılan program sayfasında bir kez | `program` (slug), `day` (1-30) |
 
-**İlteriş yapacak:** GA4 → Yönetici → Etkinlikler'de `sign_up` ve `practice_logged`'ı **Key event** (anahtar etkinlik) olarak işaretle. İlk anlamlı veri deploy'dan ≥1 hafta sonra.
+**İlteriş yapacak:** GA4 → Yönetici → Etkinlikler'de `sign_up`, `practice_logged` ve `program_enroll`'ı **Key event** (anahtar etkinlik) olarak işaretle. İlk anlamlı veri deploy'dan ≥1 hafta sonra.

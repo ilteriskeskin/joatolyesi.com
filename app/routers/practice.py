@@ -13,7 +13,7 @@ from app.config import settings
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.guide_content import get_guide
-from app.deps import csrf_protect, require_user, waitlist_gate
+from app.deps import csrf_protect, is_pro, require_user, waitlist_gate
 from app.models import Enrollment, Kata, PracticeLog, User
 from app.rate_limit import limiter
 from app.badges import BELTS, compute_badges, compute_belts
@@ -77,9 +77,11 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         await db.execute(select(func.count(User.id)).where(User.referred_by == user.referral_code))
     ).scalar_one()
 
+    # Programlar Pro kapalıyken herkese açık, Pro açıkken yalnız Pro (require_program_access);
+    # banner yalnız programa erişimi olana gösterilir
     enrollment = None
     current_day = None
-    if settings.pro_enabled:  # Pro kapalıyken program kaydı olsa bile banner gösterilmez
+    if not settings.pro_enabled or is_pro(user):
         enrollment_result = await db.execute(
             select(Enrollment)
             .options(selectinload(Enrollment.program), selectinload(Enrollment.completed_days))

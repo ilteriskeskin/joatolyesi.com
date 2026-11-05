@@ -486,6 +486,7 @@ a.card h3 { margin-bottom: 0.4rem; }
 .day-cell--done { background: #1d2b1a; color: #9bc27c; border-color: #2a3d25; }
 .day-cell--current { border-color: var(--accent); color: var(--accent); }
 .day-cell--locked { color: #4a4c50; }
+.day-cell--preview { color: var(--ink-dim); }
 a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
 
 .video-frame {

@@ -99,3 +99,11 @@ async def require_pro(user: User = Depends(require_user)) -> User:
     if not is_pro(user):
         raise ProRequired()
     return user
+
+
+async def require_program_access(user: User = Depends(require_user)) -> User:
+    """Programlar: Pro kapalıyken giriş yapmış herkese açık (B-20); Pro açıksa
+    önceki davranış (yalnız Pro)."""
+    if settings.pro_enabled and not is_pro(user):
+        raise ProRequired()
+    return user
