@@ -45,7 +45,7 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
 - [x] **B-16 Blog gövdelerinde demo kişiye ait birinci şahıs ifadeler.** Örn. jo yazısındaki "Benim için cevap basit…" cümlesi artık "Joryu Ekibi" imzasıyla tutarsız. content-writer nötrleştirir → fact-checker → developer. Seed mevcut yazıyı güncellemediği için prod satırı için tek seferlik UPDATE gerekir (İlteriş). _✓ 2026-11-04 jo yazısı (a571ef9); prod SQL İlteriş'te. Karate/taekwondo yazıları kalıyor (İlteriş kararı)._ Kapsam dışı jo iddiaları (128 cm, 20 suburi vb.) audit-log'da sonraki denetim adayı.
 
-- [ ] **B-19 Jo yazısı düzeltmelerini uygula.** content/verified/2026-11-05-jo-yazisi-duzeltme.md (satır 45, 54, 58, 202) seed_blog.py'ye; prod için idempotent UPDATE SQL (İlteriş çalıştırır). Sorumlu: developer → qa-reviewer.
+- [x] **B-19 Jo yazısı düzeltmelerini uygula.** _✓ 2026-11-05 (229cbe5); prod SQL İlteriş'te._ content/verified/2026-11-05-jo-yazisi-duzeltme.md (satır 45, 54, 58, 202) seed_blog.py'ye; prod için idempotent UPDATE SQL (İlteriş çalıştırır). Sorumlu: developer → qa-reviewer.
 
 ## Bakım
 
