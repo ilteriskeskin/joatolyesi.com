@@ -1,20 +1,15 @@
-# Aktif Sprint — 2026-11-04 (ikinci tur)
+# Aktif Sprint — 2026-11-05
 
-Dal: `team/sprint-2026-11-04` (main ile aynı noktadan devam). İlteriş, raporu okuduktan sonra canlı olarak "bugün yeni işler" istedi.
-Push/deploy/prod erişimi yok, `.env` okunmaz.
-
-## Kısa teşhis
-
-- B-09 kartı prod'da görünmüyor. Sebep kod değil: `/practitioners` hâlâ demo profilleri listeliyor ve `/u/aksam-keiko` 200 dönüyor, yani prod B-03/B-09 öncesi imajla çalışıyor. `ea769bd` için CI imajı başarıyla üretilmiş (GitHub Actions), sunucu henüz çekmemiş.
-- Instagram trafiği geliyor ama aramadan gelen trafik için temel eksik: base.html'de canonical/hreflang/og var; yapılandırılmış veri (JSON-LD) ve sayfaya özel meta yok.
+Dal: `team/sprint-2026-11-05` (`main`'den; önceki sprint dalları merge edilmiş). Push/deploy/prod erişimi yok, `.env` okunmaz.
+Planlı (zamanlanmış) sprint; kullanım tasarrufu kuralı gereği iki küçük iş. Plan tasarruf için orkestratör tarafından yazıldı.
 
 ## İşler
 
-### B-06 Teknik SEO — `developer` → `qa-reviewer`
-Kata detay, rehber ve blog yazısı sayfalarında sayfaya özel title/meta description, JSON-LD (Article / BreadcrumbList), sayfalar arası iç linkler. Yeni bağımlılık yok, ek sorgu en fazla 1.
+### B-17 Test izolasyonu — `developer` → `qa-reviewer`
+`tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Hedef: test suite aynı DB'de art arda iki kez yeşil. Uygulama kodu değişmez (yalnız testler/fixture).
 
-### B-05 SEO anahtar kelime haritası — `growth-marketer`
-Mevcut kata, rehber ve blog sayfaları için TR+EN hedef sorgu, title/meta/H1 önerisi. Taslak `docs/team/marketing/` altına yazılır; kod değişmez. B-06'nın title önerilerini sonraki turda besler.
+### B-12 İçerik denetimi (3 iddia) — `fact-checker`
+`scripts/seed_blog.py` jo yazısında audit-log'da bekleyen adaylardan 3 iddia: "128 cm / 4 shaku 2 sun 1 bu", Muso Gonnosuke–Musashi tarihi, "iki tarafı eşit çalıştıran nadir silah". Sonuç `docs/team/content/audit-log.md`'ye. Bu sprintte koda içerik girmez; düzeltme gerekiyorsa taslak `content/verified/`a yazılır, uygulama sonraki sprint.
 
 ## Başarı ölçütü
-Deploy sonrası Google Search Console'da yapılandırılmış veri hatası 0; 4 hafta içinde organik tıklamalar (GSC) referans alınır.
+B-17: `pytest` aynı DB'de iki kez art arda geçer. B-12: 3 iddia kaynaklı sonuçla kayıtlı.
