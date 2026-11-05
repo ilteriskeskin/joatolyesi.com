@@ -1,3 +1,110 @@
+{% from "_program_macros.html" import day_label with context %}
+{% set banner_html %}
+  {% if enrollment %}
+  <div class="card program-banner">
+    <span class="card-label">{{ t.dash_active_program }}</span>
+    <h2>{{ enrollment.program.title_en if lang == 'en' else enrollment.program.title_tr }}</h2>
+    {% if program_opens_tomorrow %}
+    <p class="muted">{{ t.program_opens_tomorrow_focus.format(n=current_day, focus=day_label(current_day_obj)) if current_day_obj else t.program_opens_tomorrow.format(n=current_day) }}</p>
+    {% else %}
+    <a class="button" href="/programs/{{ enrollment.program.slug }}/day/{{ current_day }}">
+      {{ t.dash_continue_day.format(day=current_day) }}
+    </a>
+    {% if current_day_obj %}<p class="muted">{{ day_label(current_day_obj) }}</p>{% endif %}
+    {% endif %}
+  </div>
+  {% endif %}
+{% endset %}
+{% set card_html %}
+{% if program_card and user.discipline == 'aikijo' and not fs_program %}
+{% set lead = true %}
+{% include "_program_card.html" %}
+{% endif %}
+{% endset %}
+{% set reminder_html %}
+{% if show_reminder_card %}
+<section class="card reminder-card" aria-labelledby="reminder-card-title">
+  <span class="card-label" id="reminder-card-title">{{ t.reminder_card_label }}</span>
+  <p>{{ t.reminder_card_text }}</p>
+  <div class="reminder-card__actions">
+    <form method="post" action="/app/reminders/enable">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="button">{{ t.reminder_card_on }}</button>
+    </form>
+    <form method="post" action="/app/reminders/dismiss">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="link-button">{{ t.reminder_card_later }}</button>
+    </form>
+  </div>
+</section>
+{% endif %}
+{% endset %}
+{% set daily_html %}
+{% if daily_kata %}
+{% set k = daily_kata %}
+<section class="card daily-kata-card" aria-labelledby="daily-kata-title">
+  <span class="card-label">{{ t.daily_kata_label }}</span>
+  <h2 id="daily-kata-title" class="daily-kata-card__title">{{ k.title_en if lang == 'en' else k.title_tr }}</h2>
+  <p class="muted">{{ k.description_en if lang == 'en' else k.description_tr }}</p>
+  {% if k.video_url %}{% include "_kata_video_lazy.html" %}{% endif %}
+  <div class="daily-kata-card__actions">
+    {% if daily_logged %}
+    <p class="form-message form-message--success">{{ t.kata_logged }}</p>
+    {% else %}
+    <form hx-post="/kata/{{ k.slug }}/log" hx-target="#practice-panel" hx-swap="innerHTML">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="minutes" value="10">
+      <input type="hidden" name="source" value="daily_kata">
+      <button type="submit" class="button">{{ t.kata_log_button }}</button>
+    </form>
+    {% endif %}
+    <a class="button button--outline" href="/kata/{{ k.slug }}">{{ t.daily_kata_page }}</a>
+  </div>
+</section>
+{% endif %}
+{% endset %}
+{% set milestone_html %}
+{% if milestone %}
+<div class="card milestone-banner">
+  <p class="milestone-text">{{ t.milestone_reached.format(belt=t["belt_" ~ milestone]) }}</p>
+  {% if user.is_public and user.username %}
+  <p class="muted">{{ t.milestone_share_hint }}</p>
+  {% else %}
+  <p class="muted"><a href="/profile">{{ t.dash_share_cta }}</a></p>
+  {% endif %}
+</div>
+{% endif %}
+{% endset %}
+{% set streak_html %}
+<div class="streak-block">
+  <span class="streak-number">{{ streak }}</span>
+  <span class="streak-label">{{ t.dash_streak_label }}</span>
+  <span class="streak-hint">{{ t.dash_streak_hint }}</span>
+  {% if streak_last_day %}
+  <p class="streak-warning" role="status">{{ t.streak_last_day_freeze if streak_last_day_freeze else t.streak_last_day }}</p>
+  {% endif %}
+  {% if longest_streak > streak %}
+  <span class="longest-streak-note">{{ t.longest_streak_label.format(n=longest_streak) }}</span>
+  {% endif %}
+  <span class="freeze-note" data-tip="{{ t.freeze_tip }}">{{ t.freeze_left.format(left=freezes_left, total=freezes_total) }}</span>
+
+  {% if user.is_public and user.username %}
+  <div class="streak-share">
+    {% with share_url = "https://joatolyesi.com/u/" ~ user.username,
+            share_title = (user.display_name or user.username) ~ " — Joryu",
+            share_text = t.dash_share_text.format(streak=streak),
+            card_url = "/u/" ~ user.username ~ "/card.png" %}
+    {% include "_share_controls.html" %}
+    {% endwith %}
+  </div>
+  {% else %}
+  <p class="streak-share-hint"><a href="/profile">{{ t.dash_share_cta }}</a></p>
+  {% endif %}
+</div>
+{% endset %}
+{# Sıra: pratiği olmayanda ilk seans düzeni; pratiği olanda seri ve uyarı en üstte (B-27) #}
+{% if first_session_card %}
+{{ banner_html }}
 {% if first_session_card and fs_program %}
 {% set fs = first_session_card %}
 <section class="card first-session-card" aria-labelledby="first-session-title">
@@ -60,44 +167,19 @@
   {% endif %}
 </section>
 {% endif %}
-
-{% if program_card and user.discipline == 'aikijo' and not fs_program %}
-{% set lead = true %}
-{% include "_program_card.html" %}
+{{ card_html }}
+{{ reminder_html }}
+{{ daily_html }}
+{{ milestone_html }}
+{{ streak_html }}
+{% else %}
+{{ milestone_html }}
+{{ streak_html }}
+{{ banner_html }}
+{{ card_html }}
+{{ daily_html }}
+{{ reminder_html }}
 {% endif %}
-
-{% if milestone %}
-<div class="card milestone-banner">
-  <p class="milestone-text">{{ t.milestone_reached.format(belt=t["belt_" ~ milestone]) }}</p>
-  {% if user.is_public and user.username %}
-  <p class="muted">{{ t.milestone_share_hint }}</p>
-  {% else %}
-  <p class="muted"><a href="/profile">{{ t.dash_share_cta }}</a></p>
-  {% endif %}
-</div>
-{% endif %}
-
-<div class="streak-block">
-  <span class="streak-number">{{ streak }}</span>
-  <span class="streak-label">{{ t.dash_streak_label }}</span>
-  {% if longest_streak > streak %}
-  <span class="longest-streak-note">{{ t.longest_streak_label.format(n=longest_streak) }}</span>
-  {% endif %}
-  <span class="freeze-note" data-tip="{{ t.freeze_tip }}">{{ t.freeze_left.format(left=freezes_left, total=freezes_total) }}</span>
-
-  {% if user.is_public and user.username %}
-  <div class="streak-share">
-    {% with share_url = "https://joatolyesi.com/u/" ~ user.username,
-            share_title = (user.display_name or user.username) ~ " — Joryu",
-            share_text = t.dash_share_text.format(streak=streak),
-            card_url = "/u/" ~ user.username ~ "/card.png" %}
-    {% include "_share_controls.html" %}
-    {% endwith %}
-  </div>
-  {% else %}
-  <p class="streak-share-hint"><a href="/profile">{{ t.dash_share_cta }}</a></p>
-  {% endif %}
-</div>
 
 <div class="card week-card">
   <h2>{{ t.week_title }}</h2>

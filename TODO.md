@@ -95,7 +95,7 @@ Sıralama: etki/emek oranına göre. İlk üçü bence kritik.
       hesap tamamen deterministik. Dashboard'da "Bu ayki donma hakkın: X/2"
       göstergesi + tooltip.
 - [x] **5. Kilometre taşı rozetleri → kuşak sistemi.** Yapıldı:
-      `app/badges.py` — seriye bağlı 7 kuşak (beyaz 7g → siyah 365g, tüm
+      `app/badges.py` — seriye bağlı 7 kuşak (beyaz 7g → siyah 365g; B-27 ile 0/15/30/60/100/140/180, tüm
       zamanların en uzun serisine bakar, SVG + hover/tooltip) + seans
       rozetleri (1/25/100/300). Dashboard'da tümü (kilitliler silüet),
       herkese açık profilde sadece kazanılanlar. Anlık hesaplanır, tablo yok.

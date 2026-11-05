@@ -26,6 +26,7 @@ from app.security import (
     hash_password,
     password_fingerprint,
     read_reset_token,
+    read_unsub_token,
     read_verify_token,
     verify_password,
 )
@@ -99,27 +100,31 @@ async def register(
     discipline: str = Form("aikijo"),
     ref: str = Form(""),
     next: str = Form(""),
+    reminders: str = Form(""),
+    reminders_shown: str = Form(""),
     db: AsyncSession = Depends(get_db),
 ):
     email = email.strip().lower()
     username = username.strip().lower()
     next_clean = safe_next(next)
+    # Hata sonrası form yeniden çizilince kullanıcının seçimi korunur
+    reminders_checked = reminders_shown != "1" or reminders == "on"
     ref_clean = ref if ref and REF_RE.match(ref) else ""
     if not EMAIL_RE.match(email):
-        return render(request, "register.html", error="form_error_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
+        return render(request, "register.html", error="form_error_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean, reminders_checked=reminders_checked)
     if not USERNAME_RE.match(username):
-        return render(request, "register.html", error="profile_error_username_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
+        return render(request, "register.html", error="profile_error_username_invalid", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean, reminders_checked=reminders_checked)
     if len(password) < 8:
-        return render(request, "register.html", error="auth_error_password_short", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
+        return render(request, "register.html", error="auth_error_password_short", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean, reminders_checked=reminders_checked)
     if discipline not in SELECTABLE_DISCIPLINES:
         discipline = "aikijo"
 
     existing = await db.execute(select(User.id).where(User.email == email))
     if existing.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="auth_error_exists", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
+        return render(request, "register.html", error="auth_error_exists", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean, reminders_checked=reminders_checked)
     taken = await db.execute(select(User.id).where(User.username == username))
     if taken.scalar_one_or_none() is not None:
-        return render(request, "register.html", error="profile_error_username_taken", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean)
+        return render(request, "register.html", error="profile_error_username_taken", disciplines=SELECTABLE_DISCIPLINES, ref=ref_clean, next=next_clean, reminders_checked=reminders_checked)
 
     referred_by = None
     if ref_clean:
@@ -134,6 +139,8 @@ async def register(
         discipline=discipline,
         referral_code=secrets.token_hex(5),
         referred_by=referred_by,
+        # Rıza: yalnız formdaki kutu işaretliyse (kutu formda hiç yoksa kapalı kalır)
+        reminders_enabled=reminders_shown == "1" and reminders == "on",
     )
     db.add(user)
     await db.commit()
@@ -278,6 +285,43 @@ async def resend_verification(
     if user.email_verified_at is None:
         _send_verification(background, user)
     return RedirectResponse(request.headers.get("referer") or "/app", status_code=303)
+
+
+# --- Hatırlatma e-postalarından tek tıkla çıkış ---
+
+
+async def _unsub_user(db: AsyncSession, token: str) -> User | None:
+    user_id = read_unsub_token(token)
+    if user_id is None:
+        return None
+    return (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
+
+
+@router.get("/unsubscribe", response_class=HTMLResponse)
+async def unsubscribe_page(request: Request, t: str = Query(""), db: AsyncSession = Depends(get_db)):
+    """GET yalnız onay sayfası gösterir (posta tarayıcıları linke GET atabilir)."""
+    user = await _unsub_user(db, t)
+    return render(request, "unsubscribe.html", token=t, state="confirm" if user else "invalid")
+
+
+@router.post("/unsubscribe", response_class=HTMLResponse)
+@limiter.limit("20/minute")
+async def unsubscribe(
+    request: Request,
+    t: str = Query(""),
+    token: str = Form(""),
+    db: AsyncSession = Depends(get_db),
+):
+    """Onay formu ve posta istemcisinin List-Unsubscribe-Post (one-click) isteği.
+    İmzalı token yetkidir; CSRF gerekmez, oturum istemez."""
+    raw = t or token
+    user = await _unsub_user(db, raw)
+    if user is None:
+        return render(request, "unsubscribe.html", token=raw, state="invalid")
+    if user.reminders_enabled:
+        user.reminders_enabled = False
+        await db.commit()
+    return render(request, "unsubscribe.html", token=raw, state="done")
 
 
 # --- Parola değiştirme (girişliyken) ---

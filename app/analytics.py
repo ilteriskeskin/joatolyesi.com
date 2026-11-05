@@ -18,7 +18,7 @@ from app.constants import DISCIPLINES
 PENDING_EVENT_COOKIE = "ga_evt"
 PENDING_EVENT_MAX_AGE = 300  # 5 dk: redirect sonrası ilk sayfaya yeter
 
-PRACTICE_SOURCES = ("dashboard", "kata", "first_session", "program")
+PRACTICE_SOURCES = ("dashboard", "kata", "first_session", "program", "daily_kata")
 PROGRAM_SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")  # program slug'ı: küçük harf, rakam, tire
 
 

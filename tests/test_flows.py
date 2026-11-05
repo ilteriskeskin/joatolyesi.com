@@ -1315,7 +1315,7 @@ async def test_dashboard_program_card_by_discipline_and_enrollment(client):
     r = await client.get("/app")
     assert "first-session-card" not in r.text
     assert "Programı gör →" in r.text and "Günde yaklaşık 10–20 dk" in r.text and "program-card--lead" in r.text
-    assert r.text.index('class="card program-card') < r.text.index("streak-block")
+    assert r.text.index("streak-block") < r.text.index('class="card program-card')  # pratigi olanda seri ustte
     # kayit olunca kart yerine mevcut banner
     token = await get_csrf(client, "/app")
     await client.post(PROGRAM + "/enroll", data={"csrf_token": token})

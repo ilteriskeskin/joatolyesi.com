@@ -26,6 +26,12 @@
     <label>{{ t.auth_password }}
       <input type="password" name="password" required minlength="8" autocomplete="new-password">
     </label>
+    <input type="hidden" name="reminders_shown" value="1">
+    <label class="checkbox-label">
+      <input type="checkbox" name="reminders" {% if reminders_checked is not defined or reminders_checked %}checked{% endif %}>
+      <span>{{ t.reg_reminders_label }}</span>
+    </label>
+    <p class="field-hint">{{ t.reg_reminders_hint }} {{ t.reg_reminders_details }} <a href="/privacy">{{ t.footer_privacy }}</a></p>
     <button type="submit">{{ t.auth_register_button }}</button>
   </form>
   <p class="auth-alt">{{ t.auth_have_account }} <a href="/login{% if next %}?next={{ next|urlencode }}{% endif %}">{{ t.nav_login }}</a></p>

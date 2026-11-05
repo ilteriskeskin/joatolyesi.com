@@ -23,8 +23,25 @@ from app.models import Kata, Program, ProgramDay
 
 
 def _k(slug: str, title: str, en: str, tr: str, free: bool = False, kind: str = "kata") -> dict:
-    return {"slug": slug, "title_en": title, "title_tr": title,
+    item = {"slug": slug, "title_en": title, "title_tr": title,
             "description_en": en, "description_tr": tr, "is_free": free, "kind": kind}
+    return item
+
+
+# Aiki-jo teknik videoları (YouTube embed id'leri; PO onaylı, B-27)
+AIKIJO_VIDEOS = {
+    "choku-tsuki": "4hvf2N0O4PA",
+    "kaeshi-tsuki": "vacznG5hNpc",
+    "ushiro-tsuki": "bN_rfsWHxFo",
+    "menuchi-gedan-gaeshi": "FqSPcqo4XRo",
+    "shomen-uchikomi": "eoMnGUoCfKQ",
+    "renzoku-uchikomi": "FnuoebP12F4",
+    "hasso-gaeshi-uchi": "cEUAGWeJjbk",
+    "hasso-gaeshi-tsuki": "etGPBS0MtuE",
+    "katate-gedan-gaeshi": "BTEPzKVR0RE",
+    "migi-nagare-gaeshi-tsuki": "N0DuCc-_HIk",
+    "hidari-nagare-gaeshi-uchi": "8O4Jw0S9oQ4",
+}
 
 
 # --- Aiki-jo: kata + Saito yöntemi 20 suburi (teknik) ---
@@ -842,6 +859,14 @@ async def seed_content() -> None:
                     set_={k: v for k, v in values.items() if k != "slug"},
                 )
                 await db.execute(stmt)
+
+        # Aiki-jo videoları yalnız video_url boşsa yazılır: admin'den girilen değer hep önceliklidir
+        for slug, video_id in AIKIJO_VIDEOS.items():
+            await db.execute(
+                Kata.__table__.update()
+                .where(Kata.slug == slug, Kata.video_url.is_(None))
+                .values(video_url=f"https://www.youtube.com/embed/{video_id}")
+            )
 
         # Katalogdan çıkarılan/yeniden adlandırılan eski satırları temizle
         # (kata tablosuna FK yok — pratik kayıtları etkilenmez).

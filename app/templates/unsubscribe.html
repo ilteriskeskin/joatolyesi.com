@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ t.unsub_title }} — Joryu{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>{{ t.unsub_title }}</h1>
+  {% if state == 'confirm' %}
+  <p class="muted">{{ t.unsub_text }}</p>
+  <form method="post" action="/unsubscribe">
+    <input type="hidden" name="token" value="{{ token }}">
+    <button type="submit">{{ t.unsub_confirm }}</button>
+  </form>
+  {% elif state == 'done' %}
+  <p class="form-message form-message--success">{{ t.unsub_done }}</p>
+  <p class="auth-alt"><a href="/profile">{{ t.unsub_profile_link }}</a></p>
+  {% else %}
+  <p class="form-message form-message--error">{{ t.unsub_invalid }}</p>
+  <p class="auth-alt"><a href="/profile">{{ t.unsub_profile_link }}</a></p>
+  {% endif %}
+</div>
+{% endblock %}

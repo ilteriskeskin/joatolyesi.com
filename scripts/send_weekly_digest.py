@@ -23,6 +23,7 @@ from app.i18n.strings import get_strings
 from app.mail import send_email
 from app.models import PracticeLog, PushSubscription, User
 from app.push import send_push
+from app.reminders import unsubscribe_headers, unsubscribe_url
 
 # En az bu kadar farklı gün çalışmışsa "haftanın birincisi" bildirimi
 # gönderilir — tek seanslık, minik bir kayıt yüzünden kutlama gitmesin.
@@ -77,7 +78,9 @@ async def main() -> None:
                         days=days, minutes=minutes,
                         discipline=strings[f"discipline_{discipline}"],
                         link=f"{settings.base_url}/app",
+                        unsub=unsubscribe_url(user),
                     ),
+                    headers=unsubscribe_headers(user),
                 )
                 digest_count += 1
                 await asyncio.sleep(0.6)  # Resend rate limiti
@@ -110,11 +113,18 @@ async def main() -> None:
                 continue
             strings = get_strings(person.lang or "tr")
             label = strings[f"discipline_{discipline}"]
-            await send_email(
-                person.email,
-                strings["mail_weekly_leader_subject"],
-                strings["mail_weekly_leader_body"].format(discipline=label, link=f"{settings.base_url}/practitioners"),
-            )
+            # E-posta da hatırlatma rızasına bağlı; push kendi aboneliğiyle ayrı rıza
+            if person.reminders_enabled:
+                await send_email(
+                    person.email,
+                    strings["mail_weekly_leader_subject"],
+                    strings["mail_weekly_leader_body"].format(
+                        discipline=label,
+                        link=f"{settings.base_url}/practitioners",
+                        unsub=unsubscribe_url(person),
+                    ),
+                    headers=unsubscribe_headers(person),
+                )
             subs = (
                 await db.execute(select(PushSubscription).where(PushSubscription.user_id == person.id))
             ).scalars().all()

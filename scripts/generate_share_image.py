@@ -116,7 +116,7 @@ def render() -> Image.Image:
 
     # Madde noktaları
     bullets = [
-        ("Seri ve kuşak sistemi", "Her gün kaydet, 365 günde siyah kuşak ol."),
+        ("Seri ve kuşak sistemi", "Her seansı kaydet, 180 pratik gününde siyah kuşak ol."),
         ("Kata & teknik kütüphanesi", "Branşına özel, videolu ve yazılı referans."),
         ("Herkese açık profil", "Isı haritası, seri, paylaşılabilir kart."),
     ]

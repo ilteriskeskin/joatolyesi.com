@@ -1,22 +1,23 @@
 """Kuşaklar ve rozetler: pratik verisinden anlık hesaplanır, tablo gerektirmez.
 
 Kuşaklar toplam pratik gününe (farklı gün sayısı) bağlıdır ve klasik kyu
-ilerleyişini izler: herkes beyaz kuşakla başlar, 365 pratik gününü dolduran
-siyah kuşak olur. Toplam gün azalmayacağı için kazanılan kuşak kaybolmaz.
+ilerleyişini izler: herkes beyaz kuşakla başlar, 180 pratik gününü dolduran
+siyah kuşak olur (eşikler 0/15/30/60/100/140/180).
+Toplam gün azalmayacağı için kazanılan kuşak kaybolmaz.
 Siyah kuşak sonrası dan sistemi (1. dan, 2. dan...) ileride eklenecek.
 """
 
 from dataclasses import dataclass
 
-# (id, toplam pratik günü eşiği) — beyaz herkese, siyah 365 günde
+# (id, toplam pratik günü eşiği) — beyaz herkese, siyah 180 günde
 BELTS = (
     ("white", 0),
-    ("yellow", 30),
-    ("orange", 60),
-    ("green", 120),
-    ("blue", 200),
-    ("brown", 280),
-    ("black", 365),
+    ("yellow", 15),
+    ("orange", 30),
+    ("green", 60),
+    ("blue", 100),
+    ("brown", 140),
+    ("black", 180),
 )
 
 SESSION_THRESHOLDS = (1, 25, 100, 300)

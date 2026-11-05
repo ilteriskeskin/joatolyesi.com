@@ -2034,3 +2034,42 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   }
   .nav-more__menu .inline-form { padding: 0; }
 }
+
+/* Seri açıklaması + "bugün son gün" uyarısı, hatırlatma ve günün tekniği kartları (B-27) */
+.streak-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+.streak-warning {
+  display: inline-block;
+  margin: 0.7rem 0 0;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+.reminder-card p { color: var(--ink-dim); margin-bottom: 0.9rem; }
+.reminder-card__actions,
+.daily-kata-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+.reminder-card__actions form,
+.daily-kata-card__actions form { margin: 0; }
+.daily-kata-card .daily-kata-card__title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  line-height: 1.25;
+  margin: 0.3rem 0 0.5rem;
+}
+.daily-kata-card .video-lazy { margin: 0.6rem 0 1rem; }
+.daily-kata-card__actions { margin-top: 0.8rem; }
+@media (max-width: 560px) {
+  .daily-kata-card__actions { flex-direction: column; align-items: stretch; }
+  .daily-kata-card__actions .button { width: 100%; text-align: center; }
+}

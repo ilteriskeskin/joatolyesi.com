@@ -1,6 +1,7 @@
 """Günlük pratik hatırlatması: BUGÜN pratik kaydetmemiş kullanıcılara
 kısa bir hatırlatma — e-posta (opt-in: reminders_enabled) ve/veya push
-bildirimi (opt-in: aktif bir PushSubscription varlığı).
+bildirimi (opt-in: aktif bir PushSubscription varlığı). E-posta içeriği
+kişiseldir (program günü / "bugün son gün" / günün tekniği), bkz. app/reminders.py.
 
 Cron (sunucuda, akşam 18:00 UTC ≈ 21:00 TR):
     0 18 * * * docker compose --project-directory /root/joryu exec -T app \
@@ -8,18 +9,59 @@ Cron (sunucuda, akşam 18:00 UTC ≈ 21:00 TR):
 """
 
 import asyncio
+import logging
 from datetime import UTC, datetime
 
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from app.config import settings
 from app.db import async_session
-from app.i18n.strings import get_strings
 from app.mail import send_email
 from app.models import PracticeLog, PushSubscription, User
 from app.push import send_push
+from app.reminders import build_push, build_reminder, unsubscribe_headers
 from app.stats import streak_info
+
+
+logger = logging.getLogger("joryu.reminders")
+
+
+async def _send_email_reminder(user_id, today) -> None:
+    # Her kullanıcı kendi oturumunda: bir kullanıcının hatası ötekilerin oturumunu bozmaz
+    async with async_session() as db:
+        user = (
+            await db.execute(select(User).options(selectinload(User.subscription)).where(User.id == user_id))
+        ).scalar_one()
+        info = await streak_info(db, user.id)
+        reminder = await build_reminder(db, user, today, info)
+        await send_email(user.email, reminder["subject"], reminder["html"], headers=unsubscribe_headers(user))
+        print(f"  mail -> {user.email} (seri: {info['streak']}, tür: {reminder['kind']})")
+
+
+async def _send_push_reminder(user_id, today) -> None:
+    async with async_session() as db:
+        user = (
+            await db.execute(
+                select(User)
+                .options(selectinload(User.push_subscriptions), selectinload(User.subscription))
+                .where(User.id == user_id)
+            )
+        ).scalar_one()
+        info = await streak_info(db, user.id)
+        push = await build_push(db, user, today, info)
+        try:
+            for sub in user.push_subscriptions:
+                subscription_info = {
+                    "endpoint": sub.endpoint,
+                    "keys": {"p256dh": sub.p256dh, "auth": sub.auth},
+                }
+                alive = await send_push(subscription_info, push["title"], push["body"], url=push["url"])
+                if not alive:
+                    await db.delete(sub)
+        finally:
+            # Döngü yarıda kesilse bile ölü abonelik silmeleri kaybolmasın
+            await db.commit()
+        print(f"  push -> {user.email} (seri: {info['streak']})")
 
 
 async def main() -> None:
@@ -28,48 +70,35 @@ async def main() -> None:
         logged_today = select(PracticeLog.user_id).where(PracticeLog.practiced_on == today)
 
         # E-posta: yalnız opt-in kullanıcılar
-        result = await db.execute(
-            select(User).where(User.reminders_enabled, User.id.not_in(logged_today))
-        )
-        email_users = list(result.scalars().all())
-        print(f"E-posta hatırlatması: {len(email_users)} kullanıcı")
-        for user in email_users:
-            info = await streak_info(db, user.id)
-            strings = get_strings(user.lang or "tr")
-            await send_email(
-                user.email,
-                strings["mail_reminder_subject"],
-                strings["mail_reminder_body"].format(streak=info["streak"], link=f"{settings.base_url}/app"),
-            )
-            print(f"  mail -> {user.email} (seri: {info['streak']})")
-            await asyncio.sleep(0.6)  # Resend rate limiti
-
+        result = await db.execute(select(User.id).where(User.reminders_enabled, User.id.not_in(logged_today)))
+        email_ids = list(result.scalars().all())
         # Push: aktif bir aboneliği olan (kaydetmemiş) kullanıcılar
         result = await db.execute(
-            select(User)
-            .options(selectinload(User.push_subscriptions))
+            select(User.id)
             .join(PushSubscription, PushSubscription.user_id == User.id)
             .where(User.id.not_in(logged_today))
             .distinct()
         )
-        push_users = list(result.scalars().all())
-        print(f"Push hatırlatması: {len(push_users)} kullanıcı")
-        for user in push_users:
-            info = await streak_info(db, user.id)
-            strings = get_strings(user.lang or "tr")
-            title = strings["push_reminder_title"]
-            body = strings["push_reminder_body"].format(streak=info["streak"])
-            for sub in user.push_subscriptions:
-                subscription_info = {
-                    "endpoint": sub.endpoint,
-                    "keys": {"p256dh": sub.p256dh, "auth": sub.auth},
-                }
-                alive = await send_push(subscription_info, title, body, url="/app")
-                if not alive:
-                    await db.delete(sub)
-            print(f"  push -> {user.email} (seri: {info['streak']})")
-        await db.commit()
+        push_ids = list(result.scalars().all())
+
+    print(f"E-posta hatırlatması: {len(email_ids)} kullanıcı")
+    for user_id in email_ids:
+        try:
+            await _send_email_reminder(user_id, today)
+        except Exception:
+            logger.exception("E-posta hatırlatması başarısız user_id=%s", user_id)
+            continue
+        await asyncio.sleep(0.6)  # Resend rate limiti
+
+    print(f"Push hatırlatması: {len(push_ids)} kullanıcı")
+    for user_id in push_ids:
+        try:
+            await _send_push_reminder(user_id, today)
+        except Exception:
+            logger.exception("Push hatırlatması başarısız user_id=%s", user_id)
+            continue
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     asyncio.run(main())

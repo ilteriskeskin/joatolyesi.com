@@ -23,16 +23,24 @@ async def _practice_dates(db: AsyncSession, user_id: uuid.UUID) -> list:
     return list(result.scalars().all())
 
 
-# Seri dondurma: takvim ayı başına bu kadar tek günlük boşluk affedilir
-# (hastalık/seyahat affı — Duolingo etkisi). Tablo yok: hesap deterministik.
+# Seri kuralı "2 günde 1": iki pratik günü arasında en fazla 1 boş gün varsa
+# (aradaki fark <= 2) zincir sürer. Donma hakkı: takvim ayı başına bu kadar
+# "2 boş günlük" boşluk (fark == 3) köprülenir — hastalık/seyahat affı.
+# Tablo yok: hesap deterministik.
 FREEZES_PER_MONTH = 2
+MAX_FREE_GAP = 2  # iki pratik günü arası bu kadar gün ya da daha az: zincir sürer
 
 
-def _streak_with_freezes(dates: list, today) -> tuple[int, int]:
-    """(seri, bu ay kullanılan donma) döner. Yalnız 1 günlük boşluklar,
-    boşluğun düştüğü ayın bütçesinden harcanarak köprülenir."""
+def _streak_state(dates: list, today) -> dict:
+    """dates: pratik günleri, yeniden eskiye (distinct). Döner:
+    streak = zincirin ilk pratik gününden son pratik gününe takvim günü (dahil),
+    used = bu ay harcanan donma, last_day = "bugün son gün" uyarısı durumu.
+
+    Canlılık: son pratik >= bugün-2 ise seri canlı; bugün-3 ise (2 boş gün) bir
+    donma hakkıyla köprülenebilir; daha eskiyse seri bitmiştir. Boşluğun
+    donması boşluğun son boş gününün ayından harcanır."""
     if not dates:
-        return 0, 0
+        return {"streak": 0, "used": 0, "last_day": False, "last_day_freeze": False}
     used: dict = {}
 
     def try_freeze(day) -> bool:
@@ -42,23 +50,48 @@ def _streak_with_freezes(dates: list, today) -> tuple[int, int]:
             return True
         return False
 
-    # Canlılık: son kayıt dün/bugün (+ UTC önü yarın) ya da dünü dondurabiliyoruz
-    if dates[0] < today - timedelta(days=1):
-        if dates[0] == today - timedelta(days=2) and try_freeze(today - timedelta(days=1)):
-            pass
-        else:
-            return 0, 0
-    streak = 1
+    since_last = (today - dates[0]).days
+    if since_last > MAX_FREE_GAP + 1:
+        return {"streak": 0, "used": 0, "last_day": False, "last_day_freeze": False}
+    if since_last == MAX_FREE_GAP + 1 and not try_freeze(today - timedelta(days=1)):
+        return {"streak": 0, "used": 0, "last_day": False, "last_day_freeze": False}
+
+    oldest = dates[0]
     for prev, curr in zip(dates, dates[1:]):
         gap = (prev - curr).days
-        if gap == 1:
-            streak += 1
-        elif gap == 2 and try_freeze(prev - timedelta(days=1)):
-            streak += 1
+        if gap <= MAX_FREE_GAP or (gap == MAX_FREE_GAP + 1 and try_freeze(prev - timedelta(days=1))):
+            oldest = curr
         else:
             break
-    this_month = used.get((today.year, today.month), 0)
-    return streak, this_month
+    return {
+        "streak": (dates[0] - oldest).days + 1,
+        "used": used.get((today.year, today.month), 0),
+        # Son pratik dün değil önceki gün (bugün pratik yok): yarın boşluk 2 gün olur
+        "last_day": since_last == MAX_FREE_GAP,
+        # Bugün çalışılmazsa yarın fark 3 olur ve bugünün ayından bir donma gerekir:
+        # bütçe varsa seri donmayla sürer ("hak harcanır"), yoksa biter
+        "last_day_freeze": since_last == MAX_FREE_GAP
+        and used.get((today.year, today.month), 0) < FREEZES_PER_MONTH,
+    }
+
+
+def _streak_with_freezes(dates: list, today) -> tuple[int, int]:
+    """(seri, bu ay kullanılan donma) döner."""
+    state = _streak_state(dates, today)
+    return state["streak"], state["used"]
+
+
+def _longest_streak(dates: list) -> int:
+    """Tüm zamanların en uzun zinciri (takvim günü, dahil); donma sayılmaz."""
+    if not dates:
+        return 0
+    longest = 1
+    chain_end = dates[0]
+    for prev, curr in zip(dates, dates[1:]):
+        if (prev - curr).days > MAX_FREE_GAP:
+            chain_end = curr
+        longest = max(longest, (chain_end - curr).days + 1)
+    return longest
 
 
 async def compute_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
@@ -69,27 +102,22 @@ async def compute_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
 
 
 async def streak_info(db: AsyncSession, user_id: uuid.UUID) -> dict:
-    """Dashboard için: seri + bu ay kalan donma hakkı."""
+    """Dashboard/hatırlatma için: seri + bu ay kalan donma hakkı + "bugün son gün"."""
     dates = await _practice_dates(db, user_id)
     today = datetime.now(UTC).date()
-    streak, used_this_month = _streak_with_freezes(dates, today)
-    return {"streak": streak, "freezes_left": max(0, FREEZES_PER_MONTH - used_this_month)}
+    state = _streak_state(dates, today)
+    return {
+        "streak": state["streak"],
+        "freezes_left": max(0, FREEZES_PER_MONTH - state["used"]),
+        "last_day": state["last_day"],
+        "last_day_freeze": state["last_day_freeze"],
+    }
 
 
 async def compute_longest_streak(db: AsyncSession, user_id: uuid.UUID) -> int:
     """Tüm zamanların en uzun serisi — rozetler buna bakar, bozulan seri
     kazanılmış rozeti geri almaz."""
-    dates = await _practice_dates(db, user_id)
-    if not dates:
-        return 0
-    longest = current = 1
-    for prev, curr in zip(dates, dates[1:]):
-        if prev - curr == timedelta(days=1):
-            current += 1
-            longest = max(longest, current)
-        else:
-            current = 1
-    return longest
+    return _longest_streak(await _practice_dates(db, user_id))
 
 
 async def total_practice_days(db: AsyncSession, user_id: uuid.UUID) -> int:

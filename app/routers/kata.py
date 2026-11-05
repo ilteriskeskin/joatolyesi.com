@@ -1,3 +1,4 @@
+import json
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Form, Request
@@ -15,6 +16,7 @@ from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, requir
 from app.models import Kata, PracticeLog, User
 from app.rate_limit import limiter
 from app.render import render
+from app.routers.practice import dashboard_context
 
 router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
@@ -141,6 +143,14 @@ async def kata_quick_log(
         )
     )
     await db.commit()
+    # Dashboard "Günün tekniği" kartı (HTMX): panel yerinde güncellenir, sayfa değişmez
+    if source == "daily_kata" and request.headers.get("HX-Request"):
+        ctx = await dashboard_context(db, user, request)
+        panel = render(request, "_practice_panel.html", user=user, daily_logged=True, **ctx)
+        params = practice_logged_params(kata.discipline, minutes, "daily_kata")
+        if params:
+            panel.headers["HX-Trigger"] = json.dumps({"joryu:practice-logged": params})
+        return panel
     # İlk seans kartından gelen kayıt dashboard'a döner (seri hemen görünür);
     # geçersiz source sessizce yok sayılır
     first_session = source == "first_session" and source in PRACTICE_SOURCES

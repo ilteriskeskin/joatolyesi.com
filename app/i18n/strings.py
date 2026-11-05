@@ -40,8 +40,8 @@ STRINGS = {
         "solution_title": "What Joryu gives you",
         "feature_1_title": "Streaks that earn you belts",
         "feature_1_body": (
-            "Log every session and keep your streak alive. Everyone starts with "
-            "the white belt — 365 days of practice earns the black belt."
+            "Log every session and keep your streak going. Everyone starts with "
+            "the white belt — 180 days of practice earns the black belt."
         ),
         "feature_2_title": "Kata & technique library",
         "feature_2_body": (
@@ -213,7 +213,10 @@ STRINGS = {
         "footer_terms": "Terms of Use",
         # Dashboard
         "dash_title": "Practice",
-        "dash_streak_label": "day streak",
+        "dash_streak_label": "Streak",
+        "dash_streak_hint": "Your streak keeps going as long as you practice at least every other day.",
+        "streak_last_day": "Last day today: if you skip it, your streak ends.",
+        "streak_last_day_freeze": "If you skip today, one of this month's streak freezes will be used.",
         "dash_log_title": "Log today's practice",
         "dash_date": "Date",
         "dash_discipline": "Discipline",
@@ -349,7 +352,7 @@ STRINGS = {
         "longest_streak_label": "Personal record: {n} days",
         "longest_streak_stat_label": "Best streak",
         "freeze_left": "Streak freezes this month: {left}/{total}",
-        "freeze_tip": "Life happens: up to 2 single-day gaps per month are bridged automatically and your streak survives.",
+        "freeze_tip": "Life happens: up to 2 times a month, a gap of 2 empty days is bridged automatically and your streak survives.",
         # Rest day
         "rest_day_hint": "Planned rest, not an injury workaround — one day a week you can mark as rest without breaking your streak.",
         "rest_day_button": "Mark today as a rest day",
@@ -373,30 +376,65 @@ STRINGS = {
         "push_msg_error": "Something went wrong. Please try again.",
         "mail_reminder_subject": "Today's practice is waiting — Joryu",
         "push_reminder_title": "Joryu",
-        "push_reminder_body": "Today's practice is waiting — your streak is at {streak} days.",
+        "push_reminder_body": "Today's practice is waiting. 10 minutes is enough.",
+        "push_reminder_lastday_body": "Last day today: if you skip it, your streak ends.",
+        "push_reminder_lastday_freeze_body": "If you skip today, one of this month's streak freezes will be used.",
+        "push_reminder_program_body": "Today: Day {n} — {focus}",
+        "push_reminder_tech_body": "Technique of the day: {title}. 10 minutes is enough.",
         "mail_reminder_body": (
             "<p>You haven't logged practice today.</p>"
-            "<p>Your streak is at <strong>{streak}</strong> days — 15 minutes is enough to keep it alive.</p>"
+            "<p>10 minutes is enough.</p>"
             '<p><a href="{link}">Log today\'s practice</a></p>'
-            "<p style=\"color:#888\">You get this because reminders are on in your profile settings.</p>"
+        ),
+        "mail_reminder_program_subject": "Today: Day {n} — Joryu",
+        "mail_reminder_program_body": (
+            "<p>Today: <strong>Day {n}</strong> — {focus}</p>"
+            '<p><a href="{day_link}">Open the day</a></p>'
+        ),
+        "mail_reminder_lastday_subject": "Last day today to keep your streak — Joryu",
+        "mail_reminder_lastday_body": (
+            "<p><strong>Last day today:</strong> if you skip it, your streak ends.</p>"
+            "<p>Your streak is at {streak} days. A short session is enough.</p>"
+            '<p><a href="{link}">Log today\'s practice</a></p>'
+        ),
+        "mail_reminder_lastday_line": "<p><strong>Last day today:</strong> if you skip it, your streak ends.</p>",
+        "mail_reminder_lastday_freeze_subject": "Skip today and a streak freeze is used — Joryu",
+        "mail_reminder_lastday_freeze_body": (
+            "<p>If you skip today, one of this month's streak freezes will be used.</p>"
+            "<p>Your streak is at {streak} days. A short session is enough.</p>"
+            '<p><a href="{link}">Log today\'s practice</a></p>'
+        ),
+        "mail_reminder_lastday_freeze_line": "<p>If you skip today, one of this month's streak freezes will be used.</p>",
+        "mail_reminder_tech_subject": "Technique of the day: {title} — Joryu",
+        "mail_reminder_tech_body": (
+            "<p>Technique of the day: <strong>{title}</strong></p>"
+            "<p>10 minutes is enough: watch it once, then repeat it a few times.</p>"
+            '<p><a href="{kata_link}">Open the technique</a></p>'
+        ),
+        "mail_unsub_footer": (
+            "<p style=\"color:#888\">You get this because reminders are on in your profile settings. "
+            '<a href="{unsub}">Turn them off with one click</a>.</p>'
         ),
         "mail_weekly_subject": "Your week on Joryu",
         "mail_weekly_body": (
             "<p>Last week you practiced <strong>{days}</strong> day(s), <strong>{minutes}</strong> minutes total.</p>"
             "<p>Most of it was {discipline}.</p>"
             '<p><a href="{link}">See your dashboard</a></p>'
-            "<p style=\"color:#888\">You get this because reminders are on in your profile settings.</p>"
+            "<p style=\"color:#888\">You get this because reminders are on in your profile settings. "
+            '<a href="{unsub}">Turn them off with one click</a>.</p>'
         ),
         "mail_weekly_leader_subject": "You were #1 this week — Joryu",
         "mail_weekly_leader_body": (
             "<p>Nice work — you practiced {discipline} more than anyone else on Joryu this week.</p>"
             '<p><a href="{link}">See the leaderboard</a></p>'
+            "<p style=\"color:#888\">You get this because reminders are on in your profile settings. "
+            '<a href="{unsub}">Turn them off with one click</a>.</p>'
         ),
         "push_weekly_leader_title": "Joryu",
         "push_weekly_leader_body": "You were #1 in {discipline} this week.",
         # Belts & badges
         "belts_title": "Belts",
-        "belts_hint": "Everyone starts with the white belt. Belts advance with total practice days — 365 days of practice earns the black belt.",
+        "belts_hint": "Everyone starts with the white belt. Belts advance with total practice days — 180 days of practice earns the black belt.",
         "belt_white": "White Belt",
         "belt_yellow": "Yellow Belt",
         "belt_orange": "Orange Belt",
@@ -418,6 +456,23 @@ STRINGS = {
         "dash_share_text": "{streak}-day streak on Joryu.",
         "dash_share_hint": "Make your profile public to get a shareable card and link.",
         "dash_share_cta": "Make profile public",
+        # Reminders (B-27)
+        "reg_reminders_label": "Get a daily reminder email",
+        "reg_reminders_hint": "You can turn it off anytime.",
+        "reg_reminders_details": "Details:",
+        "reminder_card_label": "Reminders",
+        "reminder_card_text": "Want a reminder? A short email in the evening on the days you haven't practiced.",
+        "reminder_card_on": "Turn on",
+        "reminder_card_later": "Not now",
+        "unsub_title": "Turn off reminder emails",
+        "unsub_text": "You will stop getting the daily reminder, weekly summary and weekly top-practitioner emails. You can turn them back on anytime in your profile settings.",
+        "unsub_confirm": "Yes, turn them off",
+        "unsub_done": "Done. Reminder emails are off. You can turn them back on in your profile settings.",
+        "unsub_invalid": "This link is invalid or has expired. You can turn reminders off in your profile settings.",
+        "unsub_profile_link": "Profile settings",
+        # Technique of the day (B-27)
+        "daily_kata_label": "Technique of the day",
+        "daily_kata_page": "Technique page",
         "referral_label": "Invite a friend",
         "referral_hint": "Share your link — practitioners you bring join your circle here.",
         "referral_share_button": "Share",
@@ -466,7 +521,7 @@ STRINGS = {
         "feature_1_title": "Kuşak kazandıran seriler",
         "feature_1_body": (
             "Her seansı kaydet, serini canlı tut. Herkes beyaz kuşakla başlar — "
-            "365 pratik gününü dolduran siyah kuşak olur."
+            "180 pratik gününü dolduran siyah kuşak olur."
         ),
         "feature_2_title": "Kata ve teknik kütüphanesi",
         "feature_2_body": (
@@ -638,7 +693,10 @@ STRINGS = {
         "footer_terms": "Kullanım Koşulları",
         # Dashboard
         "dash_title": "Pratik",
-        "dash_streak_label": "günlük seri",
+        "dash_streak_label": "Seri",
+        "dash_streak_hint": "En az iki günde bir çalıştıkça serin sürer.",
+        "streak_last_day": "Bugün son gün: çalışmazsan serin biter.",
+        "streak_last_day_freeze": "Bugün çalışmazsan bu ayın donma hakkından biri kullanılır.",
         "dash_log_title": "Bugünün pratiğini kaydet",
         "dash_date": "Tarih",
         "dash_discipline": "Branş",
@@ -774,7 +832,7 @@ STRINGS = {
         "longest_streak_label": "Kişisel rekorun: {n} gün",
         "longest_streak_stat_label": "En uzun seri",
         "freeze_left": "Bu ayki donma hakkın: {left}/{total}",
-        "freeze_tip": "Hayat araya girer: ayda 2 defaya kadar tek günlük boşluk otomatik köprülenir, serin bozulmaz.",
+        "freeze_tip": "Hayat araya girer: ayda 2 defaya kadar, arka arkaya 2 boş günlük bir boşluk otomatik köprülenir, serin bozulmaz.",
         # Planlı dinlenme günü
         "rest_day_hint": "Sakatken çalışmak için değil, planlı dinlenme için: haftada bir günü dinlenme olarak işaretleyebilirsin, serini bozmaz.",
         "rest_day_button": "Bugünü dinlenme günü olarak işaretle",
@@ -798,30 +856,65 @@ STRINGS = {
         "push_msg_error": "Bir şeyler ters gitti. Lütfen tekrar dene.",
         "mail_reminder_subject": "Bugünün pratiği seni bekliyor — Joryu",
         "push_reminder_title": "Joryu",
-        "push_reminder_body": "Bugünün pratiği seni bekliyor — serin {streak} günde.",
+        "push_reminder_body": "Bugünün pratiği seni bekliyor. 10 dakika yeter.",
+        "push_reminder_lastday_body": "Bugün son gün: çalışmazsan serin biter.",
+        "push_reminder_lastday_freeze_body": "Bugün çalışmazsan bu ayın donma hakkından biri kullanılır.",
+        "push_reminder_program_body": "Bugün: Gün {n} — {focus}",
+        "push_reminder_tech_body": "Günün tekniği: {title}. 10 dakika yeter.",
         "mail_reminder_body": (
             "<p>Bugün henüz pratik kaydetmedin.</p>"
-            "<p>Serin <strong>{streak}</strong> günde — canlı tutmak için 15 dakika yeter.</p>"
+            "<p>10 dakika yeter.</p>"
             '<p><a href="{link}">Bugünün pratiğini kaydet</a></p>'
-            "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun.</p>"
+        ),
+        "mail_reminder_program_subject": "Bugün: Gün {n} — Joryu",
+        "mail_reminder_program_body": (
+            "<p>Bugün: <strong>Gün {n}</strong> — {focus}</p>"
+            '<p><a href="{day_link}">Günü aç</a></p>'
+        ),
+        "mail_reminder_lastday_subject": "Bugün son gün: serin için — Joryu",
+        "mail_reminder_lastday_body": (
+            "<p><strong>Bugün son gün:</strong> çalışmazsan serin biter.</p>"
+            "<p>Serin şu an {streak} gün. Kısa bir seans yeter.</p>"
+            '<p><a href="{link}">Bugünün pratiğini kaydet</a></p>'
+        ),
+        "mail_reminder_lastday_line": "<p><strong>Bugün son gün:</strong> çalışmazsan serin biter.</p>",
+        "mail_reminder_lastday_freeze_subject": "Bugün çalışmazsan bir donma hakkı kullanılır — Joryu",
+        "mail_reminder_lastday_freeze_body": (
+            "<p>Bugün çalışmazsan bu ayın donma hakkından biri kullanılır.</p>"
+            "<p>Serin şu an {streak} gün. Kısa bir seans yeter.</p>"
+            '<p><a href="{link}">Bugünün pratiğini kaydet</a></p>'
+        ),
+        "mail_reminder_lastday_freeze_line": "<p>Bugün çalışmazsan bu ayın donma hakkından biri kullanılır.</p>",
+        "mail_reminder_tech_subject": "Günün tekniği: {title} — Joryu",
+        "mail_reminder_tech_body": (
+            "<p>Günün tekniği: <strong>{title}</strong></p>"
+            "<p>10 dk yeter: bir kez izle, birkaç tekrar yap.</p>"
+            '<p><a href="{kata_link}">Tekniği aç</a></p>'
+        ),
+        "mail_unsub_footer": (
+            "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun. "
+            '<a href="{unsub}">Tek tıkla kapat</a>.</p>'
         ),
         "mail_weekly_subject": "Bu haftan — Joryu",
         "mail_weekly_body": (
             "<p>Geçen hafta <strong>{days}</strong> gün çalıştın, toplam <strong>{minutes}</strong> dakika.</p>"
             "<p>En çok {discipline} çalıştın.</p>"
             '<p><a href="{link}">Panelini gör</a></p>'
-            "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun.</p>"
+            "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun. "
+            '<a href="{unsub}">Tek tıkla kapat</a>.</p>'
         ),
         "mail_weekly_leader_subject": "Bu hafta birincisin — Joryu",
         "mail_weekly_leader_body": (
             "<p>Tebrikler — bu hafta {discipline} branşında Joryu'da en çok sen çalıştın.</p>"
             '<p><a href="{link}">Sıralamayı gör</a></p>'
+            "<p style=\"color:#888\">Bu maili, profil ayarlarında hatırlatmalar açık olduğu için alıyorsun. "
+            '<a href="{unsub}">Tek tıkla kapat</a>.</p>'
         ),
         "push_weekly_leader_title": "Joryu",
         "push_weekly_leader_body": "Bu hafta {discipline} branşında birincisin.",
         # Kuşaklar ve rozetler
         "belts_title": "Kuşaklar",
-        "belts_hint": "Herkes beyaz kuşakla başlar. Kuşaklar toplam pratik gününle ilerler — 365 pratik gününü dolduran siyah kuşak olur.",
+        "belts_hint": "Herkes beyaz kuşakla başlar. Kuşaklar toplam pratik gününle ilerler — 180 pratik gününü dolduran siyah kuşak olur.",
         "belt_white": "Beyaz Kuşak",
         "belt_yellow": "Sarı Kuşak",
         "belt_orange": "Turuncu Kuşak",
@@ -843,6 +936,23 @@ STRINGS = {
         "dash_share_text": "Joryu'da {streak} günlük serim var.",
         "dash_share_hint": "Paylaşılabilir kart ve link için profilini herkese açık yap.",
         "dash_share_cta": "Profili herkese açık yap",
+        # Hatırlatmalar (B-27)
+        "reg_reminders_label": "Günlük hatırlatma e-postası al",
+        "reg_reminders_hint": "İstediğin zaman kapatabilirsin.",
+        "reg_reminders_details": "Ayrıntılar:",
+        "reminder_card_label": "Hatırlatma",
+        "reminder_card_text": "Hatırlatma ister misin? Çalışmadığın günlerin akşamı kısa bir e-posta.",
+        "reminder_card_on": "Aç",
+        "reminder_card_later": "Şimdi değil",
+        "unsub_title": "Hatırlatma e-postalarını kapat",
+        "unsub_text": "Günlük hatırlatma, haftalık özet ve haftanın birincisi e-postaları durur. İstediğin zaman profil ayarlarından tekrar açabilirsin.",
+        "unsub_confirm": "Evet, kapat",
+        "unsub_done": "Tamam. Hatırlatma e-postaları kapatıldı. Profil ayarlarından tekrar açabilirsin.",
+        "unsub_invalid": "Bu bağlantı geçersiz ya da süresi dolmuş. Hatırlatmaları profil ayarlarından kapatabilirsin.",
+        "unsub_profile_link": "Profil ayarları",
+        # Günün tekniği (B-27)
+        "daily_kata_label": "Günün tekniği",
+        "daily_kata_page": "Teknik sayfası",
         "referral_label": "Arkadaşını davet et",
         "referral_hint": "Linkini paylaş — getirdiğin pratisyenler burada senin çevrende görünür.",
         "referral_share_button": "Paylaş",

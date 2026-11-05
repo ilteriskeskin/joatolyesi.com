@@ -3,18 +3,19 @@ import uuid
 from datetime import UTC, date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.analytics import practice_logged_params
 from app.config import settings
+from app.daily import pick_daily_kata
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.guide_content import get_guide
 from app.deps import csrf_protect, is_pro, require_user, waitlist_gate
-from app.models import Enrollment, Kata, PracticeLog, Program, ProgramDay, User
+from app.models import Enrollment, Kata, PracticeLog, Program, ProgramDay, PushSubscription, User
 from app.rate_limit import limiter
 from app.badges import BELTS, compute_badges, compute_belts
 from app.render import render
@@ -58,7 +59,22 @@ async def _first_session_card(db: AsyncSession, user: User) -> dict | None:
     }
 
 
-async def dashboard_context(db: AsyncSession, user: User) -> dict:
+REMINDER_DISMISS_COOKIE = "rem_dismiss"
+REMINDER_DISMISS_MAX_AGE = 60 * 60 * 24 * 30  # "Şimdi değil": 30 gün gizle
+
+
+async def _show_reminder_card(db: AsyncSession, user: User, request: Request | None) -> bool:
+    """Hatırlatma kartı: e-posta hatırlatması kapalı + push aboneliği yok + 30 günlük
+    "şimdi değil" çerezi yok. Çerez/ayar kontrolleri sorgudan önce — çoğu istekte DB'ye gitmez."""
+    if user.reminders_enabled or (request is not None and request.cookies.get(REMINDER_DISMISS_COOKIE)):
+        return False
+    has_push = (
+        await db.execute(select(select(PushSubscription.id).where(PushSubscription.user_id == user.id).exists()))
+    ).scalar_one()
+    return not has_push
+
+
+async def dashboard_context(db: AsyncSession, user: User, request: Request | None = None) -> dict:
     sinfo = await streak_info(db, user.id)
     longest_streak = await compute_longest_streak(db, user.id)
     practice_days = await total_practice_days(db, user.id)
@@ -125,8 +141,13 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         and first_session_card["kata"].slug == "choku-tsuki"
     )
 
+    today = datetime.now(UTC).date()
     return {
         "first_session_card": first_session_card,
+        "show_reminder_card": await _show_reminder_card(db, user, request),
+        "daily_kata": await pick_daily_kata(db, user, today),
+        "streak_last_day": sinfo["last_day"],
+        "streak_last_day_freeze": sinfo["last_day_freeze"],
         "streak": sinfo["streak"],
         "longest_streak": max(longest_streak, sinfo["streak"]),
         "freezes_left": sinfo["freezes_left"],
@@ -155,7 +176,7 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
 
 @router.get("/app", response_class=HTMLResponse)
 async def dashboard(request: Request, user: User = Depends(require_user), db: AsyncSession = Depends(get_db)):
-    ctx = await dashboard_context(db, user)
+    ctx = await dashboard_context(db, user, request)
     return render(request, "dashboard.html", user=user, **ctx)
 
 
@@ -174,7 +195,7 @@ async def log_practice(
     # ileride olabilir; o yüzden bir gün tolerans tanınır
     max_date = datetime.now(UTC).date() + timedelta(days=1)
     if discipline not in SELECTABLE_DISCIPLINES or minutes < 1 or minutes > 600 or practiced_on > max_date:
-        ctx = await dashboard_context(db, user)
+        ctx = await dashboard_context(db, user, request)
         return render(request, "_practice_panel.html", user=user, **ctx)
 
     db.add(
@@ -187,7 +208,7 @@ async def log_practice(
         )
     )
     await db.commit()
-    ctx = await dashboard_context(db, user)
+    ctx = await dashboard_context(db, user, request)
     # Bu kayıt tam bir kuşak eşiğine denk geldiyse kutlama/paylaşım anı göster
     # (sadece bu POST cevabında — sayfayı tekrar açınca bir daha çıkmaz)
     milestone_belt = next((belt_id for belt_id, n in BELTS if n > 0 and n == ctx["practice_days"]), None)
@@ -230,5 +251,27 @@ async def log_rest_day(
             )
         )
         await db.commit()
-    ctx = await dashboard_context(db, user)
+    ctx = await dashboard_context(db, user, request)
     return render(request, "_practice_panel.html", user=user, **ctx)
+
+
+@router.post("/app/reminders/enable", dependencies=[Depends(csrf_protect)])
+@limiter.limit("30/minute")
+async def enable_reminders(request: Request, user: User = Depends(require_user), db: AsyncSession = Depends(get_db)):
+    """Dashboard kartındaki [Aç]: kullanıcının kendi tıklaması = rıza."""
+    if not user.reminders_enabled:
+        user.reminders_enabled = True
+        await db.commit()
+    return RedirectResponse("/app", status_code=303)
+
+
+@router.post("/app/reminders/dismiss", dependencies=[Depends(csrf_protect)])
+@limiter.limit("30/minute")
+async def dismiss_reminders(request: Request, user: User = Depends(require_user)):
+    """[Şimdi değil]: kartı 30 gün gizler (çerez; sunucuda durum tutulmaz)."""
+    response = RedirectResponse("/app", status_code=303)
+    response.set_cookie(
+        REMINDER_DISMISS_COOKIE, "1", max_age=REMINDER_DISMISS_MAX_AGE, httponly=True, samesite="lax",
+        secure=settings.env == "production",
+    )
+    return response
