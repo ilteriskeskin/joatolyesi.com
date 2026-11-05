@@ -20,6 +20,32 @@ async def client(migrated_db):
         yield c
 
 
+_SEEDED_TAGS: list[str] = []
+
+
+@pytest.fixture(autouse=True)
+async def _cleanup_seeded(migrated_db):
+    """Test DB koşular arası kalıcı: bu dosyanın seed ettiği kullanıcıları (ve FK
+    CASCADE ile practice_logs/posts/follows satırlarını) test sonunda sil. Aksi halde
+    önceki koşuların 99999 dk'lık "real" kayıtları weekly_leaders'ı doldurur ve
+    minutes (int32) birikerek taşar."""
+    _SEEDED_TAGS.clear()
+    yield
+    if not _SEEDED_TAGS:
+        return
+    from sqlalchemy import delete
+
+    from app.db import async_session
+    from app.models import User
+
+    emails = []
+    for t in _SEEDED_TAGS:
+        emails += [f"demo{t}{DEMO_EMAIL_SUFFIX}", f"real{t}@test.com", f"other{t}@test.com"]
+    async with async_session() as db:
+        await db.execute(delete(User).where(User.email.in_(emails)))
+        await db.commit()
+
+
 def test_is_demo_user_helper():
     class U:
         def __init__(self, email):
@@ -33,6 +59,8 @@ def test_is_demo_user_helper():
 async def _seed(tag):
     from app.db import async_session
     from app.models import Post, PracticeLog, User
+
+    _SEEDED_TAGS.append(tag)
 
     def mk(name, email, public=True):
         return User(id=uuid.uuid4(), email=email, password_hash="x", referral_code=secrets.token_hex(5),
