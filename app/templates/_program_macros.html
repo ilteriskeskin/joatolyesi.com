@@ -1,0 +1,4 @@
+{# Sıradaki günün kısa etiketi: tekrar günü ya da "Odak: ..." #}
+{% macro day_label(d) -%}
+{{ t.program_review_label if d.day_number % 7 == 0 else (d.title_en if lang == 'en' else d.title_tr) }}
+{%- endmacro %}

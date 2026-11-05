@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
-from app.analytics import PENDING_EVENT_COOKIE, read_pending_event
+from app.analytics import PENDING_EVENT_COOKIE, read_pending_events
 from app.config import settings
 from app.constants import is_demo_user
 from app.deps import CSRF_COOKIE, is_pro
@@ -54,7 +54,7 @@ def render(request: Request, template: str, user: User | None = None, **context)
         and not template.startswith("_")
         and not request.url.path.startswith("/admin")
     )
-    ga_event = read_pending_event(request) if consume_event else None
+    ga_events = read_pending_events(request) if consume_event else []
     response = templates.TemplateResponse(
         request,
         template,
@@ -68,7 +68,7 @@ def render(request: Request, template: str, user: User | None = None, **context)
             "pro_enabled": settings.pro_enabled,
             "practice_days": practice_days(),
             "csrf_token": csrf_token,
-            "ga_event": ga_event,
+            "ga_events": ga_events,
             **context,
         },
     )

@@ -32,10 +32,10 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-54NX2S2Z01');
-    {% if ga_event %}
+    {% for ga_event in ga_events %}
     // Tek seferlik dönüşüm olayı (kayıt / kata kaydı) — cookie bu yanıtta silindi
     if (typeof gtag === "function") gtag("event", {{ ga_event.name|tojson }}, {{ ga_event.params|tojson }});
-    {% endif %}
+    {% endfor %}
   </script>
   <script src="/static/js/analytics.js" defer></script>
   {% endif %}

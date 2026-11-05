@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_program_macros.html" import day_label with context %}
 {% block title %}{{ t.dash_title }} — Joryu{% endblock %}
 {% block content %}
 <div class="dash">
@@ -7,9 +8,14 @@
   <div class="card program-banner">
     <span class="card-label">{{ t.dash_active_program }}</span>
     <h2>{{ enrollment.program.title_en if lang == 'en' else enrollment.program.title_tr }}</h2>
+    {% if program_opens_tomorrow %}
+    <p class="muted">{{ t.program_opens_tomorrow_focus.format(n=current_day, focus=day_label(current_day_obj)) if current_day_obj else t.program_opens_tomorrow.format(n=current_day) }}</p>
+    {% else %}
     <a class="button" href="/programs/{{ enrollment.program.slug }}/day/{{ current_day }}">
       {{ t.dash_continue_day.format(day=current_day) }}
     </a>
+    {% if current_day_obj %}<p class="muted">{{ day_label(current_day_obj) }}</p>{% endif %}
+    {% endif %}
   </div>
   {% endif %}
 

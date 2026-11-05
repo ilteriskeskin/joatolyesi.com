@@ -14,7 +14,7 @@ from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.guide_content import get_guide
 from app.deps import csrf_protect, is_pro, require_user, waitlist_gate
-from app.models import Enrollment, Kata, PracticeLog, User
+from app.models import Enrollment, Kata, PracticeLog, ProgramDay, User
 from app.rate_limit import limiter
 from app.badges import BELTS, compute_badges, compute_belts
 from app.render import render
@@ -22,6 +22,7 @@ from app.stats import (
     FREEZES_PER_MONTH,
     REST_DAYS_PER_WEEK,
     build_heatmap,
+    completed_new_day_today,
     compute_longest_streak,
     practice_stats,
     rest_days_used_this_week,
@@ -81,6 +82,8 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
     # banner yalnız programa erişimi olana gösterilir
     enrollment = None
     current_day = None
+    program_opens_tomorrow = False
+    current_day_obj = None
     if not settings.pro_enabled or is_pro(user):
         enrollment_result = await db.execute(
             select(Enrollment)
@@ -92,6 +95,17 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         enrollment = enrollment_result.scalar_one_or_none()
         if enrollment:
             current_day = min(len(enrollment.completed_days) + 1, enrollment.program.duration_days)
+            current_day_obj = (
+                await db.execute(
+                    select(ProgramDay).where(
+                        ProgramDay.program_id == enrollment.program_id, ProgramDay.day_number == current_day
+                    )
+                )
+            ).scalar_one_or_none()
+            program_opens_tomorrow = (
+                len(enrollment.completed_days) < enrollment.program.duration_days
+                and completed_new_day_today(enrollment.completed_days)
+            )
 
     first_session_card = await _first_session_card(db, user)
 
@@ -111,6 +125,8 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         "recent_logs": list(recent.scalars().all()),
         "enrollment": enrollment,
         "current_day": current_day,
+        "program_opens_tomorrow": program_opens_tomorrow,
+        "current_day_obj": current_day_obj,
         "today": datetime.now(UTC).date().isoformat(),
         "today_max": (datetime.now(UTC).date() + timedelta(days=1)).isoformat(),
         "disciplines": SELECTABLE_DISCIPLINES,

@@ -1,0 +1,17 @@
+{# Haftalık temalar + odak suburi'ler (kata sayfası linkleriyle). Gerekli: weeks #}
+{% if weeks %}
+<h2>{{ t.program_weeks_heading }}</h2>
+<ol class="program-weeks">
+  {% for w in weeks %}
+  <li>
+    <strong>{{ t.program_week_label.format(n=loop.index) }} · {{ t.program_week_days.format(first=w.first, last=w.last) }}</strong>
+    — {{ w.theme_en if lang == 'en' else w.theme_tr }}
+    <ul class="program-week-focuses">
+      {% for f in w.focuses %}
+      <li>{% if f.kata %}<a href="/kata/{{ f.kata.slug }}">{{ f.kata.title_en if lang == 'en' else f.kata.title_tr }}</a>{% else %}{{ f.name }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ol>
+{% endif %}

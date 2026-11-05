@@ -1005,14 +1005,18 @@ async def test_free_user_enrolls_and_completes_day_one(client):
     r = await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
     assert r.status_code == 303
     r = await client.get(PROGRAM)
-    assert ga_events(r.text) == [("program_day_complete", {"program": "30-day-jo-suburi", "day": 1})]
+    assert ga_events(r.text) == [
+        ("program_day_complete", {"program": "30-day-jo-suburi", "day": 1}),
+        ("practice_logged", {"discipline": "aikijo", "minutes": 12, "source": "program"}),
+    ]
     assert "2" in r.text and "day-cell--done" in r.text
     # ayni gun tekrar tamamlanirsa olay yok
     await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
     assert ga_events((await client.get(PROGRAM)).text) == []
-    # dashboard banner'i Pro kapaliyken gorunur
+    # dashboard banner'i Pro kapaliyken gorunur; bugun gun tamamlandigi icin 2. gun yarin acilir (buton degil metin)
     r = await client.get("/app")
-    assert 'href="/programs/30-day-jo-suburi/day/2"' in r.text
+    assert "Gün 2 yarın açılır" in r.text
+    assert 'href="/programs/30-day-jo-suburi/day/2"' not in r.text
 
 
 async def test_register_next_redirect_and_open_redirect_rejected(client):
@@ -1049,3 +1053,181 @@ async def test_program_event_cookie_tampering_ignored(client):
     client.cookies.set("ga_evt", "program_day_complete|x y|abc")
     r = await client.get(PROGRAM)
     assert ga_events(r.text) == []
+
+
+# --- B-24: program icinde video, pratik kaydi, dojo notu ---
+
+
+async def _set_video(slug, url):
+    from app.db import async_session
+    from app.models import Kata
+    async with async_session() as db:
+        kata = (await db.execute(select(Kata).where(Kata.slug == slug))).scalar_one()
+        old = kata.video_url
+        kata.video_url = url
+        await db.commit()
+    return old
+
+
+async def _age_completions(username, days=1):
+    """Takvim kilidi testleri: tamamlanma zamanlarini geriye al (zaman mock'u yerine)."""
+    from sqlalchemy import text
+
+    from app.db import async_session
+    async with async_session() as db:
+        await db.execute(text(
+            "UPDATE enrollment_days SET completed_at = completed_at - make_interval(days => :d) "
+            "WHERE enrollment_id IN (SELECT e.id FROM enrollments e JOIN users u ON u.id = e.user_id "
+            "WHERE u.username = :u)"), {"d": days, "u": username})
+        await db.commit()
+
+
+async def test_program_visitor_sees_dojo_note_links_and_day1_preview(client):
+    old = await _set_video("choku-tsuki", "https://www.youtube.com/embed/4hvf2N0O4PA")
+    try:
+        r = await client.get(PROGRAM)
+        assert "hocandan öğrenmiş ya da öğreniyor olmalısın" in r.text
+        assert "1. gün böyle görünüyor" in r.text
+        assert 'src="https://www.youtube.com/embed/4hvf2N0O4PA"' in r.text
+        assert 'href="/kata/hidari-nagare-gaeshi-uchi"' in r.text and 'href="/kata/shomen-uchikomi"' in r.text
+        en = await client.get(PROGRAM + "?lang=en")
+        assert "for practice outside the dojo" in en.text
+    finally:
+        await _set_video("choku-tsuki", old)
+
+
+async def test_program_day_video_locked_review_and_practice_log(client):
+    from app.db import async_session
+    from app.models import PracticeLog, User
+    await _set_video("choku-tsuki", "https://www.youtube.com/embed/4hvf2N0O4PA")
+    await _set_video("kaeshi-tsuki", "https://www.youtube.com/embed/vacznG5hNpc")
+    email, username = f"{unique('pv')}@test.com", unique("pvuser")
+    await register(client, email, username)
+    token = await get_csrf(client, "/app")
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+
+    r = await client.get(PROGRAM + "/day/1")
+    assert "youtube.com/embed/4hvf2N0O4PA" in r.text
+    assert "Hareketin tam sayfası" in r.text and 'href="/kata/choku-tsuki"' in r.text
+    # kilitli gun: video yok
+    r2 = await client.get(PROGRAM + "/day/2")
+    assert "youtube.com/embed" not in r2.text
+
+    async def logs():
+        async with async_session() as db:
+            uid = (await db.execute(select(User.id).where(User.username == username))).scalar_one()
+            return list((await db.execute(select(PracticeLog).where(PracticeLog.user_id == uid))).scalars().all())
+
+    r = await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    assert r.headers["location"] == PROGRAM + "?done=1"
+    got = await logs()
+    assert len(got) == 1 and got[0].discipline == "aikijo" and got[0].minutes == 12
+    assert got[0].kata_slug == "choku-tsuki"
+    r = await client.get(PROGRAM + "?done=1")
+    assert "Bugün tamam. Yarın: Gün 2 — Odak: kaeshi tsuki" in r.text
+    # ikinci tamamlama kayit cogaltmaz; tamamlanmamis gun icin ?done mesaji cikmaz
+    await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    assert len(await logs()) == 1
+    assert "Bugün tamam" not in (await client.get(PROGRAM + "?done=9")).text
+
+    # tekrar gunu (7): hafta kataları, tiklayinca yuklenen video, 20 dk
+    for d in range(2, 8):
+        await _age_completions(username)  # onceki gunun tamamlanmasi dune alinir
+        await client.post(PROGRAM + f"/day/{d}/complete", data={"csrf_token": token})
+    r = await client.get(PROGRAM + "/day/7")
+    assert "Bu haftanın hareketleri" in r.text
+    assert 'href="/kata/kaeshi-tsuki"' in r.text
+    assert "<iframe" not in r.text.split("program-review")[1].split("<template")[0]  # iframe yalniz template icinde
+    assert any(l.minutes == 20 and l.kata_slug is None for l in await logs())
+    await _set_video("choku-tsuki", None)
+    await _set_video("kaeshi-tsuki", None)
+
+
+async def test_program_complete_emits_two_events_in_order(client):
+    await register(client, f"{unique('pe')}@test.com", unique("peuser"))
+    token = await get_csrf(client, "/app")
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    names = [n for n, _ in ga_events((await client.get(PROGRAM + "?done=1")).text)]
+    assert names == ["program_day_complete", "practice_logged"]
+
+
+async def test_program_calendar_lock_one_new_day_per_day(client):
+    from app.db import async_session
+    from app.models import EnrollmentDay, PracticeLog, User
+    email, username = f"{unique('cl')}@test.com", unique("cluser")
+    await register(client, email, username)
+    token = await get_csrf(client, "/app")
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+
+    async def counts():
+        async with async_session() as db:
+            uid = (await db.execute(select(User.id).where(User.username == username))).scalar_one()
+            logs = (await db.execute(select(PracticeLog).where(PracticeLog.user_id == uid))).scalars().all()
+            days = (await db.execute(select(EnrollmentDay))).scalars().all()
+            return len(logs)
+
+    # ayni gun ikinci yeni gun: tamamlama yok, kayit yok
+    r = await client.post(PROGRAM + "/day/2/complete", data={"csrf_token": token})
+    assert r.status_code == 303 and "done" not in r.headers["location"]
+    assert await counts() == 1
+    r = await client.get(PROGRAM + "/day/2")
+    assert "Gün 2 yarın açılır" in r.text and "Günü tamamla" not in r.text
+    r = await client.get(PROGRAM)
+    assert "Gün 2 yarın açılır" in r.text or "Yarın: Gün 2" in r.text
+    assert 'href="/programs/30-day-jo-suburi/day/2"' not in r.text
+    # Tamamlanmis gun yine goruntulenebilir
+    assert (await client.get(PROGRAM + "/day/1")).status_code == 200
+
+    # ertesi takvim gunu: gun 2 acilir
+    await _age_completions(username)
+    r = await client.get(PROGRAM + "/day/2")
+    assert "Günü tamamla" in r.text
+    assert 'class="button button--block"' in r.text and "pratik kaydın otomatik oluşur (12 dk)" in r.text
+    r = await client.post(PROGRAM + "/day/2/complete", data={"csrf_token": token})
+    assert r.headers["location"].endswith("?done=2")
+    assert await counts() == 2
+    # kacirilan gunler geriye donuk acilmaz: 3 gun sonra da siradaki gun yalnizca 3
+    await _age_completions(username, 5)
+    assert "Günü tamamla" not in (await client.get(PROGRAM + "/day/4")).text
+    assert "Günü tamamla" in (await client.get(PROGRAM + "/day/3")).text
+
+
+async def test_program_week_focus_order_follows_days(client):
+    r = await client.get(PROGRAM)
+    week4 = r.text.split("Hafta 4")[1]
+    assert week4.index("Hidari nagare") < week4.index("Migi nagare")
+    # hafta 2: 8. gun shomen, 9. renzoku, 10. men uchi
+    week2 = r.text.split("Hafta 2")[1].split("Hafta 3")[0]
+    assert week2.index("Shomen uchikomi") < week2.index("Renzoku uchikomi") < week2.index("Men uchi gedan gaeshi")
+
+
+async def test_program_done_param_robust_and_only_for_today(client):
+    email, username = f"{unique('dn')}@test.com", unique("dnuser")
+    await register(client, email, username)
+    token = await get_csrf(client, "/app")
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    for bad in ("abc", "", "1.5", "-1", "99999999999999999999", "%EF%BC%91"):
+        r = await client.get(PROGRAM + f"?done={bad}")
+        assert r.status_code == 200 and "Bugün tamam" not in r.text, bad
+    assert "Bugün tamam. Yarın: Gün 2" in (await client.get(PROGRAM + "?done=1")).text
+    # eski link: gun dune alinirsa mesaj cikmaz
+    await _age_completions(username)
+    r = await client.get(PROGRAM + "?done=1")
+    assert r.status_code == 200 and "Bugün tamam" not in r.text
+
+
+async def test_program_enrolled_page_shows_next_focus_and_weeks(client):
+    email, username = f"{unique('nf')}@test.com", unique("nfuser")
+    await register(client, email, username)
+    token = await get_csrf(client, "/app")
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    r = await client.get(PROGRAM)
+    assert "Odak: choku tsuki" in r.text and "Haftalık temalar" in r.text
+    assert 'href="/kata/shomen-uchikomi"' in r.text
+    await client.post(PROGRAM + "/day/1/complete", data={"csrf_token": token})
+    r = await client.get(PROGRAM)
+    assert "Gün 2 yarın açılır — Odak: kaeshi tsuki" in r.text
+    assert "Gün 2 yarın açılır — Odak: kaeshi tsuki" in (await client.get("/app")).text

@@ -268,3 +268,10 @@ async def weekly_leaders(db: AsyncSession) -> list[dict]:
         if discipline not in leaders:
             leaders[discipline] = {"discipline": discipline, "person": person, "minutes": minutes}
     return sorted(leaders.values(), key=lambda x: -x["minutes"])
+
+
+def completed_new_day_today(completed_days) -> bool:
+    """Program takvim kilidi: bugün (PracticeLog ile aynı UTC "bugün") yeni bir gün
+    tamamlandıysa sıradaki gün yarın açılır. Aynı takvim gününde en çok 1 yeni gün."""
+    today = datetime.now(UTC).date()
+    return any(d.completed_at is not None and d.completed_at.astimezone(UTC).date() == today for d in completed_days)

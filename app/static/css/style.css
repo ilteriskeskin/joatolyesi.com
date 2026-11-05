@@ -1988,3 +1988,15 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   .first-session-card__actions { flex-direction: column; align-items: stretch; }
   .first-session-card__actions .button { width: 100%; text-align: center; }
 }
+
+/* Program: dojo notu, odak bloğu, tekrar günü listesi */
+.program-note { border-left: 3px solid var(--accent); padding: 0.5rem 0.9rem; margin: 1rem 0; color: var(--ink); font-size: 0.95rem; }
+.program-focus { margin: 1rem 0 1.5rem; }
+.program-review-list { list-style: none; padding: 0; }
+.program-review-list li { border-top: 1px solid var(--border); padding: 1rem 0; }
+.program-weeks { padding-left: 1.2rem; }
+.program-week-focuses { margin: 0.3rem 0 0.8rem; padding-left: 1.2rem; }
+.button--block { display: block; }
+@media (max-width: 600px) {
+  .button--block, .program-cta .button { display: block; width: 100%; text-align: center; box-sizing: border-box; }
+}

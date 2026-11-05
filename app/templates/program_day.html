@@ -5,7 +5,9 @@
   <p class="muted"><a href="/programs/{{ program.slug }}">{{ program.title_en if lang == 'en' else program.title_tr }}</a></p>
   <h1>{{ t.program_day }} {{ day.day_number }} — {{ day.title_en if lang == 'en' else day.title_tr }}</h1>
 
-  {% if is_locked %}
+  {% if opens_tomorrow %}
+  <p class="form-message">{{ t.program_opens_tomorrow.format(n=day.day_number) }}</p>
+  {% elif is_locked %}
   <p class="form-message form-message--error">{{ t.program_locked_day }}</p>
   {% else %}
   {% if day.video_url %}
@@ -13,18 +15,42 @@
     <iframe src="{{ day.video_url }}" loading="lazy" allowfullscreen></iframe>
   </div>
   {% endif %}
-  <p class="day-content">{{ day.content_en if lang == 'en' else day.content_tr }}</p>
   {% if focus_kata %}
-  <p><a href="/kata/{{ focus_kata.slug }}">{{ t.program_day_kata_link.format(name=focus_kata.title_en if lang == 'en' else focus_kata.title_tr) }}</a></p>
+  <section class="program-focus">
+    {% if focus_kata.video_url %}
+    <div class="video-frame">
+      <iframe src="{{ focus_kata.video_url }}" loading="lazy" allowfullscreen></iframe>
+    </div>
+    {% endif %}
+    <p>{{ focus_kata.description_en if lang == 'en' else focus_kata.description_tr }}</p>
+    <p><a href="/kata/{{ focus_kata.slug }}">{{ t.program_kata_full_page }}</a></p>
+  </section>
   {% endif %}
+  {% if review_katas %}
+  <section class="program-review">
+    <h2>{{ t.program_review_heading }}</h2>
+    <ul class="program-review-list">
+      {% for k in review_katas %}
+      <li>
+        <h3>{{ k.title_en if lang == 'en' else k.title_tr }}</h3>
+        <p>{{ k.description_en if lang == 'en' else k.description_tr }}</p>
+        {% if k.video_url %}{% include "_kata_video_lazy.html" %}{% endif %}
+        <p><a href="/kata/{{ k.slug }}">{{ t.program_kata_full_page }}</a></p>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+  <p class="day-content">{{ day.content_en if lang == 'en' else day.content_tr }}</p>
 
   {% if is_completed %}
   <p class="form-message form-message--success">{{ t.program_completed }}</p>
   {% else %}
   <form method="post" action="/programs/{{ program.slug }}/day/{{ day.day_number }}/complete">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <button type="submit">{{ t.program_complete_button }}</button>
+    <button type="submit" class="button button--block">{{ t.program_complete_button }}</button>
   </form>
+  <p class="muted">{{ t.program_auto_log_note.format(minutes=log_minutes) }}</p>
   {% endif %}
   {% endif %}
 </article>

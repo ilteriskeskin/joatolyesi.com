@@ -1,0 +1,10 @@
+{# Tıklayınca yüklenen video: iframe yalnız kullanıcı açınca DOM'a girer (tek sayfada çoklu YouTube yüklenmesin).
+   Gerekli değişken: k (Kata) #}
+<div x-data="{ open: false }" class="video-lazy">
+  <button type="button" class="link-button" @click="open = true" x-show="!open">{{ t.program_show_video }}</button>
+  <template x-if="open">
+    <div class="video-frame">
+      <iframe src="{{ k.video_url }}" allowfullscreen></iframe>
+    </div>
+  </template>
+</div>
