@@ -3,9 +3,19 @@
 PO önceliklendirir. Puan = (Etki × Güven) / Emek, her biri 1-5. Yeni fikir
 eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
-## Sıradaki sprint (İlteriş kararı, 2026-11-04)
+## Yön (PO kararı, 2026-11-05) — 2 haftalık büyüme hamlesi
 
-~~B-03 (b)~~ (2026-11-04 tamam) + ~~B-09~~ (2026-11-04 tamam). Gerekçe: bio linki değiştirildi, Instagram trafiği geliyor; kayıt olanın ilk gün seans kaydetmesi şu an en kritik sızıntı. PO bu ikisini seçsin.
+Teşhis: 10 gerçek kullanıcı, haftalık aktif ~0; Instagram videoları 138k izlenmeye kadar çıkıyor ama siteye ~5 oturum geliyor. Darboğaz ürün cilası değil, **teklif + dağıtım**. Bundan sonra her sprint işi bir büyüme hipotezine ve bir metriğe bağlanır. Hijyen/bakım işleri yalnız bir büyüme işini engelliyorsa seçilir.
+
+Sıra:
+1. **B-20** 30 günlük jo programı ücretsiz + Instagram açılış sayfası (sprint 2026-11-05b).
+2. **B-21** Instagram kampanyası (growth-marketer taslak → İlteriş paylaşır, 14 gün).
+3. **B-22** Program e-posta dizisi: kayıt/enroll sonrası gün 1, 3, 7 hatırlatma ("dün kaldığın gün"). Resend çalışıyor.
+4. **B-23** Hoca/dojo pilotu: hoca öğrencilerine haftalık ödev verir, kimin çalıştığını görür. Önce İlteriş'in kendi dojosunda 1 pilot.
+5. B-07, B-08, B-13 (organik kanal) bunlardan sonra.
+
+Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 günlük hedef sunulursa kayıt ve 7. gün geri dönüş artar.
+Ölçüt (14 gün): GA4 `sign_up` (utm_source=instagram), `program_enroll`, `program_day_complete` day≥7. Eşikler kampanya taslağında.
 
 ## Ölçüm (önce bunlar — ölçemediğini büyütemezsin)
 
@@ -46,6 +56,13 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 - [x] **B-16 Blog gövdelerinde demo kişiye ait birinci şahıs ifadeler.** Örn. jo yazısındaki "Benim için cevap basit…" cümlesi artık "Joryu Ekibi" imzasıyla tutarsız. content-writer nötrleştirir → fact-checker → developer. Seed mevcut yazıyı güncellemediği için prod satırı için tek seferlik UPDATE gerekir (İlteriş). _✓ 2026-11-04 jo yazısı (a571ef9); prod SQL İlteriş'te. Karate/taekwondo yazıları kalıyor (İlteriş kararı)._ Kapsam dışı jo iddiaları (128 cm, 20 suburi vb.) audit-log'da sonraki denetim adayı.
 
 - [x] **B-19 Jo yazısı düzeltmelerini uygula.** _✓ 2026-11-05 (229cbe5); prod SQL İlteriş'te._ content/verified/2026-11-05-jo-yazisi-duzeltme.md (satır 45, 54, 58, 202) seed_blog.py'ye; prod için idempotent UPDATE SQL (İlteriş çalıştırır). Sorumlu: developer → qa-reviewer.
+
+## Büyüme hamlesi (2026-11-05)
+
+- [ ] **B-20 30 günlük jo programı ücretsiz.** Pro kapalıyken program giriş yapan herkese açık; `/programs/30-day-jo-suburi` ziyaretçiye açık açılış sayfası + kayıt CTA'sı (`next` ile geri dönüş); gün → kata linkleri; GA4 `program_enroll`, `program_day_complete`. Sorumlu: developer → qa-reviewer.
+- [ ] **B-21 Instagram 30 gün kampanyası.** Bio, 14 günlük takvim, pin yorumlar, DM şablonu, UTM. Sorumlu: growth-marketer → İlteriş.
+- [ ] **B-22 Program e-posta dizisi.** Gün 1/3/7 hatırlatma; kaldığı güne link. Sorumlu: developer.
+- [ ] **B-23 Hoca/dojo pilotu.** Grup + haftalık ödev + öğrenci ilerleme görünümü. Önce İlteriş'in dojosu. Sorumlu: PO (tasarım) + developer.
 
 ## Bakım
 
