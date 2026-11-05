@@ -1294,14 +1294,10 @@ a.day-cell:hover { text-decoration: none; border-color: var(--accent); }
 
 /* Hero metni alttan süzülür */
 .hero__content > * {
-  opacity: 0;
-  animation: rise-in 0.7s ease forwards;
+  /* Metin ilk boyamada görünür (opacity 1); yalnız hafif, kısa bir yükselme */
+  animation: rise-in 0.25s ease-out both;
 }
-.hero__content h1 { animation-delay: 0.15s; }
-.hero__content .hero__sub { animation-delay: 0.35s; }
-.hero__content .hero__disciplines { animation-delay: 0.55s; }
-.hero__content .waitlist-form { animation-delay: 0.75s; }
-@keyframes rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes rise-in { from { transform: translateY(8px); } to { transform: none; } }
 
 /* Seri sayısı "kiai" ile gelir */
 .streak-number { animation: pop-in 0.55s cubic-bezier(0.2, 1.6, 0.4, 1) both; }
@@ -1999,4 +1995,42 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
 .button--block { display: block; }
 @media (max-width: 600px) {
   .button--block, .program-cta .button { display: block; width: 100%; text-align: center; box-sizing: border-box; }
+}
+
+/* Üst menü: "Daha" açılır menüsü */
+.nav-more { position: relative; }
+.nav-more__btn {
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: var(--ink-dim); font: inherit; font-size: 0.9rem;
+}
+.nav-more__btn:hover, .nav-more__btn[aria-expanded="true"] { color: var(--ink); }
+.nav-more__menu {
+  display: none; position: absolute; right: 0; top: calc(100% + 0.5rem); min-width: 11rem;
+  flex-direction: column; gap: 0.2rem; padding: 0.5rem 0.9rem;
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: 6px; z-index: 60;
+}
+.nav-more__menu.is-open { display: flex; }
+.nav-more__menu a, .nav-more__menu .link-button { padding: 0.4rem 0; text-align: left; }
+@media (max-width: 760px) {
+  /* Mobil menüde düz liste */
+  .nav-more { width: 100%; }
+  .nav-more__btn { display: none; }
+  .nav-more__menu { display: flex; position: static; border: none; background: none; padding: 0; min-width: 0; gap: 0; }
+}
+
+/* Program giriş noktaları */
+.program-card { display: block; }
+.program-card--compact { opacity: 0.92; }
+.hero__program { margin-top: 0.9rem; }
+.hero__program a { color: var(--accent); }
+.program-teaser { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem; text-align: center; }
+.program-teaser ul { list-style: none; padding: 0; margin: 1rem 0 1.5rem; color: var(--ink-dim); }
+.program-box { margin: 1.5rem 0; }
+.first-session-card__program { margin-top: 0.6rem; font-size: 0.92rem; }
+.program-teaser h2 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 0.6rem; }
+@media (max-width: 760px) {
+  .nav-more__menu a, .nav-more__menu .link-button, .nav-more__menu .inline-form {
+    display: block; width: 100%; padding: 0.8rem 0; font-size: 1rem; text-align: left; line-height: inherit;
+  }
+  .nav-more__menu .inline-form { padding: 0; }
 }

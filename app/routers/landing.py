@@ -17,6 +17,7 @@ from app.i18n.strings import DEFAULT_LANG, SUPPORTED_LANGS, get_strings
 from app.models import Post, User, Waitlist
 from app.rate_limit import limiter
 from app.render import render
+from app.seed import WEEKS
 
 router = APIRouter()
 
@@ -38,6 +39,7 @@ async def index(
         request, "index.html", user=user,
         source=src if src and SOURCE_RE.match(src) else "",
         ref=ref if ref and REF_RE.match(ref) else "",
+        program_weeks=[(en, tr) for en, tr, _ in WEEKS],
     )
 
 

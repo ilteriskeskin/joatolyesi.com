@@ -23,9 +23,18 @@
     <a href="/kata?d={{ d }}">{{ t.guide_video_library_link }} →</a>
   </nav>
 
+  {% if d == 'aikijo' %}
+  <div class="card program-box">
+    <h2>{{ t.guide_program_box_title }}</h2>
+    <p>{{ t.guide_program_box_body }}</p>
+    <p><a class="button" href="/programs/30-day-jo-suburi">{{ t.landing_program_button }}</a></p>
+  </div>
+  {% endif %}
+
   {% if g.program %}
   <div class="card guide-program" id="program">
     <h2>{{ t.guide_program_title }}</h2>
+    {% if d == 'aikijo' %}<p><a href="/programs/30-day-jo-suburi">{{ t.guide_program_short_link }}</a></p>{% endif %}
     <ol>
       {% for step in (g.program[lang] if lang in g.program else g.program.tr) %}
       <li>{{ step }}</li>

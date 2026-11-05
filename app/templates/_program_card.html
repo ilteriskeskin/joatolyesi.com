@@ -1,0 +1,9 @@
+{# Programa kayıtlı olmayan kullanıcıya program kartı. Gerekli: program_card #}
+{% if program_card %}
+<section class="card program-card {{ 'program-card--compact' if compact else '' }}{{ ' program-card--lead' if lead else '' }}" aria-label="{{ t.dash_program_card_title }}">
+  <span class="card-label">{{ t.nav_programs }}</span>
+  <h2>{{ program_card.title_en if lang == 'en' else program_card.title_tr }}</h2>
+  <p class="muted">{{ t.dash_program_card_meta }}</p>
+  <a class="button button--outline" href="/programs/{{ program_card.slug }}">{{ t.dash_program_card_link }}</a>
+</section>
+{% endif %}

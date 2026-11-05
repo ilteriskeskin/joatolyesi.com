@@ -1,4 +1,5 @@
 import hashlib
+from functools import lru_cache
 import secrets
 from datetime import date, datetime
 from pathlib import Path
@@ -20,6 +21,21 @@ templates.env.globals["is_demo_user"] = is_demo_user  # blog yazar satırı: dem
 # style.css içerik hash'i: link'e ?v= olarak eklenir; CSS değişince tarayıcı
 # önbelleği ve SW eski stili sunmaz (açılışta bir kez okunur)
 templates.env.globals["css_v"] = hashlib.sha256(Path("app/static/css/style.css").read_bytes()).hexdigest()[:10]
+
+
+
+@lru_cache(maxsize=None)
+def asset(path: str) -> str:
+    """Statik dosya URL'si + içerik hash'i (?v=): dosya değişince tarayıcı/SW önbelleği yenilenir."""
+    static_root = Path("app/static").resolve()
+    target = (static_root / path).resolve()
+    if not target.is_relative_to(static_root):
+        raise ValueError(f"asset path outside static: {path}")
+    digest = hashlib.sha256(target.read_bytes()).hexdigest()[:10]
+    return f"/static/{path}?v={digest}"
+
+
+templates.env.globals["asset"] = asset
 
 # Kesintisiz pratik serisinin başlangıcı — landing'deki gün sayacı buradan türer
 PRACTICE_START = date(2025, 8, 11)

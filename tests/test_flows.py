@@ -539,7 +539,8 @@ async def test_pro_disabled_by_default(client):
     assert "/billing" not in r.text and 'href="/programs"' in r.text
 
     assert (await client.get("/billing")).status_code == 404
-    assert (await client.get("/programs")).status_code == 200
+    r = await client.get("/programs")  # tek yayimli program: dogrudan ona
+    assert r.status_code == 303 and r.headers["location"] == "/programs/30-day-jo-suburi"
 
     # Pro kapaliyken odeme duvari yok: is_free=False isaretli kata da tamamen
     # erisilebilir olmali (listede gorunur, detay 200 doner) - aksi halde
@@ -732,19 +733,22 @@ async def test_first_session_card_flow(client):
     await client.get("/app")  # sign_up olayını tüket
     r = await client.get("/app")
     assert "first-session-card" in r.text
-    assert "Bugün 10 dakika:" in r.text and "İlk antrenmanın" in r.text
+    # aikijo + pratik yok + kayitsiz: ilk seans karti programin 1. gunu olur (tek kart)
+    assert "Bugün: Choku tsuki" in r.text and "İlk antrenmanın · 30 günlük programın 1. günü" in r.text
+    assert "Programa başla — 1. gün" in r.text and 'action="/programs/30-day-jo-suburi/enroll"' in r.text
+    assert "5 dk ısın, 3×20 tekrar." in r.text and "Programsız, sadece 10 dk kaydet" in r.text
+    assert "Başlangıç programına bak" not in r.text and 'class="card program-card' not in r.text
+    assert "Kendi seansını gir" in r.text
     r_en = await client.get("/app?lang=en")
-    assert "first-session-card" in r_en.text and "Today, 10 minutes:" in r_en.text
+    assert "first-session-card" in r_en.text and "Today: Choku tsuki" in r_en.text
 
     slug = re.search(r'action="/kata/([^"/]+)/log"', r.text).group(1)
     async with async_session() as db:
         kata = (await db.execute(select(Kata).where(Kata.slug == slug))).scalar_one()
-    assert f'href="/kata/{slug}"' in r.text and "#program" in r.text
     # Yeni başlayana önce temel teknik (aiki-jo'da suburi 1 = choku tsuki)
     assert kata.kind == "teknik"
     if kata.discipline == "aikijo":
         assert slug == "choku-tsuki"
-    assert "Tekniği aç" in r.text and "Katayı aç" not in r.text
 
     token = re.search(r'name="csrf_token" value="([^"]+)"', r.text).group(1)
     r = await client.post(f"/kata/{slug}/log",
@@ -1231,3 +1235,136 @@ async def test_program_enrolled_page_shows_next_focus_and_weeks(client):
     r = await client.get(PROGRAM)
     assert "Gün 2 yarın açılır — Odak: kaeshi tsuki" in r.text
     assert "Gün 2 yarın açılır — Odak: kaeshi tsuki" in (await client.get("/app")).text
+
+
+# --- B-25: programin kesfedilebilirligi ---
+
+
+async def test_visitor_nav_landing_and_programs_list(client):
+    r = await client.get("/")
+    assert r.status_code == 200
+    assert 'href="/programs"' in r.text  # landing nav
+    assert "Ücretsiz: 30 Günlük Jo Suburi Programı →" in r.text
+    assert 'class="program-teaser"' in r.text and "Tsuki temelleri" in r.text
+    assert "Programı gör" in r.text
+    # ziyaretçi nav'ı (programlar sayfasi uzerinden)
+    r = await client.get("/privacy")
+    assert 'href="/programs"' in r.text
+    # /programs ziyaretciye acik: tek program -> detaya yonlenir, utm dusmez
+    r = await client.get("/programs?utm_source=ig")
+    assert r.status_code == 303 and r.headers["location"] == "/programs/30-day-jo-suburi?utm_source=ig"
+    en = await client.get("/?lang=en")
+    assert "Free: 30-Day Jo Suburi Program →" in en.text and "Four weekly themes" in en.text
+
+
+async def test_programs_list_open_to_visitor_when_multiple(client):
+    from app.db import async_session
+    from app.models import Program
+    slug = unique("extra-prog")
+    async with async_session() as db:
+        db.add(Program(slug=slug, title_en="Extra", title_tr="Ekstra", description_en="d", description_tr="d",
+                       duration_days=7))
+        await db.commit()
+    try:
+        r = await client.get("/programs")
+        assert r.status_code == 200 and slug in r.text
+    finally:
+        async with async_session() as db:
+            await db.execute(Program.__table__.delete().where(Program.slug == slug))
+            await db.commit()
+
+
+async def test_landing_program_hidden_when_waitlist_only(client, monkeypatch):
+    from app.config import settings
+    monkeypatch.setattr(settings, "waitlist_only", True)
+    r = await client.get("/")
+    assert r.status_code == 200
+    assert "program-teaser" not in r.text and "/programs" not in r.text
+
+
+async def test_logged_in_nav_more_menu(client):
+    await register(client, f"{unique('nv')}@test.com", unique("nvuser"))
+    r = await client.get("/app")
+    assert 'aria-controls="nav-more-menu"' in r.text and ':aria-expanded="more"' in r.text
+    assert "@keydown.escape.window" in r.text and "@click.outside" in r.text
+    nav = r.text.split('class="app-nav"')[1].split("</nav>")[0]
+    order = [nav.index(x) for x in ('href="/app"', 'href="/programs"', 'href="/kata"', 'href="/guide"',
+                                     'href="/practitioners"', 'href="/profile"', 'nav-more')]
+    assert order == sorted(order)
+    assert nav.index("nav-more") < nav.index('href="/blog"') < nav.index('href="/tips"')
+
+
+async def _register_disc(client, discipline):
+    token = await get_csrf(client, "/register")
+    return await client.post("/register", data={
+        "email": f"{unique('dc')}@test.com", "password": "password123", "username": unique("dcuser"),
+        "discipline": discipline, "csrf_token": token})
+
+
+async def test_dashboard_program_card_by_discipline_and_enrollment(client):
+    # aikijo, kayitsiz, pratiksiz: TEK kart (ilk seans karti = programin 1. gunu)
+    await _register_disc(client, "aikijo")
+    r = await client.get("/app")
+    assert 'class="card program-card' not in r.text
+    assert "Programa başla — 1. gün" in r.text and "Başlangıç programına bak" not in r.text
+    assert "Bunu 30 günlük programın" not in r.text
+    # pratigi VAR + kayitsiz: yalniz program karti (ust), ilk seans karti yok
+    token = await get_csrf(client, "/app")
+    await client.post("/app/practice", data={"practiced_on": date.today().isoformat(), "discipline": "aikijo",
+                                              "minutes": "15", "csrf_token": token})
+    r = await client.get("/app")
+    assert "first-session-card" not in r.text
+    assert "Programı gör →" in r.text and "Günde yaklaşık 10–20 dk" in r.text and "program-card--lead" in r.text
+    assert r.text.index('class="card program-card') < r.text.index("streak-block")
+    # kayit olunca kart yerine mevcut banner
+    token = await get_csrf(client, "/app")
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    r = await client.get("/app")
+    assert "program-card" not in r.text and "program-banner" in r.text
+    assert "Bunu 30 günlük programın" not in r.text
+
+
+async def test_dashboard_program_card_other_discipline_is_compact_below(client):
+    await _register_disc(client, "bokken")
+    r = await client.get("/app")
+    assert "program-card--compact" in r.text and "program-card--lead" not in r.text
+    assert "first-session-card" in r.text and "Bugün 10 dakika:" in r.text  # klasik ilk seans karti aynen
+    assert "Programa başla — 1. gün" not in r.text
+    assert r.text.index("streak-block") < r.text.index('class="card program-card')
+
+
+async def test_kata_page_program_box_and_guide_box(client):
+    r = await client.get("/kata/choku-tsuki")
+    assert "Bu hareket 30 Günlük Jo Suburi Programı&#39;nda: 1. hafta — günler: 1, 4" in r.text
+    assert 'href="/programs/30-day-jo-suburi"' in r.text
+    r = await client.get("/kata/hidari-nagare-gaeshi-uchi")
+    assert "4. hafta — günler: 22, 24, 26, 30" in r.text
+    # programda olmayan hareket: kutu yok
+    assert "Bu hareket 30 Günlük" not in (await client.get("/kata/katate-toma-uchi")).text
+    g = await client.get("/guide/aikijo")
+    assert "program-box" in g.text and 'href="/programs/30-day-jo-suburi"' in g.text
+    assert "program-box" not in (await client.get("/guide/bokken")).text
+
+
+async def test_motion_js_does_not_reveal_lead_cards(client):
+    js = (await client.get("/static/js/motion.js")).text
+    assert ":not(.first-session-card):not(.program-banner):not(.program-card--lead)" in js
+
+
+async def test_static_js_versioned_and_hero_visible_on_first_paint(client):
+    html = (await client.get("/")).text
+    m = re.search(r'src="(/static/js/motion\.js\?v=[0-9a-f]{10})"', html)
+    assert m and (await client.get(m.group(1))).status_code == 200
+    assert 'src="/static/js/motion.js"' not in html
+    css = (await client.get("/static/css/style.css")).text
+    block = css.split(".hero__content > * {")[1].split("}")[0]
+    assert "opacity: 0" not in block and "0.25s" in block
+
+
+async def test_guide_aikijo_plan_heading_and_program_link(client):
+    r = await client.get("/guide/aikijo")
+    assert "Uzun vadeli öğrenme planı" in r.text and "Başlangıç programı (sıfırdan)" not in r.text
+    sect = r.text.split('id="program"')[1]
+    assert sect.index("Kısa ve günlük bir plan istersen: 30 Günlük Jo Suburi Programı →") < sect.index("<ol>")
+    assert "Long-term learning plan" in (await client.get("/guide/aikijo?lang=en")).text
+    assert "30-Day Jo Suburi Program →" not in (await client.get("/guide/bokken")).text.split('id="program"')[1].split("</div>")[0]

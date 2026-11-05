@@ -57,6 +57,7 @@
   <nav class="app-nav">
     {% if not waitlist_only %}
     <a href="/guide">{{ t.nav_guide }}</a>
+    <a href="/programs">{{ t.nav_programs }}</a>
     {% if user %}
     <a href="/app">{{ t.nav_practice }}</a>
     {% else %}
@@ -103,6 +104,7 @@
     {% else %}
     <a class="button" href="/register{% if ref %}?ref={{ ref }}{% endif %}">{{ t.cta_button_open }}</a>
     <p class="hero__login-hint">{{ t.cta_login_hint }} <a href="/login">{{ t.nav_login }}</a></p>
+    <p class="hero__program"><a href="/programs/30-day-jo-suburi">{{ t.nav_program_free }}</a></p>
     {% endif %}
   </div>
 </section>
@@ -173,6 +175,18 @@
     </div>
   </div>
 </section>
+
+{% if not waitlist_only %}
+<section class="program-teaser">
+  <h2>{{ t.landing_program_title }}</h2>
+  <p>{{ t.landing_program_body }}</p>
+  <p class="muted">{{ t.landing_program_weeks }}</p>
+  <ul>
+    {% for en, tr in program_weeks %}<li>{{ en if lang == 'en' else tr }}</li>{% endfor %}
+  </ul>
+  <a class="button" href="/programs/30-day-jo-suburi">{{ t.landing_program_button }}</a>
+</section>
+{% endif %}
 
 <section class="showcase">
   <div class="showcase__item">
@@ -247,8 +261,8 @@
   </a>
 </footer>
 
-<script src="/static/js/motion.js" defer></script>
-<script src="/static/js/analytics.js" defer></script>
-<script src="/static/js/install-prompt.js" defer></script>
+<script src="{{ asset('js/motion.js') }}" defer></script>
+<script src="{{ asset('js/analytics.js') }}" defer></script>
+<script src="{{ asset('js/install-prompt.js') }}" defer></script>
 </body>
 </html>

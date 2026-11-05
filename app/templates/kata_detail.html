@@ -36,6 +36,12 @@
   <div class="video-placeholder">{{ t.kata_video_soon }}</div>
   {% endif %}
   <p>{{ kata_desc }}</p>
+  {% if in_program %}
+  <div class="card program-box">
+    <p>{{ t.kata_in_program.format(week=in_program.week, days=in_program.days|join(', ')) }}</p>
+    <p><a href="/programs/30-day-jo-suburi">{{ t.kata_in_program_link }}</a></p>
+  </div>
+  {% endif %}
   {% if guide_available %}
   <p class="kata-guide-link"><a href="/guide/{{ kata.discipline }}">{{ t.kata_guide_link.format(d=t["discipline_" ~ kata.discipline]) }} →</a></p>
   {% endif %}

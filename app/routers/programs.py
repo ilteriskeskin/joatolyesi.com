@@ -129,9 +129,18 @@ async def _review_katas(db: AsyncSession, day_number: int) -> list[Kata]:
 
 
 @router.get("/programs", response_class=HTMLResponse)
-async def program_list(request: Request, user: User = Depends(require_user), db: AsyncSession = Depends(get_db)):
+async def program_list(
+    request: Request, user: User | None = Depends(get_current_user), db: AsyncSession = Depends(get_db)
+):
+    # Ziyaretçiye açık. Nav "Program" linki buraya gelir: tek yayımlı program varsa doğrudan ona gider
+    if user is not None and settings.pro_enabled and not is_pro(user):
+        raise ProRequired()
     result = await db.execute(select(Program).where(Program.is_published).order_by(Program.title_en))
-    return render(request, "program_list.html", user=user, programs=list(result.scalars().all()))
+    programs = list(result.scalars().all())
+    if len(programs) == 1:
+        qs = f"?{request.url.query}" if request.url.query else ""  # utm/lang düşmesin
+        return RedirectResponse(f"/programs/{programs[0].slug}{qs}", status_code=303)
+    return render(request, "program_list.html", user=user, programs=programs)
 
 
 @router.get("/programs/{slug}", response_class=HTMLResponse)
@@ -291,3 +300,21 @@ async def complete_day(
         set_pending_events(response, events)
         response.headers["location"] = f"/programs/{slug}?done={day_number}"
     return response
+
+
+def _kata_program_days() -> dict[str, dict]:
+    """Kata slug'ı -> programdaki hafta ve gün numaraları (seed.WEEKS'ten; DB sorgusu yok)."""
+    out: dict[str, dict] = {}
+    for first, last in [(1, 7), (8, 14), (15, 21), (22, 30)]:
+        week = _week_index(first) + 1
+        _, _, focuses = WEEKS[week - 1]
+        for day_number in range(first, last + 1):
+            if _is_review_day(day_number):
+                continue
+            slug = _focus_slug(focuses[(day_number - 1) % len(focuses)])
+            entry = out.setdefault(slug, {"week": week, "days": []})
+            entry["days"].append(day_number)
+    return out
+
+
+KATA_PROGRAM_DAYS = _kata_program_days()

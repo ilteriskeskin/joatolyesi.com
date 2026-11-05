@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.routers.programs import KATA_PROGRAM_DAYS
 from app.analytics import PRACTICE_SOURCES, practice_logged_params, set_pending_event
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
@@ -107,6 +108,7 @@ async def kata_detail(
         request, "kata_detail.html", user=user, kata=kata, logged=logged,
         repeat_count=repeat_count, related=related,
         guide_available=kata.discipline in GUIDE,
+        in_program=KATA_PROGRAM_DAYS.get(kata.slug) if kata.discipline == "aikijo" else None,
     )
 
 

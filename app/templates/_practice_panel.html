@@ -1,4 +1,28 @@
-{% if first_session_card %}
+{% if first_session_card and fs_program %}
+{% set fs = first_session_card %}
+<section class="card first-session-card" aria-labelledby="first-session-title">
+  <span class="card-label first-session-card__label">{{ t.first_session_program_label }}</span>
+  <h2 id="first-session-title" class="first-session-card__title">{{ t.first_session_program_title.format(name=(fs.kata.title_en if lang == 'en' else fs.kata.title_tr)) }}</h2>
+  <ol class="first-session-steps">
+    <li>{{ t.first_session_program_step_1 }}</li>
+    <li>{{ t.first_session_program_step_2 }}</li>
+    <li>{{ t.first_session_program_step_3 }}</li>
+  </ol>
+  <div class="first-session-card__actions">
+    <form method="post" action="/programs/{{ program_card.slug }}/enroll">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="button">{{ t.first_session_program_start }}</button>
+    </form>
+    <form method="post" action="/kata/{{ fs.kata.slug }}/log">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="minutes" value="10">
+      <input type="hidden" name="source" value="first_session">
+      <button type="submit" class="button button--outline">{{ t.first_session_program_skip }}</button>
+    </form>
+  </div>
+  <p class="first-session-card__alt"><a href="#log-form">{{ t.first_session_other_link }}</a></p>
+</section>
+{% elif first_session_card %}
 {% set fs = first_session_card %}
 <section class="card first-session-card" aria-labelledby="first-session-title">
   <span class="card-label first-session-card__label">{{ t.first_session_label }}</span>
@@ -28,13 +52,18 @@
     <a class="button" href="#log-form">{{ t.first_session_other_link }}</a>
   </div>
   {% endif %}
-  {% if fs.kata or fs.has_guide %}
+  {% if fs.kata or (fs.has_guide and not (program_card and fs.discipline == 'aikijo')) %}
   <p class="first-session-card__alt">
     {% if fs.kata %}{{ t.first_session_other }} <a href="#log-form">{{ t.first_session_other_link }}</a>{% endif %}
-    {% if fs.has_guide %}{% if fs.kata %} · {% endif %}<a href="/guide/{{ fs.discipline }}#program">{{ t.first_session_guide_link }}</a>{% endif %}
+    {% if fs.has_guide and not (program_card and fs.discipline == 'aikijo') %}{% if fs.kata %} · {% endif %}<a href="/guide/{{ fs.discipline }}#program">{{ t.first_session_guide_link }}</a>{% endif %}
   </p>
   {% endif %}
 </section>
+{% endif %}
+
+{% if program_card and user.discipline == 'aikijo' and not fs_program %}
+{% set lead = true %}
+{% include "_program_card.html" %}
 {% endif %}
 
 {% if milestone %}

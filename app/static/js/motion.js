@@ -2,7 +2,7 @@
 (function () {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var els = document.querySelectorAll(
-    ".problem__card, .feature-card, .device, .app-main .card, .guide-item, .guide-program, .social-proof__line, .cta2 h2"
+    ".problem__card, .feature-card, .device, .app-main .card:not(.first-session-card):not(.program-banner):not(.program-card--lead), .guide-item, .guide-program, .social-proof__line, .cta2 h2"
   );
   els.forEach(function (el, i) {
     el.classList.add("reveal");

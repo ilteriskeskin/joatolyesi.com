@@ -37,13 +37,14 @@
     if (typeof gtag === "function") gtag("event", {{ ga_event.name|tojson }}, {{ ga_event.params|tojson }});
     {% endfor %}
   </script>
-  <script src="/static/js/analytics.js" defer></script>
+  <script src="{{ asset('js/analytics.js') }}" defer></script>
   {% endif %}
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("/static/sw.js", { scope: "/" }));
     }
   </script>
+<noscript><style>.nav-more__menu{display:flex}.nav-more__btn{display:none}</style></noscript>
 </head>
 <body>
 
@@ -52,25 +53,32 @@
   {% if user %}
   <nav class="app-nav" :class="open && 'app-nav--open'">
     <a href="/app">{{ t.nav_practice }}</a>
+    <a href="/programs">{{ t.nav_programs }}</a>
     <a href="/kata">{{ t.nav_kata }}</a>
     <a href="/guide">{{ t.nav_guide }}</a>
-    <a href="/blog">{{ t.nav_blog }}</a>
-    <a href="/resources">{{ t.nav_resources }}</a>
-    <a href="/tips">{{ t.nav_tips }}</a>
-    <a href="/programs">{{ t.nav_programs }}</a>
     <a href="/practitioners">{{ t.nav_community }}</a>
     <a href="/profile">{{ t.nav_profile }}</a>
-    {% if pro_enabled %}
-    <a href="/billing" {% if user_is_pro %}class="pro-active"{% endif %}>{{ t.nav_pro }}</a>
-    {% endif %}
-    <form method="post" action="/logout" class="inline-form">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      <button type="submit" class="link-button">{{ t.nav_logout }}</button>
-    </form>
+    <div class="nav-more" x-data="{ more: false }" @keydown.escape.window="more = false" @click.outside="more = false">
+      <button type="button" class="nav-more__btn" :aria-expanded="more" aria-haspopup="true" aria-controls="nav-more-menu"
+              @click="more = !more">{{ t.nav_more }} <span aria-hidden="true">&#9662;</span></button>
+      <div id="nav-more-menu" class="nav-more__menu" :class="more && 'is-open'">
+        <a href="/blog">{{ t.nav_blog }}</a>
+        <a href="/resources">{{ t.nav_resources }}</a>
+        <a href="/tips">{{ t.nav_tips }}</a>
+        {% if pro_enabled %}
+        <a href="/billing" {% if user_is_pro %}class="pro-active"{% endif %}>{{ t.nav_pro }}</a>
+        {% endif %}
+        <form method="post" action="/logout" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="link-button">{{ t.nav_logout }}</button>
+        </form>
+      </div>
+    </div>
   </nav>
   {% else %}
   <nav class="app-nav" :class="open && 'app-nav--open'">
     {% if not waitlist_only %}
+    <a href="/programs">{{ t.nav_programs }}</a>
     <a href="/login">{{ t.nav_login }}</a>
     <a href="/register">{{ t.nav_register }}</a>
     {% endif %}
@@ -109,7 +117,7 @@
   </div>
 </footer>
 
-<script src="/static/js/motion.js" defer></script>
-<script src="/static/js/install-prompt.js" defer></script>
+<script src="{{ asset('js/motion.js') }}" defer></script>
+<script src="{{ asset('js/install-prompt.js') }}" defer></script>
 </body>
 </html>

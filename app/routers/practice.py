@@ -14,7 +14,7 @@ from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.guide_content import get_guide
 from app.deps import csrf_protect, is_pro, require_user, waitlist_gate
-from app.models import Enrollment, Kata, PracticeLog, ProgramDay, User
+from app.models import Enrollment, Kata, PracticeLog, Program, ProgramDay, User
 from app.rate_limit import limiter
 from app.badges import BELTS, compute_badges, compute_belts
 from app.render import render
@@ -107,7 +107,23 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
                 and completed_new_day_today(enrollment.completed_days)
             )
 
+    # Programa kayıtlı olmayana program kartı (kayıtlıda mevcut banner kalır)
+    program_card = None
+    if enrollment is None and (not settings.pro_enabled or is_pro(user)):
+        program_card = (
+            await db.execute(select(Program).where(Program.slug == "30-day-jo-suburi", Program.is_published))
+        ).scalar_one_or_none()
+
     first_session_card = await _first_session_card(db, user)
+    # aikijo + pratiği yok + kayıtsız: ilk seans kartı programın 1. günü olur (tek kart);
+    # ayrı program kartı ve "başlangıç programı" linki gösterilmez
+    fs_program = bool(
+        first_session_card
+        and program_card
+        and first_session_card["discipline"] == "aikijo"
+        and first_session_card["kata"] is not None
+        and first_session_card["kata"].slug == "choku-tsuki"
+    )
 
     return {
         "first_session_card": first_session_card,
@@ -127,6 +143,8 @@ async def dashboard_context(db: AsyncSession, user: User) -> dict:
         "current_day": current_day,
         "program_opens_tomorrow": program_opens_tomorrow,
         "current_day_obj": current_day_obj,
+        "program_card": program_card,
+        "fs_program": fs_program,
         "today": datetime.now(UTC).date().isoformat(),
         "today_max": (datetime.now(UTC).date() + timedelta(days=1)).isoformat(),
         "disciplines": SELECTABLE_DISCIPLINES,
