@@ -2,9 +2,10 @@
 
 - Tarih: 2026-11-05 · Hazırlayan: growth-marketer · Durum: **taslak**. Hiçbir yere paylaşılmadı, paylaşımı İlteriş yapacak.
 - Temel alınan: `2026-11-03-instagram-hunisi.md` (UTM kuralları §2, teşhis §1, ölçüm §7). Burada tekrar yazılmadı, yalnız bu kampanyaya özel kısımlar var.
-- Program içeriği (app/seed.py: `WEEKS`, `_build_program_days`): 4 haftalık tema (Tsuki temelleri, Uchikomi vuruş haftası, Katate & hasso gaeshi, 31'lik kataya akış). Her 7. gün tekrar günü. Normal gün: 5 dk ısınma + ana çalışma (3 set x 20 tekrar, son set daha yavaş) + seansı kaydet. Program açıklaması "günde 15-25 dk" diyor.
+- Program içeriği (app/seed.py: `WEEKS`, `_build_program_days`): 4 haftalık tema (Tsuki temelleri, Uchikomi vuruş haftası, Katate & hasso gaeshi, Nagare gaeshi). Her 7. gün tekrar günü. Normal gün: 5 dk ısınma + ana çalışma (3 set x 20 tekrar, son set daha yavaş) + seansı kaydet. Program açıklaması "günde yaklaşık 10-20 dk" diyor (fact-check 2026-11-05 sonrası).
+- **Konumlandırma (PO kararı, 2026-11-05):** Program bir *ev çalışması planı*; hareketleri öğretmiyor. Hedef kitle, suburi'yi bir hocadan öğrenmiş ya da öğrenmekte olan ve dojo dışında düzenli çalışmak isteyenler. "Sıfırdan jo öğren", "dojo gerekmez", "hocasız" gibi ifadeler **kullanılmaz**.
 - Rakam yok: kullanıcı sayısı, izlenme, "binlerce kişi" gibi iddia kullanılmadı. `<N>` gibi yerlere İlteriş **gerçek** değerini yazar.
-- `[fact-check]`: bu belgede **hiç teknik dövüş sanatı iddiası yok**. Metinler yalnız programın yapısını (gün sayısı, süre, set/tekrar, hafta teması) anlatıyor, bunlar ürünün kendi içeriği. Tek not: programın hafta açıklamaları (seed'deki "saplamalar, vuruşlar, dönüş formları, akış") ve gün içerikleri fact-checker'dan geçmedi. Kampanya metni bunlara teknik ayrıntı eklemiyor, ama sayfada ne yazıyorsa onun denetimi ayrı iş.
+- `[fact-check]`: bu belgede **hiç teknik dövüş sanatı iddiası yok**. Metinler yalnız programın yapısını (gün sayısı, süre, set/tekrar, hafta teması) anlatıyor, bunlar ürünün kendi içeriği. Tek not: programın hafta açıklamaları (program metni 2026-11-05'te fact-checker'dan geçti ve düzeltildi: content/verified/2026-11-05-30-gun-jo-programi.md). Kampanya metni bunlara teknik ayrıntı eklemiyor, ama sayfada ne yazıyorsa onun denetimi ayrı iş.
 
 ## 0. Başlamadan önce: iki bağımlılık (önemli)
 
@@ -22,7 +23,7 @@ Karakter sayıları Python `len` ile, satır sonları dahil (≤150). Emoji yok.
 **Seçenek A (önerilen):**
 
 ```
-30 günde jo suburi: günde 15-25 dk, ücretsiz program ↓
+Dojo dışı 30 günlük jo suburi planı, ücretsiz ↓
 Daily jo & bokken practice.
 Aiki-jo · aiki-ken · solo pratik
 ```
@@ -55,7 +56,7 @@ Genel kural: ekran metni 8 kelimeyi geçmesin; ilk 2 sn'de metin ekranda olsun, 
 
 | Gün | Biçim | Kanca (ilk 2 sn) | Ekran metni | Açıklama / story CTA (TR) | Story URL |
 |---|---|---|---|---|---|
-| D1 | Reels + story | Jo'yu kameraya doğru uzat, doğrudan konuş: "30 gün. Her gün jo." | "30 gün · günde 15-25 dk · ücretsiz" | "30 günlük jo suburi programı açıldı. Dört haftalık plan, günde 15-25 dakika, ücretsiz. Link bio'da." | `...campaign=story-30-gun-jo-d1` |
+| D1 | Reels + story | Jo'yu kameraya doğru uzat, doğrudan konuş: "30 gün. Her gün jo." | "30 gün · dojo dışı çalışma · ücretsiz" | "Hocandan öğrendiğin suburi'yi dojo dışında düzenli çalışmak için 30 günlük plan. Günde yaklaşık 10-20 dakika, ücretsiz. Link bio'da." | `...campaign=story-30-gun-jo-d1` |
 | D2 | Story | Telefon ekran kaydı: program sayfası kaydırılıyor | "Program böyle görünüyor" | "Dört hafta, her haftanın bir teması var. Sayfaya buradan bak." (sticker) | `...story-30-gun-jo-d2` |
 | D3 | Reels + story | Ekranda "Gün 1" yazısı, jo yerden kalkıyor | "Gün 1: 5 dk ısınma, 3 set" | "Programın ilk günü böyle başlıyor: ısınma, sonra 3 set x 20 tekrar. Hepsi sitede, link bio'da." | `...story-30-gun-jo-d3` |
 | D4 | Story | Kameraya: "Jo'yu en son ne zaman eline aldın?" + soru çıkartması | "En son ne zaman?" | "Cevabını yaz. 30 günlük programın linki burada." | `...story-30-gun-jo-d4` |
@@ -63,12 +64,12 @@ Genel kural: ekran metni 8 kelimeyi geçmesin; ilk 2 sn'de metin ekranda olsun, 
 | D6 | Story | Kendi serini/ilerlemeni göster (telefon ekranı, gerçek) | "Gün <N>" | "Ben de çalışıyorum, her günü kaydediyorum. Sen de başla." (sticker) | `...story-30-gun-jo-d6` |
 | D7 | Reels + story | Hafif tempoda tekrar: "Yeni bir şey yok. Sadece yavaş tekrar." | "7. gün: tekrar günü" | "Her yedinci gün tekrar günü: yarı hız, tam dikkat. Bütün plan sitede, link bio'da." | `...story-30-gun-jo-d7` |
 | D8 | Story | İkinci hafta temasını göster: ekranda "Hafta 2: vuruş haftası" | "Hafta 2: uchikomi" | "İkinci hafta vuruşlara geçiyor. İlk haftayı kaçırdıysan hâlâ 1. günden başlayabilirsin." (sticker) | `...story-30-gun-jo-d8` |
-| D9 | Reels + story | Ekranda "Hafta 2" yazısı, bir uchikomi tekrarı | "Hafta 2 başlıyor" | "Programın ikinci haftası: uchikomi. Günde 15-25 dakika. Link bio'da." | `...story-30-gun-jo-d9` |
+| D9 | Reels + story | Ekranda "Hafta 2" yazısı, bir uchikomi tekrarı | "Hafta 2 başlıyor" | "Programın ikinci haftası: uchikomi. Günde yaklaşık 10-20 dakika. Link bio'da." | `...story-30-gun-jo-d9` |
 | D10 | Story | Soru çıkartması: "30 gün sence en zor nerede kopar?" | "Nerede kopar?" | "Cevapla, sonra programın kayıt/seri takibini gör." (sticker) | `...story-30-gun-jo-d10` |
-| D11 | Reels + story | Boş bahçe/oda planı, sonra jo: "Dojo yok mu? Program yine de var." | "Dojo kapalı. Program açık." | "Evde, bahçede, 15-25 dakikada yapılacak bir plan. Ücretsiz, link bio'da." | `...story-30-gun-jo-d11` |
+| D11 | Reels + story | Boş bahçe/oda planı, sonra jo: "Dojo günü değil mi? Çalışma yine de var." | "Dojo arası günler için" | "Dojo'da öğrendiğini evde, bahçede pekiştirmek için 10-20 dakikalık plan. Ücretsiz, link bio'da." | `...story-30-gun-jo-d11` |
 | D12 | Story | Ekranda "Hafta 3: katate & hasso gaeshi" | "Hafta 3'e hazırlık" | "Üçüncü hafta geliyor. Şimdi başlarsan hafta hafta yetişirsin." (sticker) | `...story-30-gun-jo-d12` |
 | D13 | Reels + story | **Yalnız gerçekten yapıyorsa:** "İki haftadır programdayım." + telefonda gerçek gün sayın | "Gün <N>: ne değişti?" | "İki hafta notum: <İlteriş kendi gözlemini tek cümleyle yazar>. Programı sen de başlat, link bio'da." | `...story-30-gun-jo-d13` |
-| D14 | Story | Kameraya: "Bu hafta başlayan olursa 4. haftaya birlikte varırız." | "Hafta 4: 31'lik kataya akış" | "Son hafta 31'lik kataya akışla bitiyor. Başlamak için link burada." (sticker) | `...story-30-gun-jo-d14` |
+| D14 | Story | Kameraya: "Bu hafta başlayan olursa 4. haftaya birlikte varırız." | "Hafta 4: nagare gaeshi" | "Son hafta nagare gaeshi ile bitiyor. Başlamak için link burada." (sticker) | `...story-30-gun-jo-d14` |
 
 Notlar:
 - D6 ve D13 İlteriş'in **gerçek** ilerlemesine bağlı. Programı gerçekten yapmıyorsa bu iki günü "program sayfası" ekran kaydıyla değiştir; "ben de yapıyorum" deme.
@@ -83,9 +84,9 @@ Instagram'da bir gönderide en fazla 3 yorum sabitlenir. Yorumlardaki bağlantı
 
 Hangi videolara: en çok izlenen jo videolarının 3'ünde (ya da en çok izlenen, jo içeren 1 videoda 3 yorum), İlteriş kendi hesabından yazıp sabitler. Yorumlar birbirini tekrar etmesin diye 3 farklı videoya dağıtmak daha doğal.
 
-1. **Program tanıtımı:** `Bu videodaki çalışmayı 30 günlük bir plana çevirdim: günde 15-25 dk, ücretsiz. Link bio'da. Ya da "link" yaz, DM atayım.`
+1. **Program tanıtımı:** `Dojo dışında bu tür suburi'yi düzenli çalışmak için 30 günlük bir plan hazırladım: günde 10-20 dk, ücretsiz. Link bio'da. Ya da "link" yaz, DM atayım.`
 2. **Soru:** `Jo'yu günde kaç dakika çalışıyorsunuz? Ben 30 günlük bir program hazırladım, ücretsiz. Link bio'da.`
-3. **Başlangıç:** `Sıfırdan başlamak ya da yeniden başlamak isteyen için 30 günlük jo programı var: hafta hafta tema, her gün kayıt. Link bio'da, "link" yazarsan DM atarım.`
+3. **Başlangıç:** `Suburi'yi dojoda öğrenmiş ama evde düzenli çalışamayanlar için 30 günlük plan var: hafta hafta tema, her gün kayıt. Link bio'da, "link" yazarsan DM atarım.`
 
 ("Bu videodaki çalışmayı" ifadesi yalnız videonun gerçekten programın bir temasıyla ilgili olduğu durumda kullanılmalı; değilse 2 ya da 3 numarayı seç.)
 
@@ -160,16 +161,16 @@ Dayanak yalnız bu: başlangıçta instagram ~5 oturum / 28 gün, kayıtlı ger�
 
 ## 6. EN versiyon (kısa)
 
-**Bio (EN):** `Free 30-day jo suburi program ↓ / 15-25 min a day / Solo aiki-jo · aiki-ken practice`
+**Bio (EN):** `Free 30-day jo suburi plan for between-class practice ↓ / Aiki-jo · aiki-ken`
 **Bio link:** same as §1 (`campaign=bio`).
 
 **Pin comments (EN):**
-1. `I turned this practice into a 30-day plan: 15-25 min a day, free. Link in bio, or comment "link" and I'll DM you.`
+1. `A 30-day plan to practice suburi between classes: 10-20 min a day, free. Link in bio, or comment "link" and I'll DM you.`
 2. `How many minutes a day do you train with the jo? I made a free 30-day program. Link in bio.`
 3. `Starting from zero or coming back? There's a 30-day jo program: one theme per week, log every day. Link in bio.`
 
 **14-day plan, one line each** (story URL pattern is identical for all days: `.../programs/30-day-jo-suburi?utm_source=instagram&utm_medium=social&utm_campaign=story-30-gun-jo-dN`):
-- D1 reel: "30 days. Every day, the jo." Caption: "30-day jo suburi program is live. Four weeks, 15-25 min a day, free. Link in bio."
+- D1 reel: "30 days. Every day, the jo." Caption: "30-day jo suburi program is live. For between-class practice, about 10-20 min a day, free. Link in bio."
 - D2 story: screen recording of the program page.
 - D3 reel: "Day 1: 5 min warm-up, 3 sets." D4 story: question sticker ("When did you last pick up the jo?").
 - D5 reel: "Third set is slower. On purpose." D6 story: your real day count.
