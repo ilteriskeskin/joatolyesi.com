@@ -32,7 +32,7 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 ## İçerik (her biri: content-writer → fact-checker → developer)
 
 - [ ] **B-11 TODO §3b araştırma listesi:** 13 no jo kata adımları, 31 no jo bölüm dökümü, aiki-ken 2-7 suburi tanımları. Yalnız güçlü kaynakla.
-- [ ] **B-12 Mevcut içerik denetimi:** guide_content.py ve blog yazılarındaki iddiaların örneklem denetimi (fact-checker, her sprint 3 iddia).
+- [ ] **B-12 Mevcut içerik denetimi:** _2026-11-05: jo yazısında 3 iddia denetlendi, üçü düzeltme gerektirdi → content/verified/2026-11-05-jo-yazisi-duzeltme.md (seed'e uygulanması B-19)._ guide_content.py ve blog yazılarındaki iddiaların örneklem denetimi (fact-checker, her sprint 3 iddia).
 - [ ] **B-13 SEO odaklı rehber yazıları:** B-05 haritasındaki en iyi 5 sorgu için birer sayfa.
 
 ## Arama
@@ -45,7 +45,9 @@ eklenebilir; tamamlanan iş `[x]` ile işaretlenip rapora bağlanır.
 
 - [x] **B-16 Blog gövdelerinde demo kişiye ait birinci şahıs ifadeler.** Örn. jo yazısındaki "Benim için cevap basit…" cümlesi artık "Joryu Ekibi" imzasıyla tutarsız. content-writer nötrleştirir → fact-checker → developer. Seed mevcut yazıyı güncellemediği için prod satırı için tek seferlik UPDATE gerekir (İlteriş). _✓ 2026-11-04 jo yazısı (a571ef9); prod SQL İlteriş'te. Karate/taekwondo yazıları kalıyor (İlteriş kararı)._ Kapsam dışı jo iddiaları (128 cm, 20 suburi vb.) audit-log'da sonraki denetim adayı.
 
+- [ ] **B-19 Jo yazısı düzeltmelerini uygula.** content/verified/2026-11-05-jo-yazisi-duzeltme.md (satır 45, 54, 58, 202) seed_blog.py'ye; prod için idempotent UPDATE SQL (İlteriş çalıştırır). Sorumlu: developer → qa-reviewer.
+
 ## Bakım
 
-- [ ] **B-17 Test izolasyonu.** `tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Sorumlu: developer.
+- [x] **B-17 Test izolasyonu.** _✓ 2026-11-05 (dalda; seed edilen test kullanıcıları teardown'da siliniyor, aynı DB'de 11 koşu yeşil)._ `tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Sorumlu: developer.
 - [x] **B-18 Sitemap'e blog yazıları.** _✓ 2026-11-04 (81facbd, dalda); karate/taekwondo da dahil edildi (132e99a, İlteriş kararı)._ Sitemap blog yazılarını içermiyor; karate/taekwondo kata sayfaları da yok (İlteriş kararı bekliyor). Sorumlu: developer. Puan 4×4/1.
