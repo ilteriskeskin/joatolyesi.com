@@ -62,10 +62,22 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - [x] **B-20 30 günlük jo programı ücretsiz.** _✓ 2026-11-05 (4abea57, 380ce28); program metni fact-check ile düzeltildi; prod SQL İlteriş'te. Küçük not: 4. haftada ilk gün suburi 20, sonra 19 geliyor (yorumdaki sıranın tersi) — sonraki içerik turunda düzeltilebilir._ Pro kapalıyken program giriş yapan herkese açık; `/programs/30-day-jo-suburi` ziyaretçiye açık açılış sayfası + kayıt CTA'sı (`next` ile geri dönüş); gün → kata linkleri; GA4 `program_enroll`, `program_day_complete`. Sorumlu: developer → qa-reviewer.
 - [x] **B-24 Program içinde hareket videoları ve program bütünlüğü.** _✓ 2026-11-05 (25b8a92)._ Gün sayfasında odak suburi'nin videosu ve açıklaması, tekrar gününde haftanın videoları, takvim kilidi, tamamlamada PracticeLog, açılış sayfasında 1. gün önizlemesi + "hocadan öğrenmiş olmalısın" notu.
 - [x] **B-25 Programın keşfedilebilirliği ve dashboard sadeleştirme.** _✓ 2026-11-05 (cb0eb1e)._
-- [ ] **B-26 Landing gün sayacı doğrulaması.** Hero'da "452 gün aralıksız çalışmış bir pratisyenden" sayısı `PRACTICE_START=2025-08-11`'den hesaplanıyor (render.py), DB'den değil. İlteriş gerçekten aralıksız çalıştıysa doğru; değilse ya sahip hesabının gerçek serisine bağlanmalı ya da kaldırılmalı. Karar İlteriş'te.
+- [x] **B-26 Landing gün sayacı doğrulaması.** _İlteriş 2026-11-05: doğru (aralıksız çalışıyor). Uygulamadaki serisi `scripts/backfill_practice.py` ile doldurulacak._ Hero'da "452 gün aralıksız çalışmış bir pratisyenden" sayısı `PRACTICE_START=2025-08-11`'den hesaplanıyor (render.py), DB'den değil. İlteriş gerçekten aralıksız çalıştıysa doğru; değilse ya sahip hesabının gerçek serisine bağlanmalı ya da kaldırılmalı. Karar İlteriş'te.
 - [ ] **B-21 Instagram 30 gün kampanyası.** Bio, 14 günlük takvim, pin yorumlar, DM şablonu, UTM. Sorumlu: growth-marketer → İlteriş.
 - [ ] **B-22 Program e-posta dizisi.** Gün 1/3/7 hatırlatma; kaldığı güne link. Sorumlu: developer.
 - [ ] **B-23 Hoca/dojo pilotu.** Grup + haftalık ödev + öğrenci ilerleme görünümü. Önce İlteriş'in dojosu. Sorumlu: PO (tasarım) + developer.
+
+## Günlük platform (İlteriş vizyonu, 2026-11-05): "Dövüş sanatçılarının her gün açtığı platform"
+
+İlke: düzenliliği ödüllendir, cezalandırma; her gün girmek için *faydalı* bir sebep ver (bildirim spam'i değil).
+
+- [x] **B-27 Seri "2 günde 1" + kuşak eşikleri yarıya + hatırlatmalar varsayılan açık (yeni kayıtta) + abonelikten çık + Günün tekniği kartı.** _✓ 2026-11-05 (ceac461)._
+- [ ] **B-28 Seans notu / antrenman günlüğü.** Kayda kısa not ve "bugün ne çalıştın" etiketleri; geçmişte arama. Dojo sonrası not alma alışkanlığı en güçlü günlük sebep.
+- [ ] **B-29 Haftalık meydan okuma.** Her hafta bir teknik ("bu hafta: kaeshi tsuki, 5 gün"). Katılanlar listesi yalnız gerçek kullanıcılar, sahte katılım yok.
+- [ ] **B-30 Takip akışı.** Takip ettiklerinin bugünkü pratikleri (açık profiller), "tebrik" tepkisi. Topluluk sayfasını günlük sebebe çevirir.
+- [ ] **B-31 Günün ipucu.** tips_content.py içeriği dashboard'da günlük döner (fact-check edilmiş içerik).
+- [ ] **B-32 Push bildirimleri.** Altyapı var (push.py, VAPID). İzin isteme anını iyileştir: ilk pratik kaydından sonra sor, sayfa açılışında değil.
+- [ ] B-23 Hoca/dojo pilotu (yukarıda) bu vizyonun ikinci ayağı.
 
 ## Bakım
 
