@@ -11,7 +11,7 @@ Sıra:
 1. **B-20** 30 günlük jo programı ücretsiz + Instagram açılış sayfası (sprint 2026-11-05b).
 2. **B-21** Instagram kampanyası (growth-marketer taslak → İlteriş paylaşır, 14 gün).
 3. **B-22** Program e-posta dizisi: kayıt/enroll sonrası gün 1, 3, 7 hatırlatma ("dün kaldığın gün"). Resend çalışıyor.
-4. ~~B-23 Hoca/dojo pilotu~~ → **ertelendi (İlteriş 2026-11-06: anlaşılmış dojo yok).** Yerine B-33..B-35 öğrenme yolu (aşağıda).
+4. ~~B-23 Hoca/dojo pilotu~~ → **ertelendi (İlteriş 2026-11-06: anlaşılmış dojo yok).** Yerine B-33/B-35 öğrenme yolu tavsiyeleri (aşağıda).
 5. B-07, B-08, B-13 (organik kanal) bunlardan sonra.
 
 Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 günlük hedef sunulursa kayıt ve 7. gün geri dönüş artar.
@@ -77,7 +77,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - [ ] **B-30 Takip akışı.** Takip ettiklerinin bugünkü pratikleri (açık profiller), "tebrik" tepkisi. Topluluk sayfasını günlük sebebe çevirir.
 - [ ] **B-31 Günün ipucu.** tips_content.py içeriği dashboard'da günlük döner (fact-check edilmiş içerik).
 - [ ] **B-32 Push bildirimleri.** Altyapı var (push.py, VAPID). İzin isteme anını iyileştir: ilk pratik kaydından sonra sor, sayfa açılışında değil.
-- [ ] ~~B-23~~ ertelendi; vizyonun ikinci ayağı şimdilik B-33..B-35 (öğrenme yolu + topluluk).
+- [ ] ~~B-23~~ ertelendi; vizyonun ikinci ayağı şimdilik topluluk (B-29/B-30) + program tavsiyeleri (B-33/B-35).
 
 ## Bakım
 
@@ -90,16 +90,12 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 
 **Konumlandırma değişti.** 2026-11-05 PO kararında "program hareketleri öğretmiyor; hocadan öğrenmiş olmalısın, 'hocasız' denmez" deniyordu. Bu karar artık geçersiz. Yeni çerçeve: kendi kendine öğrenme + topluluk desteği, temelden başlayarak. Ancak güvenlik notu kalır (ısınma, yavaş başla, ağrıda dur). "Hocaya gerek yok" gibi bir vaat de verilmez; dürüst ifade "hocan yoksa buradan, temelden başla" olur. Kampanya taslağı (B-21) ve program açılış sayfası metni buna göre güncellenmeli (content-writer → fact-checker).
 
-Uygulama kuralları (orkestratör kararı; İlteriş seçimleri Claude'a bıraktı, değiştirmek isterse burada güncellenir):
-- **Tekrar:** Bir hareket kaydı en az 10 tekrar. Pratik kaydına isteğe bağlı değil, hareket kaydında zorunlu `reps` alanı (≥10). Rest-day ve serbest "diğer" kayıtlarında yok.
-- **"Vuruş tamamlandı" tanımı:** Bir suburi, en az **3 farklı günde** her biri ≥10 tekrarla kaydedildiğinde tamamlanır. Tek seferlik 10 tekrar öğrenme sayılmaz. 3 gün, 30 günlük programın haftalık temposuyla uyumlu.
-- **Kata kilidi:** Bir branşın katasını *kaydetmek* için o branşın tüm suburi'leri tamamlanmış olmalı (aiki-jo: 20 jo suburi; aiki-ken: 7 bokken suburi). Kata sayfaları **okunur kalır** (SEO ve merak), kilitli olan yalnız "Bugün bunu çalıştım" ve programda/dashboard'da kata önerisi. Kilit mesajı: kalan suburi listesi + ilerleme ("20'den 12'si tamam").
-- **Mevcut kullanıcılar:** Eski kayıtlarda tekrar sayısı yok. Daha önce bir suburi'yi kaydetmiş olanlar o kayıtlar için tekrar ≥10 kabul edilir (geçmişi silmeyiz, cezalandırmayız). Kilit yalnız yeni kata kaydında uygulanır.
+**Revizyon (İlteriş, 2026-11-06, aynı gün):** Tekrar sayacı ve kata kilidi **yok**. Amaç kullanımı artırmak/kolaylaştırmak; sayı istemek kaydı zorlaştırır, tecrübeli kişi katayı zaten çalışabilir. Kurallar yalnız **tavsiye** ve yalnız **30 günlük programa sıfırdan başlayanlar** için. Pratik kaydı, kata sayfaları ve kata kaydı olduğu gibi kalır.
 
 İşler:
-- [ ] **B-33 Tekrar sayısı.** PracticeLog'a `reps` (migration), hareket kaydında ≥10 doğrulaması, program gününde "3 set × 20" gibi önerinin altında kayıt. GA4 `practice_logged`'a `reps`. Sorumlu: developer → qa-reviewer. Puan 4×4/2.
-- [ ] **B-34 Öğrenme yolu ve kata kilidi.** Branş başına suburi ilerlemesi (3 gün × ≥10 tekrar), dashboard'da "Yolun: 20 suburi'den N'i tamam", kata kaydında kilit + kalanlar listesi. B-33'e bağlı. Suburi sırası ve listesi yalnız `content/verified/` (fact-checker). Sorumlu: PO (akış) → fact-checker (liste) → developer → qa-reviewer. Puan 5×4/3.
-- [ ] **B-35 Konumlandırma metinleri.** Program açılış sayfası, landing hero alt metni ve B-21 kampanya taslağı "kendi kendine, temelden, toplulukla" çerçevesine; güvenlik notu korunur. Sorumlu: content-writer → fact-checker → developer. Puan 3×4/1.
-- Bağlantı: B-29 haftalık meydan okuma ve B-30 takip akışı "topluluk hocalığı" ayağı; B-34'ten sonra öne alınır.
+- [ ] **B-33 Program içi tavsiyeler.** 30 günlük jo programında görünür tavsiye: "Her hareketi en az 10 tekrar çalış" ve "Önce temel vuruşlar: katalara programı bitirdikten sonra geç". Yerler: program açılış sayfası (kimin için olduğu), 1. gün, program bitiş ekranı ("Sırada katalar" → aiki-jo kata listesi linki). Zorunluluk, kilit, yeni alan, migration yok. Metin content-writer → fact-checker; uygulama developer → qa-reviewer. Puan 3×4/1.
+- [ ] **B-35 Konumlandırma metinleri.** Program açılış sayfası, landing hero alt metni ve B-21 kampanya taslağı "hocan yoksa buradan, temelden başla; topluluk yanında" çerçevesine; güvenlik notu korunur. B-33 ile aynı içerik turunda yapılabilir. Sorumlu: content-writer → fact-checker → developer. Puan 3×4/1.
+- ~~B-34 Öğrenme yolu ve kata kilidi~~ — iptal (İlteriş 2026-11-06).
+- Bağlantı: B-29 haftalık meydan okuma ve B-30 takip akışı "topluluk hocalığı" ayağı.
 
-Önerilen sıra: B-33 → B-34 → B-35 (B-35 küçük, B-33 ile aynı güne girebilir) → B-32 → B-28 → B-29/B-30.
+Önerilen sıra: B-33 + B-35 (tek içerik turu) → B-32 → B-28 → B-29/B-30.
