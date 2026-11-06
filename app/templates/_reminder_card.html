@@ -1,0 +1,16 @@
+<section class="card reminder-card" aria-labelledby="reminder-card-title">
+  <span class="card-label" id="reminder-card-title">{{ t.reminder_card_label }}</span>
+  <p>{{ t.reminder_card_text }}</p>
+  <div class="reminder-card__actions">
+    <form method="post" action="/app/reminders/enable">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      {% if reminder_next %}<input type="hidden" name="next" value="{{ reminder_next }}">{% endif %}
+      <button type="submit" class="button">{{ t.reminder_card_on }}</button>
+    </form>
+    <form method="post" action="/app/reminders/dismiss">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      {% if reminder_next %}<input type="hidden" name="next" value="{{ reminder_next }}">{% endif %}
+      <button type="submit" class="link-button">{{ t.reminder_card_later }}</button>
+    </form>
+  </div>
+</section>

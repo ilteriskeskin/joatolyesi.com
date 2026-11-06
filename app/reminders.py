@@ -6,7 +6,7 @@ bağlantısı. Kişiselleştirme sırası:
 Sayı yalnız gerçek seri değeridir; uydurma sayı yok."""
 
 import html as _html
-from datetime import date
+from datetime import UTC, date
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -60,8 +60,23 @@ async def _open_program_day(db: AsyncSession, user: User) -> tuple[Enrollment, P
     return enrollment, day, number
 
 
-async def select_reminder(db: AsyncSession, user: User, today: date, info: dict) -> dict:
-    """Mail ve push ortak seçim: kind + gereken alanlar. info: stats.streak_info."""
+# Enroll'dan sonraki bu takvim günlerinde "kaldığın yerden devam" maili (yalnız e-posta)
+COMEBACK_STEPS = (1, 3, 7)
+
+
+def comeback_step(enrollment: Enrollment, today: date) -> int | None:
+    """Bugün dizi adımıysa ve o adım daha gönderilmediyse adım (1/3/7), yoksa None."""
+    if enrollment.created_at is None:
+        return None
+    age = (today - enrollment.created_at.astimezone(UTC).date()).days
+    if age in COMEBACK_STEPS and age > enrollment.last_comeback_step:
+        return age
+    return None
+
+
+async def select_reminder(db: AsyncSession, user: User, today: date, info: dict, comeback: bool = False) -> dict:
+    """Mail ve push ortak seçim: kind + gereken alanlar. info: stats.streak_info.
+    comeback=True yalnız e-postada: gün 1/3/7'de "program_comeback" günlük hatırlatmanın yerine geçer."""
     lang = user.lang or "tr"
     last_day = bool(info.get("last_day"))
     freeze = bool(info.get("last_day_freeze"))
@@ -71,6 +86,11 @@ async def select_reminder(db: AsyncSession, user: User, today: date, info: dict)
         t = get_strings(lang)
         if day is not None:
             focus = t["program_review_label"] if number % 7 == 0 else (day.title_en if lang == "en" else day.title_tr)
+            step = comeback_step(enrollment, today) if comeback else None
+            if step is not None:
+                return {"kind": "program_comeback", "n": number, "focus": focus, "last_day": last_day,
+                        "freeze": freeze, "day_path": f"/programs/{enrollment.program.slug}/day/{number}",
+                        "enrollment_id": enrollment.id, "step": step}
             return {"kind": "program", "n": number, "focus": focus, "last_day": last_day, "freeze": freeze,
                     "day_path": f"/programs/{enrollment.program.slug}/day/{number}"}
     if last_day:
@@ -91,9 +111,16 @@ async def build_reminder(db: AsyncSession, user: User, today: date, info: dict) 
     t = get_strings(user.lang or "tr")
     base = settings.base_url
     footer = t["mail_unsub_footer"].format(unsub=unsubscribe_url(user))
-    sel = await select_reminder(db, user, today, info)
+    sel = await select_reminder(db, user, today, info, comeback=True)
     key = _last_day_key(sel)
-    if sel["kind"] == "program":
+    if sel["kind"] == "program_comeback":
+        html = t["mail_comeback_body"].format(
+            n=sel["n"], focus=_html.escape(sel["focus"]), day_link=base + sel["day_path"]
+        )
+        if sel["last_day"]:
+            html += t[f"mail_reminder_{key}_line"]
+        subject = t["mail_comeback_subject"].format(n=sel["n"])
+    elif sel["kind"] == "program":
         html = t["mail_reminder_program_body"].format(
             n=sel["n"], focus=_html.escape(sel["focus"]), day_link=base + sel["day_path"]
         )
@@ -109,7 +136,10 @@ async def build_reminder(db: AsyncSession, user: User, today: date, info: dict) 
     else:
         subject = t["mail_reminder_subject"]
         html = t["mail_reminder_body"].format(link=f"{base}/app")
-    return {"kind": sel["kind"], "subject": subject, "html": html + footer}
+    out = {"kind": sel["kind"], "subject": subject, "html": html + footer}
+    if sel["kind"] == "program_comeback":
+        out["enrollment_id"], out["step"] = sel["enrollment_id"], sel["step"]
+    return out
 
 
 async def build_push(db: AsyncSession, user: User, today: date, info: dict) -> dict:

@@ -1,7 +1,7 @@
 """Günlük pratik hatırlatması: BUGÜN pratik kaydetmemiş kullanıcılara
 kısa bir hatırlatma — e-posta (opt-in: reminders_enabled) ve/veya push
 bildirimi (opt-in: aktif bir PushSubscription varlığı). E-posta içeriği
-kişiseldir (program günü / "bugün son gün" / günün tekniği), bkz. app/reminders.py.
+kişiseldir (program günü / enroll sonrası gün 1/3/7 "kaldığın yerden devam" / "bugün son gün" / günün tekniği), bkz. app/reminders.py.
 
 Cron (sunucuda, akşam 18:00 UTC ≈ 21:00 TR):
     0 18 * * * docker compose --project-directory /root/joryu exec -T app \
@@ -17,7 +17,7 @@ from sqlalchemy.orm import selectinload
 
 from app.db import async_session
 from app.mail import send_email
-from app.models import PracticeLog, PushSubscription, User
+from app.models import Enrollment, PracticeLog, PushSubscription, User
 from app.push import send_push
 from app.reminders import build_push, build_reminder, unsubscribe_headers
 from app.stats import streak_info
@@ -35,6 +35,11 @@ async def _send_email_reminder(user_id, today) -> None:
         info = await streak_info(db, user.id)
         reminder = await build_reminder(db, user, today, info)
         await send_email(user.email, reminder["subject"], reminder["html"], headers=unsubscribe_headers(user))
+        if reminder["kind"] == "program_comeback":
+            # Gönderim başarılıysa adımı işaretle: script aynı gün tekrar koşsa ikinci mail gitmez
+            enrollment = await db.get(Enrollment, reminder["enrollment_id"])
+            enrollment.last_comeback_step = reminder["step"]
+            await db.commit()
         print(f"  mail -> {user.email} (seri: {info['streak']}, tür: {reminder['kind']})")
 
 

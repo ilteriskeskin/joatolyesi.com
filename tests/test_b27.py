@@ -524,7 +524,7 @@ async def test_reminder_html_escapes_title_and_focus(monkeypatch):
     assert "<script>" not in out["html"] and "&lt;script&gt;" in out["html"]
 
     day = SimpleNamespace(title_tr="<i>odak</i>", title_en="<i>focus</i>")
-    enrollment = SimpleNamespace(program=SimpleNamespace(slug="p"))
+    enrollment = SimpleNamespace(program=SimpleNamespace(slug="p"), created_at=None)
 
     async def program(db, user):
         return enrollment, day, 2

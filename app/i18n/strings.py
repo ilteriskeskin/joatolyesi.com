@@ -391,6 +391,11 @@ STRINGS = {
             "<p>Today: <strong>Day {n}</strong> — {focus}</p>"
             '<p><a href="{day_link}">Open the day</a></p>'
         ),
+        "mail_comeback_subject": "Day {n} is waiting — Joryu",
+        "mail_comeback_body": (
+            "<p>Pick up where you left off: <strong>Day {n}</strong> — {focus}</p>"
+            '<p><a href="{day_link}">Open Day {n}</a></p>'
+        ),
         "mail_reminder_lastday_subject": "Last day today to keep your streak — Joryu",
         "mail_reminder_lastday_body": (
             "<p><strong>Last day today:</strong> if you skip it, your streak ends.</p>"
@@ -870,6 +875,11 @@ STRINGS = {
         "mail_reminder_program_body": (
             "<p>Bugün: <strong>Gün {n}</strong> — {focus}</p>"
             '<p><a href="{day_link}">Günü aç</a></p>'
+        ),
+        "mail_comeback_subject": "Gün {n} seni bekliyor — Joryu",
+        "mail_comeback_body": (
+            "<p>Kaldığın yerden devam: <strong>Gün {n}</strong> — {focus}</p>"
+            '<p><a href="{day_link}">Gün {n}\'i aç</a></p>'
         ),
         "mail_reminder_lastday_subject": "Bugün son gün: serin için — Joryu",
         "mail_reminder_lastday_body": (

@@ -63,6 +63,13 @@ REMINDER_DISMISS_COOKIE = "rem_dismiss"
 REMINDER_DISMISS_MAX_AGE = 60 * 60 * 24 * 30  # "Şimdi değil": 30 gün gizle
 
 
+def _reminder_return(next_path: str) -> str:
+    """Kart program gün sayfasından da gösterilir: yalnız /programs/ altı yerel yola dön."""
+    if next_path.startswith("/programs/") and "//" not in next_path and "\\" not in next_path and ":" not in next_path:
+        return next_path
+    return "/app"
+
+
 async def _show_reminder_card(db: AsyncSession, user: User, request: Request | None) -> bool:
     """Hatırlatma kartı: e-posta hatırlatması kapalı + push aboneliği yok + 30 günlük
     "şimdi değil" çerezi yok. Çerez/ayar kontrolleri sorgudan önce — çoğu istekte DB'ye gitmez."""
@@ -257,19 +264,24 @@ async def log_rest_day(
 
 @router.post("/app/reminders/enable", dependencies=[Depends(csrf_protect)])
 @limiter.limit("30/minute")
-async def enable_reminders(request: Request, user: User = Depends(require_user), db: AsyncSession = Depends(get_db)):
+async def enable_reminders(
+    request: Request,
+    next: str = Form(""),
+    user: User = Depends(require_user),
+    db: AsyncSession = Depends(get_db),
+):
     """Dashboard kartındaki [Aç]: kullanıcının kendi tıklaması = rıza."""
     if not user.reminders_enabled:
         user.reminders_enabled = True
         await db.commit()
-    return RedirectResponse("/app", status_code=303)
+    return RedirectResponse(_reminder_return(next), status_code=303)
 
 
 @router.post("/app/reminders/dismiss", dependencies=[Depends(csrf_protect)])
 @limiter.limit("30/minute")
-async def dismiss_reminders(request: Request, user: User = Depends(require_user)):
+async def dismiss_reminders(request: Request, next: str = Form(""), user: User = Depends(require_user)):
     """[Şimdi değil]: kartı 30 gün gizler (çerez; sunucuda durum tutulmaz)."""
-    response = RedirectResponse("/app", status_code=303)
+    response = RedirectResponse(_reminder_return(next), status_code=303)
     response.set_cookie(
         REMINDER_DISMISS_COOKIE, "1", max_age=REMINDER_DISMISS_MAX_AGE, httponly=True, samesite="lax",
         secure=settings.env == "production",

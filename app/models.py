@@ -141,6 +141,8 @@ class Enrollment(Base):
     program_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("programs.id", ondelete="CASCADE"), index=True)
     started_on: Mapped[date] = mapped_column(Date, nullable=False, server_default=func.current_date())
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    # Program e-posta dizisi (gün 1/3/7): en son gönderilen adım; aynı adım iki kez gitmez
+    last_comeback_step: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
 
     program: Mapped[Program] = relationship()
     completed_days: Mapped[list["EnrollmentDay"]] = relationship(back_populates="enrollment")

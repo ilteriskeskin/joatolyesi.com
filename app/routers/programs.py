@@ -27,6 +27,7 @@ from app.deps import (
 )
 from app.models import Enrollment, EnrollmentDay, Kata, PracticeLog, Program, ProgramDay, User
 from app.render import render
+from app.routers.practice import _show_reminder_card
 from app.stats import completed_new_day_today
 from app.seed import WEEKS
 
@@ -244,6 +245,8 @@ async def program_day(
         # Kilitli günde video/kata içeriği yok
         focus_kata=None if is_locked or review else await _focus_kata(db, day),
         review_katas=await _review_katas(db, day_number) if review and not is_locked else [],
+        # B-27 kartı: hatırlatması kapalı enroll olmuş kullanıcıya tek tıkla açma
+        show_reminder_card=await _show_reminder_card(db, user, request),
     )
 
 

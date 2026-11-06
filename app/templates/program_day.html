@@ -53,5 +53,6 @@
   <p class="muted">{{ t.program_auto_log_note.format(minutes=log_minutes) }}</p>
   {% endif %}
   {% endif %}
+  {% if show_reminder_card %}{% set reminder_next = "/programs/" ~ program.slug ~ "/day/" ~ day.day_number %}{% include "_reminder_card.html" %}{% endif %}
 </article>
 {% endblock %}
