@@ -64,7 +64,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - [x] **B-25 Programın keşfedilebilirliği ve dashboard sadeleştirme.** _✓ 2026-11-05 (cb0eb1e)._
 - [x] **B-26 Landing gün sayacı doğrulaması.** _İlteriş 2026-11-05: doğru (aralıksız çalışıyor). Uygulamadaki serisi `scripts/backfill_practice.py` ile doldurulacak._ Hero'da "452 gün aralıksız çalışmış bir pratisyenden" sayısı `PRACTICE_START=2025-08-11`'den hesaplanıyor (render.py), DB'den değil. İlteriş gerçekten aralıksız çalıştıysa doğru; değilse ya sahip hesabının gerçek serisine bağlanmalı ya da kaldırılmalı. Karar İlteriş'te.
 - [ ] **B-21 Instagram 30 gün kampanyası.** Bio, 14 günlük takvim, pin yorumlar, DM şablonu, UTM. Sorumlu: growth-marketer → İlteriş.
-- [ ] **B-22 Program e-posta dizisi.** Gün 1/3/7 hatırlatma; kaldığı güne link. Sorumlu: developer.
+- [x] **B-22 Program e-posta dizisi.** _✓ 2026-11-06 (c60a705); yalnız hatırlatması açık kullanıcıya; migration 0012, deploy İlteriş'te._ Gün 1/3/7 hatırlatma; kaldığı güne link. Sorumlu: developer.
 - [ ] **B-23 Hoca/dojo pilotu.** Grup + haftalık ödev + öğrenci ilerleme görünümü. Önce İlteriş'in dojosu. Sorumlu: PO (tasarım) + developer.
 
 ## Günlük platform (İlteriş vizyonu, 2026-11-05): "Dövüş sanatçılarının her gün açtığı platform"
