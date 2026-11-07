@@ -93,9 +93,9 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 **Revizyon (İlteriş, 2026-11-06, aynı gün):** Tekrar sayacı ve kata kilidi **yok**. Amaç kullanımı artırmak/kolaylaştırmak; sayı istemek kaydı zorlaştırır, tecrübeli kişi katayı zaten çalışabilir. Kurallar yalnız **tavsiye** ve yalnız **30 günlük programa sıfırdan başlayanlar** için. Pratik kaydı, kata sayfaları ve kata kaydı olduğu gibi kalır.
 
 İşler:
-- [ ] **B-33 Program içi tavsiyeler.** 30 günlük jo programında görünür tavsiye: "Her hareketi en az 10 tekrar çalış" ve "Önce temel vuruşlar: katalara programı bitirdikten sonra geç". Yerler: program açılış sayfası (kimin için olduğu), 1. gün, program bitiş ekranı ("Sırada katalar" → aiki-jo kata listesi linki). Zorunluluk, kilit, yeni alan, migration yok. Metin content-writer → fact-checker; uygulama developer → qa-reviewer. Puan 3×4/1.
-- [ ] **B-35 Konumlandırma metinleri.** Program açılış sayfası, landing hero alt metni ve B-21 kampanya taslağı "hocan yoksa buradan, temelden başla; topluluk yanında" çerçevesine; güvenlik notu korunur. B-33 ile aynı içerik turunda yapılabilir. Sorumlu: content-writer → fact-checker → developer. Puan 3×4/1.
+- [x] **B-33 Program içi tavsiyeler.** _✓ 2026-11-07 (dalda, deploy bekliyor)._ 30 günlük jo programında görünür tavsiye: "Her hareketi en az 10 tekrar çalış" ve "Önce temel vuruşlar: katalara programı bitirdikten sonra geç". Yerler: program açılış sayfası (kimin için olduğu), 1. gün, program bitiş ekranı ("Sırada katalar" → aiki-jo kata listesi linki). Zorunluluk, kilit, yeni alan, migration yok. Metin content-writer → fact-checker; uygulama developer → qa-reviewer. Puan 3×4/1.
+- [ ] **B-35 Konumlandırma metinleri.** _2026-11-07: program sayfası + landing hero ✓ (dalda). Kalan: B-21 kampanya taslağının yeni çerçeveye güncellenmesi (growth-marketer)._ Program açılış sayfası, landing hero alt metni ve B-21 kampanya taslağı "hocan yoksa buradan, temelden başla; topluluk yanında" çerçevesine; güvenlik notu korunur. B-33 ile aynı içerik turunda yapılabilir. Sorumlu: content-writer → fact-checker → developer. Puan 3×4/1.
 - ~~B-34 Öğrenme yolu ve kata kilidi~~ — iptal (İlteriş 2026-11-06).
 - Bağlantı: B-29 haftalık meydan okuma ve B-30 takip akışı "topluluk hocalığı" ayağı.
 
-Önerilen sıra: B-33 + B-35 (tek içerik turu) → B-32 → B-28 → B-29/B-30.
+Önerilen sıra: ~~B-33~~ + B-35 kalan (kampanya taslağı) → B-32 → B-28 → B-29/B-30.
