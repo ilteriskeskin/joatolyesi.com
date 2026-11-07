@@ -1090,12 +1090,12 @@ async def test_program_visitor_sees_dojo_note_links_and_day1_preview(client):
     old = await _set_video("choku-tsuki", "https://www.youtube.com/embed/4hvf2N0O4PA")
     try:
         r = await client.get(PROGRAM)
-        assert "hocandan öğrenmiş ya da öğreniyor olmalısın" in r.text
+        assert "Hocan yoksa buradan, temelden başla" in r.text
         assert "1. gün böyle görünüyor" in r.text
         assert 'src="https://www.youtube.com/embed/4hvf2N0O4PA"' in r.text
         assert 'href="/kata/hidari-nagare-gaeshi-uchi"' in r.text and 'href="/kata/shomen-uchikomi"' in r.text
         en = await client.get(PROGRAM + "?lang=en")
-        assert "for practice outside the dojo" in en.text
+        assert "No teacher? Start here, from the basics" in en.text
     finally:
         await _set_video("choku-tsuki", old)
 
@@ -1368,3 +1368,36 @@ async def test_guide_aikijo_plan_heading_and_program_link(client):
     assert sect.index("Kısa ve günlük bir plan istersen: 30 Günlük Jo Suburi Programı →") < sect.index("<ol>")
     assert "Long-term learning plan" in (await client.get("/guide/aikijo?lang=en")).text
     assert "30-Day Jo Suburi Program →" not in (await client.get("/guide/bokken")).text.split('id="program"')[1].split("</div>")[0]
+
+
+# --- B-33 + B-35: ogrenme yolu metinleri ---
+
+async def test_program_detail_shows_advice_and_dojo_note(client):
+    r = await client.get(PROGRAM)
+    assert "Hocan yoksa buradan, temelden başla" in r.text
+    assert "Joryu tavsiyesi" in r.text and "Her hareketi en az 10 tekrar çalış." in r.text
+    assert "Bunlar tavsiyedir; sayaç ya da kilit yok." in r.text
+    en = await client.get(PROGRAM + "?lang=en")
+    assert "Practice each movement at least 10 times." in en.text and "Joryu's advice" in en.text.replace("&#39;", "'")
+
+
+async def test_program_day1_tip_only_on_day_one(client):
+    await register(client, f"{unique('tip')}@test.com", unique("tipuser"))
+    token = await get_csrf(client, PROGRAM)
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    tip = "İpucu: her hareketi en az 10 tekrar çalış"
+    assert tip in (await client.get(PROGRAM + "/day/1")).text
+    assert tip not in (await client.get(PROGRAM + "/day/2")).text
+
+
+async def test_program_finished_links_to_aikijo_katas(client):
+    username = unique("finuser")
+    await register(client, f"{unique('fin')}@test.com", username)
+    token = await get_csrf(client, PROGRAM)
+    await client.post(PROGRAM + "/enroll", data={"csrf_token": token})
+    for d in range(1, 31):
+        await _age_completions(username)
+        await client.post(PROGRAM + f"/day/{d}/complete", data={"csrf_token": token})
+    await _age_completions(username)
+    r = await client.get(PROGRAM)
+    assert "Sırada katalar." in r.text and 'href="/kata?d=aikijo"' in r.text

@@ -14,7 +14,8 @@ STRINGS = {
             "For aikido, iaido, jodo and kenjutsu practitioners who train alone "
             "between dojo days: log your jo, bokken and kata practice, keep "
             "your streak, and browse the kata & technique library — built by a "
-            "practitioner who trained {days} days straight."
+            "practitioner who trained {days} days straight. No teacher? Start "
+            "from the basics with the 30-day program."
         ),
         "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo",
         "pricing_note": "Free to use — no paywall, no card required.",
@@ -284,7 +285,14 @@ STRINGS = {
         "program_complete_button": "Mark day complete",
         "program_completed": "Completed",
         "program_locked_day": "Complete the previous day to unlock this one.",
-        "program_finished": "You finished the program. Well done.",
+        "program_finished": "You finished the program. Well done. Next up: the katas.",
+        "program_next_kata_link": "Go to the Aiki-jo katas →",
+        "program_for_whom": "This program is for people starting jo from scratch. If you already train, the advice below doesn't bind you; you can browse the katas any time.",
+        "program_advice_heading": "Joryu's advice",
+        "program_advice_reps": "Practice each movement at least 10 times.",
+        "program_advice_basics_first": "Basic strikes first: move on to the katas after you finish the program.",
+        "program_advice_note": "These are recommendations; there is no counter or lock.",
+        "program_day1_advice": "Tip: practice each movement at least 10 times; save the katas until you finish the program.",
         "program_pro_gate": "Programs are part of Pro.",
         "program_cta_register": "Sign up free, start Day 1",
         "program_cta_login": "Already have an account? Log in",
@@ -301,7 +309,7 @@ STRINGS = {
         "program_review_heading": "This week's movements",
         "program_show_video": "Show video",
         "program_day1_preview": "This is what Day 1 looks like",
-        "program_dojo_note": "This plan is for practice outside the dojo; you should have learned these movements from your teacher, or be learning them. Each day's video is a reminder of the movement, not a substitute for your teacher.",
+        "program_dojo_note": "No teacher? Start here, from the basics; the community is with you. If you have a teacher, their word comes first. The videos show the movement, but they are not a substitute for a teacher. Warm up, start slow, and stop if something hurts.",
         "program_done_tomorrow": "Done for today. Tomorrow: Day {n} — {title}",
         # Billing
         "billing_title": "Joryu Pro",
@@ -499,7 +507,8 @@ STRINGS = {
             "Dojo günleri arasında tek başına çalışan aikido, iaido, jodo ve "
             "kenjutsu pratisyenleri için: jo, bokken ve kata seanslarını kaydet, "
             "serini koru, kata ve teknik kütüphanesinde ilerle — {days} gün "
-            "aralıksız çalışmış bir pratisyenden."
+            "aralıksız çalışmış bir pratisyenden. Hocan yoksa 30 günlük "
+            "programla temelden başla."
         ),
         "hero_disciplines": "Aikido · Aiki-jo · Iaido · Jodo · Kenjutsu · Kendo",
         "pricing_note": "Kullanımı ücretsiz — ödeme duvarı yok, kart bilgisi istenmez.",
@@ -769,7 +778,14 @@ STRINGS = {
         "program_complete_button": "Günü tamamla",
         "program_completed": "Tamamlandı",
         "program_locked_day": "Bu günü açmak için önceki günü tamamla.",
-        "program_finished": "Programı tamamladın. Tebrikler.",
+        "program_finished": "Programı tamamladın. Tebrikler. Sırada katalar.",
+        "program_next_kata_link": "Aiki-jo katalarına git →",
+        "program_for_whom": "Bu program jo'ya sıfırdan başlayanlar için. Zaten çalışıyorsan, aşağıdaki tavsiyeler seni bağlamaz; katalara istediğin zaman bakabilirsin.",
+        "program_advice_heading": "Joryu tavsiyesi",
+        "program_advice_reps": "Her hareketi en az 10 tekrar çalış.",
+        "program_advice_basics_first": "Önce temel vuruşlar: katalara programı bitirdikten sonra geç.",
+        "program_advice_note": "Bunlar tavsiyedir; sayaç ya da kilit yok.",
+        "program_day1_advice": "İpucu: her hareketi en az 10 tekrar çalış; katalara programı bitirince geç.",
         "program_pro_gate": "Programlar Pro üyelere açık.",
         "program_cta_register": "Ücretsiz kaydol, 1. güne başla",
         "program_cta_login": "Zaten hesabın var mı? Giriş yap",
@@ -786,7 +802,7 @@ STRINGS = {
         "program_review_heading": "Bu haftanın hareketleri",
         "program_show_video": "Videoyu göster",
         "program_day1_preview": "1. gün böyle görünüyor",
-        "program_dojo_note": "Bu plan dojo dışı çalışma içindir; hareketleri hocandan öğrenmiş ya da öğreniyor olmalısın. Her günün videosu hareketi hatırlatır, öğretmenin yerini tutmaz.",
+        "program_dojo_note": "Hocan yoksa buradan, temelden başla; topluluk yanında. Hocan varsa onun sözü önce gelir. Videolar hareketi gösterir, bir öğretmenin yerini tutmaz. Isın, yavaş başla, ağrı hissedersen dur.",
         "program_done_tomorrow": "Bugün tamam. Yarın: Gün {n} — {title}",
         # Billing
         "billing_title": "Joryu Pro",

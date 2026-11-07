@@ -42,6 +42,7 @@
   </section>
   {% endif %}
   <p class="day-content">{{ day.content_en if lang == 'en' else day.content_tr }}</p>
+  {% if day.day_number == 1 %}<p class="muted">{{ t.program_day1_advice }}</p>{% endif %}
 
   {% if is_completed %}
   <p class="form-message form-message--success">{{ t.program_completed }}</p>

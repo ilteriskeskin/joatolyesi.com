@@ -6,12 +6,21 @@
 <article>
   <h1>{{ program.title_en if lang == 'en' else program.title_tr }}</h1>
   <p class="muted">{{ program.description_en if lang == 'en' else program.description_tr }}</p>
+  <p class="muted">{{ t.program_for_whom }}</p>
 
   {% if not user %}
   {% set reg = '/register?next=' ~ ('/programs/' ~ program.slug)|urlencode %}
   <p class="program-cta"><a class="button" href="{{ reg }}">{{ t.program_cta_register }}</a></p>
   <p class="muted"><a href="/login?next={{ ('/programs/' ~ program.slug)|urlencode }}">{{ t.program_cta_login }}</a></p>
   <p class="program-note">{{ t.program_dojo_note }}</p>
+  <section class="program-note">
+    <p><strong>{{ t.program_advice_heading }}</strong></p>
+    <ul>
+      <li>{{ t.program_advice_reps }}</li>
+      <li>{{ t.program_advice_basics_first }}</li>
+    </ul>
+    <p class="muted">{{ t.program_advice_note }}</p>
+  </section>
   {% if day1_kata and day1_kata.video_url %}
   <h2>{{ t.program_day1_preview }}</h2>
   <div class="video-frame">
@@ -28,6 +37,7 @@
   {% else %}
   {% if finished %}
   <p class="form-message form-message--success">{{ t.program_finished }}</p>
+  <p class="program-cta"><a class="button" href="/kata?d=aikijo">{{ t.program_next_kata_link }}</a></p>
   {% elif enrollment %}
   {% if next_day %}
   <p class="form-message form-message--success">{{ t.program_done_tomorrow.format(n=next_day.day_number, title=(next_day.title_en if lang == 'en' else next_day.title_tr)) }}</p>
@@ -43,6 +53,14 @@
   {% endif %}
   {% else %}
   <p class="program-note">{{ t.program_dojo_note }}</p>
+  <section class="program-note">
+    <p><strong>{{ t.program_advice_heading }}</strong></p>
+    <ul>
+      <li>{{ t.program_advice_reps }}</li>
+      <li>{{ t.program_advice_basics_first }}</li>
+    </ul>
+    <p class="muted">{{ t.program_advice_note }}</p>
+  </section>
   <form method="post" action="/programs/{{ program.slug }}/enroll">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button type="submit" class="button button--block">{{ t.program_enroll }}</button>
