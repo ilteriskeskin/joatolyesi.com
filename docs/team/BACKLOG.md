@@ -63,7 +63,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - [x] **B-24 Program içinde hareket videoları ve program bütünlüğü.** _✓ 2026-11-05 (25b8a92)._ Gün sayfasında odak suburi'nin videosu ve açıklaması, tekrar gününde haftanın videoları, takvim kilidi, tamamlamada PracticeLog, açılış sayfasında 1. gün önizlemesi + "hocadan öğrenmiş olmalısın" notu.
 - [x] **B-25 Programın keşfedilebilirliği ve dashboard sadeleştirme.** _✓ 2026-11-05 (cb0eb1e)._
 - [x] **B-26 Landing gün sayacı doğrulaması.** _İlteriş 2026-11-05: doğru (aralıksız çalışıyor). Uygulamadaki serisi `scripts/backfill_practice.py` ile doldurulacak._ Hero'da "452 gün aralıksız çalışmış bir pratisyenden" sayısı `PRACTICE_START=2025-08-11`'den hesaplanıyor (render.py), DB'den değil. İlteriş gerçekten aralıksız çalıştıysa doğru; değilse ya sahip hesabının gerçek serisine bağlanmalı ya da kaldırılmalı. Karar İlteriş'te.
-- [ ] **B-21 Instagram 30 gün kampanyası.** Bio, 14 günlük takvim, pin yorumlar, DM şablonu, UTM. Sorumlu: growth-marketer → İlteriş.
+- [ ] **B-21 Instagram 30 gün kampanyası.** _2026-11-08: taslak yeni çerçevede hazır (`docs/team/marketing/2026-11-05-30-gun-jo-kampanyasi.md`); paylaşım İlteriş'te._ Bio, 14 günlük takvim, pin yorumlar, DM şablonu, UTM. Sorumlu: growth-marketer → İlteriş.
 - [x] **B-22 Program e-posta dizisi.** _✓ 2026-11-06 (c60a705); yalnız hatırlatması açık kullanıcıya; migration 0012, deploy İlteriş'te._ Gün 1/3/7 hatırlatma; kaldığı güne link. Sorumlu: developer.
 - [ ] **B-23 Hoca/dojo pilotu.** _Ertelendi 2026-11-06: anlaşılmış dojo yok. Bir dojo anlaşırsa geri gelir._ Grup + haftalık ödev + öğrenci ilerleme görünümü. Sorumlu: PO (tasarım) + developer.
 
@@ -94,8 +94,8 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 
 İşler:
 - [x] **B-33 Program içi tavsiyeler.** _✓ 2026-11-07 (dalda, deploy bekliyor)._ 30 günlük jo programında görünür tavsiye: "Her hareketi en az 10 tekrar çalış" ve "Önce temel vuruşlar: katalara programı bitirdikten sonra geç". Yerler: program açılış sayfası (kimin için olduğu), 1. gün, program bitiş ekranı ("Sırada katalar" → aiki-jo kata listesi linki). Zorunluluk, kilit, yeni alan, migration yok. Metin content-writer → fact-checker; uygulama developer → qa-reviewer. Puan 3×4/1.
-- [ ] **B-35 Konumlandırma metinleri.** _2026-11-07: program sayfası + landing hero ✓ (dalda). Kalan: B-21 kampanya taslağının yeni çerçeveye güncellenmesi (growth-marketer)._ Program açılış sayfası, landing hero alt metni ve B-21 kampanya taslağı "hocan yoksa buradan, temelden başla; topluluk yanında" çerçevesine; güvenlik notu korunur. B-33 ile aynı içerik turunda yapılabilir. Sorumlu: content-writer → fact-checker → developer. Puan 3×4/1.
+- [x] **B-35 Konumlandırma metinleri.** _✓ 2026-11-07 program sayfası + landing hero; ✓ 2026-11-08 B-21 kampanya taslağı yeni çerçeveye uyarlandı (fact-checker: düzeltmeyle onay)._ Program açılış sayfası, landing hero alt metni ve B-21 kampanya taslağı "hocan yoksa buradan, temelden başla; topluluk yanında" çerçevesine; güvenlik notu korunur. B-33 ile aynı içerik turunda yapılabilir. Sorumlu: content-writer → fact-checker → developer. Puan 3×4/1.
 - ~~B-34 Öğrenme yolu ve kata kilidi~~ — iptal (İlteriş 2026-11-06).
 - Bağlantı: B-29 haftalık meydan okuma ve B-30 takip akışı "topluluk hocalığı" ayağı.
 
-Önerilen sıra: ~~B-33~~ + B-35 kalan (kampanya taslağı) → B-32 → B-28 → B-29/B-30.
+Önerilen sıra: ~~B-33~~ + ~~B-35~~ → B-32 → B-28 → B-29/B-30.
