@@ -1,18 +1,16 @@
-# Aktif Sprint — 2026-11-08
+# Aktif Sprint — 2026-11-09
 
-Dal: `team/sprint-2026-11-08` (`main`'den; önceki sprint dalları merge edildi). Push/deploy/prod erişimi yok, `.env` okunmaz.
-Planlı sprint; kullanım tasarrufu gereği tek pazarlama/içerik turu, kod işi yok. Plan orkestratör tarafından yazıldı (BACKLOG önerilen sırası: B-35 kalan → B-32).
+Dal: `team/sprint-2026-11-09` (`team/sprint-2026-11-08` üstünden; o dal merge bekliyor). Push/deploy/prod erişimi yok, `.env` okunmaz.
+Planlı sprint; kullanım tasarrufu gereği tek kod işi. Plan orkestratör tarafından yazıldı (BACKLOG önerilen sırası: B-32 → B-28).
 
-## İş: B-35 kalan — B-21 kampanya taslağını yeni çerçeveye uyarla — `growth-marketer` → `fact-checker`
+## İş: B-32 — push izin anı — `developer` → `qa-reviewer`
 
-Hipotez: Instagram kampanyası "hocan yoksa buradan, temelden başla; topluluk yanında" çerçevesiyle ve sitedeki program metinleriyle aynı dili konuşursa, hocası olmayan ziyaretçinin `sign_up` → `program_enroll` dönüşümü artar.
+Hipotez: Bildirim izni, kullanıcı ilk pratiğini kaydedip değeri gördükten sonra bağlamsal bir kartla istenirse kabul oranı artar. Bu da 7. güne ulaşan programa devamı (`program_day_complete` day≥7) yükseltir.
 
-Kapsam (yalnız taslak; site kodu değişmez, hiçbir yere gönderi atılmaz):
-- `docs/team/marketing/2026-11-05-30-gun-jo-kampanyasi.md` güncellenir: eski "hocandan öğrenmiş olmalısın / hocasız denmez" ifadeleri kaldırılır; bio, takvim, pin yorumlar, DM şablonu yeni çerçeveye.
-- Program tavsiyeleri (her hareket en az 10 tekrar; önce temel vuruşlar, katalar program bitince) İlteriş'in tavsiyesi olarak geçer; sayaç/kilit vaadi yok.
-- Güvenlik notu (ısın, yavaş başla, ağrıda dur) korunur. "Hocaya gerek yok" vaadi verilmez. Sahte kullanıcı/istatistik/yorum yok.
-- Metinler sitedeki doğrulanmış metinlerle (`docs/team/content/verified/2026-11-07-ogrenme-yolu-metinleri.md`) tutarlı.
-- fact-checker teknik/olgusal iddiaları ve çerçeve uyumunu denetler.
+Kapsam: İlk gerçek (dinlenme günü olmayan) pratik kaydından sonra dashboard'da kapatılabilir bir kart çıkar. Tarayıcı izin penceresi yalnız "Hatırlatmayı aç" tıklamasında açılır. Kart şu durumlarda gizli kalır: izin granted/denied, abonelik var, tarayıcı desteklemiyor, kart daha önce kapatılmış (localStorage). Mevcut buton korunur.
 
 ## Başarı ölçütü
-fact-checker ONAY. Metrik (kampanya yayınından 14 gün, GA4): `sign_up` (utm_source=instagram), `program_enroll`, `program_day_complete` day≥7.
+QA GEÇTİ (✓). Metrik (deploy'dan 14 gün, GA4): `push_prompt_accept / push_prompt_shown` oranı, `push_prompt_dismiss`, `program_day_complete` day≥7.
+
+## QA
+GEÇTİ (1. tur). 144 test geçti, 1 test kaldı. Kalan `test_sitemap_includes_blog_posts` B-32 değişiklikleri olmadan HEAD'de de kalıyor, yani önceden var olan bir sorun.

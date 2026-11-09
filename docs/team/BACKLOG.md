@@ -76,10 +76,12 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - [ ] **B-29 Haftalık meydan okuma.** Her hafta bir teknik ("bu hafta: kaeshi tsuki, 5 gün"). Katılanlar listesi yalnız gerçek kullanıcılar, sahte katılım yok.
 - [ ] **B-30 Takip akışı.** Takip ettiklerinin bugünkü pratikleri (açık profiller), "tebrik" tepkisi. Topluluk sayfasını günlük sebebe çevirir.
 - [ ] **B-31 Günün ipucu.** tips_content.py içeriği dashboard'da günlük döner (fact-check edilmiş içerik).
-- [ ] **B-32 Push bildirimleri.** Altyapı var (push.py, VAPID). İzin isteme anını iyileştir: ilk pratik kaydından sonra sor, sayfa açılışında değil.
+- [x] **B-32 Push bildirimleri.** _✓ 2026-11-09 (f7d0306, dalda; ilk gerçek pratik kaydından sonra kapatılabilir kart, GA push_prompt_*)._ Altyapı var (push.py, VAPID). İzin isteme anını iyileştir: ilk pratik kaydından sonra sor, sayfa açılışında değil.
 - [ ] ~~B-23~~ ertelendi; vizyonun ikinci ayağı şimdilik topluluk (B-29/B-30) + program tavsiyeleri (B-33/B-35).
 
 ## Bakım
+
+- [ ] **B-36 Sitemap testi kırık.** `tests/test_flows.py::test_sitemap_includes_blog_posts` 2026-11-09'da temiz test DB'sinde de düşüyor (`assert None`). B-32'den bağımsız; HEAD'de de kalıyor. 2026-11-07'de yeşildi. Muhtemelen tarih ya da sıralamaya bağlı. Sorumlu: developer.
 
 - [x] **B-17 Test izolasyonu.** _✓ 2026-11-05 (dalda; seed edilen test kullanıcıları teardown'da siliniyor, aynı DB'de 11 koşu yeşil)._ `tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Sorumlu: developer.
 - [x] **B-18 Sitemap'e blog yazıları.** _✓ 2026-11-04 (81facbd, dalda); karate/taekwondo da dahil edildi (132e99a, İlteriş kararı)._ Sitemap blog yazılarını içermiyor; karate/taekwondo kata sayfaları da yok (İlteriş kararı bekliyor). Sorumlu: developer. Puan 4×4/1.
@@ -98,4 +100,4 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - ~~B-34 Öğrenme yolu ve kata kilidi~~ — iptal (İlteriş 2026-11-06).
 - Bağlantı: B-29 haftalık meydan okuma ve B-30 takip akışı "topluluk hocalığı" ayağı.
 
-Önerilen sıra: ~~B-33~~ + ~~B-35~~ → B-32 → B-28 → B-29/B-30.
+Önerilen sıra: ~~B-33~~ + ~~B-35~~ → ~~B-32~~ → B-36 → B-28 → B-29/B-30.
