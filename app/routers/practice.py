@@ -81,6 +81,20 @@ async def _show_reminder_card(db: AsyncSession, user: User, request: Request | N
     return not has_push
 
 
+async def _has_practice_log(db: AsyncSession, user: User) -> bool:
+    """En az bir gerçek pratik kaydı (dinlenme günü sayılmaz): push "yumuşak soru"
+    kartı yalnız ilk kayıttan sonra gösterilir."""
+    return (
+        await db.execute(
+            select(
+                select(PracticeLog.id)
+                .where(PracticeLog.user_id == user.id, PracticeLog.is_rest_day.is_(False))
+                .exists()
+            )
+        )
+    ).scalar_one()
+
+
 async def dashboard_context(db: AsyncSession, user: User, request: Request | None = None) -> dict:
     sinfo = await streak_info(db, user.id)
     longest_streak = await compute_longest_streak(db, user.id)
@@ -151,6 +165,7 @@ async def dashboard_context(db: AsyncSession, user: User, request: Request | Non
     today = datetime.now(UTC).date()
     return {
         "first_session_card": first_session_card,
+        "show_push_prompt": await _has_practice_log(db, user),
         "show_reminder_card": await _show_reminder_card(db, user, request),
         "daily_kata": await pick_daily_kata(db, user, today),
         "streak_last_day": sinfo["last_day"],

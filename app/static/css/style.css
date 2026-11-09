@@ -2051,6 +2051,9 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   color: var(--accent);
   font-size: 0.85rem;
 }
+.push-prompt-card[hidden] { display: none; }
+.push-prompt-card p { color: var(--ink-dim); margin-bottom: 0.9rem; }
+.push-prompt-card__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
 .reminder-card p { color: var(--ink-dim); margin-bottom: 0.9rem; }
 .reminder-card__actions,
 .daily-kata-card__actions {

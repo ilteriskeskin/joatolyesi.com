@@ -769,6 +769,23 @@ async def test_first_session_card_flow(client):
     assert any(log.minutes == 10 for log in logs)
 
 
+async def test_push_prompt_card_only_after_first_practice(client):
+    await register(client, f"{unique('pp')}@test.com", unique("ppuser"))
+    token = await get_csrf(client, "/app")
+    assert "data-push-prompt" not in (await client.get("/app")).text
+    # Dinlenme günü gerçek pratik değil: kart hâlâ yok
+    await client.post("/app/rest-day", data={"practiced_on": date.today().isoformat(), "csrf_token": token})
+    assert "data-push-prompt" not in (await client.get("/app")).text
+
+    await client.post("/app/practice", data={"practiced_on": (date.today() - timedelta(days=1)).isoformat(),
+                                             "discipline": "bokken", "minutes": "15", "csrf_token": token})
+    r = await client.get("/app")
+    assert "data-push-prompt" in r.text and "Yarın da çalışmak için hatırlatma ister misin?" in r.text
+    assert "Hatırlatmayı aç" in r.text and "data-push-enable" in r.text
+    r_en = await client.get("/app?lang=en")
+    assert "Want a reminder to practice again tomorrow?" in r_en.text
+
+
 async def test_first_session_invalid_source_ignored(client):
     from app.db import async_session
     from app.models import Kata

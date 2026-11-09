@@ -14,6 +14,17 @@
     <span class="push-status" data-push-status></span>
   </div>
 
+  {% if show_push_prompt %}
+  <section class="card push-prompt-card" data-push-prompt hidden aria-labelledby="push-prompt-title">
+    <span class="card-label" id="push-prompt-title">{{ t.push_prompt_label }}</span>
+    <p>{{ t.push_prompt_text }}</p>
+    <div class="push-prompt-card__actions">
+      <button type="button" class="button" data-push-prompt-accept>{{ t.push_prompt_accept }}</button>
+      <button type="button" class="link-button" data-push-prompt-dismiss>{{ t.push_prompt_dismiss }}</button>
+    </div>
+  </section>
+  {% endif %}
+
   <div id="practice-panel">
     {% include "_practice_panel.html" %}
   </div>

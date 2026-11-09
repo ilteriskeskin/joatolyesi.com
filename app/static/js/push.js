@@ -95,4 +95,56 @@
   });
 
   refreshButtonState();
+
+  // Bağlamsal "yumuşak soru" kartı: sunucu yalnız ilk pratik kaydından sonra
+  // (gizli olarak) render eder. İzin penceresi YALNIZ "Hatırlatmayı aç"
+  // tıklamasında açılır (mevcut butonun akışı tetiklenir); sayfa açılışında
+  // Notification.requestPermission çağrılmaz.
+  const prompt = document.querySelector("[data-push-prompt]");
+  if (!prompt) return;
+  const DISMISS_KEY = "joryu_push_prompt_dismissed";
+
+  function track(name) {
+    if (typeof window.joryuTrack === "function") window.joryuTrack(name, {});
+  }
+  function storage(fn) {
+    try {
+      return fn(window.localStorage);
+    } catch (e) {
+      return null; // localStorage kapalıysa kart her açılışta çıkabilir; ısrar riski yok sayılır
+    }
+  }
+  function hidePrompt(remember) {
+    prompt.hidden = true;
+    if (remember) storage((ls) => ls.setItem(DISMISS_KEY, "1"));
+  }
+
+  (async function maybeShowPrompt() {
+    if (!("Notification" in window) || Notification.permission !== "default") return;
+    if (storage((ls) => ls.getItem(DISMISS_KEY))) return;
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      if (await reg.pushManager.getSubscription()) return;
+    } catch (e) {
+      return;
+    }
+    prompt.hidden = false;
+    track("push_prompt_shown");
+  })();
+
+  const accept = prompt.querySelector("[data-push-prompt-accept]");
+  const dismiss = prompt.querySelector("[data-push-prompt-dismiss]");
+  if (accept) {
+    accept.addEventListener("click", () => {
+      track("push_prompt_accept");
+      hidePrompt(true);
+      btn.click(); // kullanıcı tıklaması içinde: izin penceresi burada açılır
+    });
+  }
+  if (dismiss) {
+    dismiss.addEventListener("click", () => {
+      track("push_prompt_dismiss");
+      hidePrompt(true);
+    });
+  }
 })();
