@@ -22,6 +22,9 @@ os.environ.setdefault("SECRET_KEY", "test-secret-key")
 os.environ.setdefault("ENV", "test")
 os.environ.setdefault("WAITLIST_ONLY", "false")
 os.environ.setdefault("RESEND_API_KEY", "")  # mail gönderme, logla
+# setdefault değil atama: env değişkeni .env'nin önüne geçer; sitemap/robots testleri
+# yerel .env'ye ya da .env'nin yokluğuna bağlı olmadan kanonik alan adını görmeli
+os.environ["BASE_URL"] = "https://joatolyesi.com"
 
 
 @pytest.fixture(scope="session")
