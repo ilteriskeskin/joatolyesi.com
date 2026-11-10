@@ -81,7 +81,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 
 ## Bakım
 
-- [ ] **B-36 Sitemap testi kırık.** `tests/test_flows.py::test_sitemap_includes_blog_posts` 2026-11-09'da temiz test DB'sinde de düşüyor (`assert None`). B-32'den bağımsız; HEAD'de de kalıyor. 2026-11-07'de yeşildi. Muhtemelen tarih ya da sıralamaya bağlı. Sorumlu: developer.
+- [x] **B-36 Sitemap testi kırık.** _✓ 2026-11-10 (4ed7ab6, dalda): kök neden testin `.env`'deki BASE_URL'e bağlı olmasıydı (varsayılan localhost:8000). conftest'te BASE_URL sabitlendi; temiz ortamda 145/145._ Sorumlu: developer.
 
 - [x] **B-17 Test izolasyonu.** _✓ 2026-11-05 (dalda; seed edilen test kullanıcıları teardown'da siliniyor, aynı DB'de 11 koşu yeşil)._ `tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Sorumlu: developer.
 - [x] **B-18 Sitemap'e blog yazıları.** _✓ 2026-11-04 (81facbd, dalda); karate/taekwondo da dahil edildi (132e99a, İlteriş kararı)._ Sitemap blog yazılarını içermiyor; karate/taekwondo kata sayfaları da yok (İlteriş kararı bekliyor). Sorumlu: developer. Puan 4×4/1.
@@ -100,4 +100,4 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - ~~B-34 Öğrenme yolu ve kata kilidi~~ — iptal (İlteriş 2026-11-06).
 - Bağlantı: B-29 haftalık meydan okuma ve B-30 takip akışı "topluluk hocalığı" ayağı.
 
-Önerilen sıra: ~~B-33~~ + ~~B-35~~ → ~~B-32~~ → B-36 → B-28 → B-29/B-30.
+Önerilen sıra: ~~B-33~~ + ~~B-35~~ → ~~B-32~~ → ~~B-36~~ → B-28 → B-29/B-30.
