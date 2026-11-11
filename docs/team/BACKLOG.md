@@ -75,7 +75,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - [ ] **B-28 Seans notu / antrenman günlüğü.** Kayda kısa not ve "bugün ne çalıştın" etiketleri; geçmişte arama. Dojo sonrası not alma alışkanlığı en güçlü günlük sebep.
 - [ ] **B-29 Haftalık meydan okuma.** Her hafta bir teknik ("bu hafta: kaeshi tsuki, 5 gün"). Katılanlar listesi yalnız gerçek kullanıcılar, sahte katılım yok.
 - [ ] **B-30 Takip akışı.** Takip ettiklerinin bugünkü pratikleri (açık profiller), "tebrik" tepkisi. Topluluk sayfasını günlük sebebe çevirir.
-- [ ] **B-31 Günün ipucu.** tips_content.py içeriği dashboard'da günlük döner (fact-check edilmiş içerik).
+- [ ] **B-31 Günün ipucu.** tips_content.py içeriği dashboard'da günlük döner (fact-check edilmiş içerik). _2026-11-11: denetim bitti → docs/team/content/verified/2026-11-11-gunun-ipucu-denetimi.md (13 onay, 8 düzelt; #10 Dokkōdō edisyondan teyit edilemezse kaldırılır). Kod işi merge sonrası._
 - [x] **B-32 Push bildirimleri.** _✓ 2026-11-09 (f7d0306, dalda; ilk gerçek pratik kaydından sonra kapatılabilir kart, GA push_prompt_*)._ Altyapı var (push.py, VAPID). İzin isteme anını iyileştir: ilk pratik kaydından sonra sor, sayfa açılışında değil.
 - [ ] ~~B-23~~ ertelendi; vizyonun ikinci ayağı şimdilik topluluk (B-29/B-30) + program tavsiyeleri (B-33/B-35).
 
