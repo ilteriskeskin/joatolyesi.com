@@ -14,4 +14,4 @@ Planlı sprint, tek iş. Planı orkestratör yazdı, 11 raporundaki "Sonraki" ö
 Testler yeşil; dashboard'da kart görünür; ölçüm: dashboard dönüşü (ipucu kartı tıklama/görüntülenme GA olayı varsa).
 
 ## Sonuç
-Developer uyguladı, QA GEÇTİ verdi (0c8cae9). DB'li `test_dashboard_renders_tip_card` Docker kapalı olduğu için atlandı.
+Developer uyguladı, QA GEÇTİ verdi (0c8cae9). Test Postgres'iyle tam koşu: 148/148.
