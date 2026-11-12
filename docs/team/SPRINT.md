@@ -1,13 +1,17 @@
-# Aktif Sprint — 2026-11-11
+# Aktif Sprint — 2026-11-12
 
-Dal: `team/sprint-2026-11-11` (`team/sprint-2026-11-10` üstünden). Push, deploy ve prod erişimi yok, `.env` okunmaz.
-Planlı sprint. Merge bekleyen 3 sprint dalı (08, 09, 10) olduğu için kural gereği yeni kod işi açılmadı; yalnız içerik işi. Planı orkestratör yazdı, 10 raporundaki "Sonraki" önerisini izledi.
+Dal: `team/sprint-2026-11-12` (`main`'den; 08–11 dalları merge edildi). Push, deploy ve prod erişimi yok, `.env` okunmaz.
+Planlı sprint, tek iş. Planı orkestratör yazdı, 11 raporundaki "Sonraki" önerisini izledi.
 
-## İş: B-31 hazırlığı — `tips_content.py` ipuçlarının fact-check turu — `fact-checker`
+## İş: B-31 Günün ipucu — `developer` → `qa-reviewer`
 
-Amaç: "Günün ipucu" (B-31) dashboard'a girmeden önce tüm ipuçlarının atfı ve çevirisi doğrulanmış olsun. Merge sonrası developer yalnız onaylı/düzeltilmiş metinle çalışır.
-
-Çıktı: `docs/team/content/verified/2026-11-11-gunun-ipucu-denetimi.md`, `docs/team/content/audit-log.md` güncellemesi. Koda dokunulmaz.
+- `app/tips_content.py`'ye `docs/team/content/verified/2026-11-11-gunun-ipucu-denetimi.md`'deki DÜZELT metinleri aynen uygulanır.
+- #10 (Dokkōdō 1. madde) Japonca edisyondan teyit edilmedi ve İlteriş teyit vermedi → kural gereği **kaldırılır**.
+- Dashboard'da günlük dönen tek ipucu kartı (tarihe göre deterministik seçim; aynı gün herkes aynı ipucunu görür). Kaynak etiketi gösterilir.
+- Yeni metin üretilmez; yalnız doğrulanmış içerik.
 
 ## Başarı ölçütü
-Her madde için ONAY / DÜZELT / KALDIR kararı ve kaynağı.
+Testler yeşil; dashboard'da kart görünür; ölçüm: dashboard dönüşü (ipucu kartı tıklama/görüntülenme GA olayı varsa).
+
+## Sonuç
+Developer uyguladı, QA GEÇTİ verdi (0c8cae9). DB'li `test_dashboard_renders_tip_card` Docker kapalı olduğu için atlandı.
