@@ -49,6 +49,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 
 - [ ] **B-37 En çok gösterim alan 15 sayfayı derinleştir.** 1. sayfadayız (poz. 5–9) ama TO ≈ %0. "Nedir / nasıl yapılır / sık hata" bölümleri, soruya cevap veren title ve meta. content-writer → fact-checker → developer, sprint başına 5 sayfa. Ölçüt: 4 hafta sonra TO %2. Puan 5×4/2.
 - [x] **B-38 Karate ve taekwondo yeniden seçilebilir.** _✓ 2026-11-12 (dalda, QA GEÇTİ, testler 148/148)._ İlteriş kararı 2026-11-12, gösterimlerin %54'ü bu branşlardan. Kayıt, profil, pratik, kata listesi ve rehber dizini. (Sitemap'te zaten vardı.) Sorumlu: developer → qa-reviewer.
+- [ ] **B-39 Karate ve taekwondo içerik envanteri.** _İlteriş isteği 2026-11-12: 2026-11-13 sprintine B-37 ile birlikte alınsın._ Kapsam: `app/guide_content.py` karate/taekwondo rehberleri ve `app/seed.py`'deki 35 karate + 26 taekwondo girişi (teknik + kata). Çıktı: `docs/team/content/drafts/2026-11-13-karate-tkd-envanteri.md`. İçinde (1) **eksikler:** rehberin listelediği ama seed'de olmayan kata/teknikler, ve GSC'de aranıp karşılığı olmayan sorgular (ör. bassai sho, gankaku, hangetsu, nidan geri, taegeuk 3-8); (2) **zayıf girişler:** tek cümlelik ya da TR/EN uyumsuz olanlar; (3) **şüpheli iddialar:** fact-checker'a gidecek liste. Bu sprintte yeni içerik yazılmaz, yalnız envanter çıkarılır. Sorumlu: content-writer (envanter) → fact-checker (şüpheli iddiaların ilk taraması). Koda dokunulmaz.
 
 ## Arama
 
@@ -105,4 +106,4 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - ~~B-34 Öğrenme yolu ve kata kilidi~~ — iptal (İlteriş 2026-11-06).
 - Bağlantı: B-29 haftalık meydan okuma ve B-30 takip akışı "topluluk hocalığı" ayağı.
 
-Önerilen sıra: ~~B-33~~ + ~~B-35~~ → ~~B-32~~ → ~~B-36~~ → B-28 → B-29/B-30.
+Önerilen sıra: ~~B-33~~ + ~~B-35~~ → ~~B-32~~ → ~~B-36~~ → **B-37 (ilk 5 sayfa) + B-39 (2026-11-13)** → B-28 → B-29/B-30.
