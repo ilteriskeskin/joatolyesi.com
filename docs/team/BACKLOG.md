@@ -48,7 +48,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 ## GSC bulguları (2026-11-12, bkz. marketing/2026-11-12-gsc-analizi.md)
 
 - [ ] **B-37 En çok gösterim alan 15 sayfayı derinleştir.** 1. sayfadayız (poz. 5–9) ama TO ≈ %0. "Nedir / nasıl yapılır / sık hata" bölümleri, soruya cevap veren title ve meta. content-writer → fact-checker → developer, sprint başına 5 sayfa. Ölçüt: 4 hafta sonra TO %2. Puan 5×4/2.
-- [ ] **B-38 Karate ve taekwondo kata sayfalarını sitemap'e ekle.** Gösterimlerin %54'ü bu sayfalardan. Sorumlu: developer. Puan 3×4/1.
+- [x] **B-38 Karate ve taekwondo yeniden seçilebilir.** _✓ 2026-11-12 (dalda, QA GEÇTİ, testler 148/148)._ İlteriş kararı 2026-11-12, gösterimlerin %54'ü bu branşlardan. Kayıt, profil, pratik, kata listesi ve rehber dizini. (Sitemap'te zaten vardı.) Sorumlu: developer → qa-reviewer.
 
 ## Arama
 

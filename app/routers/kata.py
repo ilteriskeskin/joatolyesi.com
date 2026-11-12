@@ -23,8 +23,7 @@ router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 @router.get("/kata", response_class=HTMLResponse)
 async def kata_list(request: Request, user: User | None = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    # Karate/taekwondo kapsam dışı: sekmelerde ve "tümü" görünümünde hiç
-    # görünmez. Veri silinmedi — sadece kütüphane gezintisinden çıkarıldı.
+    # Sekmeler seçilebilir branşlardan gelir (SELECTABLE_DISCIPLINES).
     available_result = await db.execute(
         select(Kata.discipline).where(Kata.discipline.in_(SELECTABLE_DISCIPLINES)).distinct()
     )

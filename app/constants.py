@@ -11,12 +11,11 @@ DISCIPLINES = (
     "other",
 )
 
-# Ürün artık silahlı solo pratiğe odaklanıyor (karate/taekwondo kapsam dışı).
 # Yeni seçim gerektiren her yerde (kayıt, profil, pratik kaydı, filtreler)
-# bu liste kullanılır. Eski karate/taekwondo verisi (kullanıcı/seans/kata)
-# DISCIPLINES üzerinden hâlâ okunabilir — silinmedi, sadece yeni seçimden
-# çıkarıldı.
-SELECTABLE_DISCIPLINES = tuple(d for d in DISCIPLINES if d not in ("karate", "taekwondo"))
+# bu liste kullanılır. Karate/taekwondo 7b06a24'te çıkarılmıştı; arama
+# trafiğinin yarısı bu branşlardan geldiği için yeniden açıldı (İlteriş
+# kararı 2026-11-12, docs/team/marketing/2026-11-12-gsc-analizi.md).
+SELECTABLE_DISCIPLINES = DISCIPLINES
 
 # Sahibin gerçek hesabı: geçmişi scripts/backfill_practice.py ile doldurulduğu
 # için scripts/weekly_metrics.py ana metriklerden hariç tutar. Tek kaynak burası.

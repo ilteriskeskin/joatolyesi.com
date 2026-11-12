@@ -103,10 +103,11 @@ class TestBelts:
 
 
 class TestDisciplines:
-    def test_karate_taekwondo_not_selectable_but_preserved(self):
-        assert "karate" not in SELECTABLE_DISCIPLINES
-        assert "taekwondo" not in SELECTABLE_DISCIPLINES
-        assert "karate" in DISCIPLINES and "taekwondo" in DISCIPLINES  # eski veri hâlâ geçerli
+    def test_karate_taekwondo_selectable(self):
+        # İlteriş kararı 2026-11-12: arama trafiği bu branşlardan geliyor
+        assert "karate" in SELECTABLE_DISCIPLINES
+        assert "taekwondo" in SELECTABLE_DISCIPLINES
+        assert set(SELECTABLE_DISCIPLINES) == set(DISCIPLINES)
 
 
 class TestI18n:

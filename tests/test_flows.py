@@ -366,7 +366,8 @@ async def test_kata_kind_split_and_admin(client):
     assert r.status_code == 200
 
 
-async def test_kata_hides_karate_taekwondo_but_keeps_data(client):
+async def test_kata_shows_karate_taekwondo(client):
+    # İlteriş kararı 2026-11-12: karate/taekwondo yeniden seçilebilir ve listelenir
     from app.db import async_session
     from app.models import Kata
     from sqlalchemy import select as _select
@@ -378,16 +379,15 @@ async def test_kata_hides_karate_taekwondo_but_keeps_data(client):
     if karate_kata is None:
         pytest.skip("seed içerik yok")
 
-    # "Tümü" görünümünde ve branş sekmelerinde karate/taekwondo hiç görünmez
     r = await client.get("/kata?d=all")
-    assert "Karate" not in r.text and "Taekwondo" not in r.text
-    assert karate_kata.title_tr not in r.text
+    assert "Karate" in r.text and "Taekwondo" in r.text
 
-    # ?d=karate ile zorlanırsa da branş seçilmiş sayılmaz (sekmelerde yok)
-    r = await client.get("/kata?d=karate")
-    assert karate_kata.title_tr not in r.text
+    r = await client.get(f"/kata?d=karate&kind={karate_kata.kind}")
+    assert karate_kata.title_tr in r.text
 
-    # Veri silinmedi: detay sayfası hâlâ doğrudan linkle erişilebilir
+    r = await client.get("/register")
+    assert 'value="karate"' in r.text and 'value="taekwondo"' in r.text
+
     r = await client.get(f"/kata/{karate_kata.slug}")
     assert r.status_code == 200 and karate_kata.title_tr in r.text
 

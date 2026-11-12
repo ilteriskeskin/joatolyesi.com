@@ -22,8 +22,7 @@ RESOURCES = [
 @router.get("/guide", response_class=HTMLResponse)
 async def guide_index(request: Request, user: User | None = Depends(get_current_user)):
     """Branş rehberi — giriş istemez (SEO + üyelik öncesi değer)."""
-    # Karate/taekwondo rehber içeriği kalıyor (/guide/karate hâlâ erişilebilir),
-    # sadece index kartlarından gizleniyor — ürün artık silahlı pratiğe odaklı.
+    # Dizin, seçilebilir branşlardan rehberi olanları listeler.
     disciplines = [d for d in SELECTABLE_DISCIPLINES if d in GUIDE]
     return render(request, "guide_index.html", user=user, disciplines=disciplines, guide=GUIDE)
 
