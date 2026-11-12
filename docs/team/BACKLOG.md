@@ -45,6 +45,11 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 - [ ] **B-12 Mevcut içerik denetimi:** _2026-11-05: jo yazısında 3 iddia denetlendi, üçü düzeltme gerektirdi → content/verified/2026-11-05-jo-yazisi-duzeltme.md (seed'e uygulanması B-19)._ guide_content.py ve blog yazılarındaki iddiaların örneklem denetimi (fact-checker, her sprint 3 iddia).
 - [ ] **B-13 SEO odaklı rehber yazıları:** B-05 haritasındaki en iyi 5 sorgu için birer sayfa.
 
+## GSC bulguları (2026-11-12, bkz. marketing/2026-11-12-gsc-analizi.md)
+
+- [ ] **B-37 En çok gösterim alan 15 sayfayı derinleştir.** 1. sayfadayız (poz. 5–9) ama TO ≈ %0. "Nedir / nasıl yapılır / sık hata" bölümleri, soruya cevap veren title ve meta. content-writer → fact-checker → developer, sprint başına 5 sayfa. Ölçüt: 4 hafta sonra TO %2. Puan 5×4/2.
+- [ ] **B-38 Karate ve taekwondo kata sayfalarını sitemap'e ekle.** Gösterimlerin %54'ü bu sayfalardan. Sorumlu: developer. Puan 3×4/1.
+
 ## Arama
 
 - [ ] **B-14 Site içi arama.** `/kata?q=` üzerinden kata + teknik + rehber + blog araması; Postgres full-text (unaccent / `simple` config). Yeni servis ya da bağımlılık yok. Sorumlu: developer → qa-reviewer.
