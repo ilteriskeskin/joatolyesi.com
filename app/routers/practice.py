@@ -11,6 +11,7 @@ from sqlalchemy.orm import selectinload
 from app.analytics import practice_logged_params
 from app.config import settings
 from app.daily import pick_daily_kata
+from app.tips_content import pick_daily_tip
 from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.guide_content import get_guide
@@ -168,6 +169,7 @@ async def dashboard_context(db: AsyncSession, user: User, request: Request | Non
         "show_push_prompt": await _has_practice_log(db, user),
         "show_reminder_card": await _show_reminder_card(db, user, request),
         "daily_kata": await pick_daily_kata(db, user, today),
+        "daily_tip": pick_daily_tip(today),
         "streak_last_day": sinfo["last_day"],
         "streak_last_day_freeze": sinfo["last_day_freeze"],
         "streak": sinfo["streak"],

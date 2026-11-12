@@ -29,6 +29,19 @@
     {% include "_practice_panel.html" %}
   </div>
 
+  {% if daily_tip %}
+  <section class="card tip-of-day" aria-labelledby="dash-tip-label">
+    <span class="card-label" id="dash-tip-label">{{ t.tips_today_label }}</span>
+    <blockquote class="tip-quote">{{ daily_tip.tr if lang == 'tr' else daily_tip.en }}</blockquote>
+    {% if daily_tip.author %}
+    <p class="tip-author">{{ daily_tip.author }}
+      <span class="muted">— {{ daily_tip.role_tr if lang == 'tr' else daily_tip.role_en }}</span></p>
+    {% endif %}
+    <p class="tip-source muted">{{ daily_tip.source }}</p>
+    <a class="link-button" href="/tips" data-track="tip_card_click">{{ t.nav_tips }}</a>
+  </section>
+  {% endif %}
+
   {% if user.discipline != 'aikijo' %}
   {% set compact = true %}
   {% include "_program_card.html" %}

@@ -3,14 +3,15 @@ doğrulanabilir antrenman bilgeliğinden günlük bir seçki.
 
 DOĞRULUK KURALI (app/guide_content.py ile aynı): Burada yalnız gerçekten
 belgelenmiş, kaynağı gösterilebilen öğretiler yer alır:
-- Gichin Funakoshi'nin "Niju Kun" (Karatenin Yirmi İlkesi, 1938) — her biri
+- Gichin Funakoshi'nin "Niju Kun" (Karatenin Yirmi İlkesi; ilk yayımı Genwa
+  Nakasone'nin Karate-dō Taikan'ında, 1938 — yazılış tarihi tartışmalıdır) — her biri
   "hitotsu" (bir/ilk) ile başlar, yani orijinalinde numaralı/sıralı değildir
   ve tek bir "resmi" İngilizce/Türkçe çevirisi yoktur; burada anlam olarak
   doğrulanmış, yaygın kabul gören çeviriler kullanılır. Madde numarası iddia
   edilmez.
-- Miyamoto Musashi'nin "Dokkodo" (Tek Başına Yürüme Yolu, 1645) — 21
-  maddelik öz-disiplin metni; çeviriler arasında kelime farkı olabilir,
-  anlam olarak doğrulanmış maddeler kullanılır.
+- Miyamoto Musashi'nin "Dokkodo" (Tek Başına Yürüme Yolu, 1645) — yaygın
+  versiyonda 21 madde (bazı nüshalarda 19); çeviriler arasında kelime farkı
+  olabilir, yalnız iki adlandırılmış çeviriyle örtüşen maddeler kullanılır.
 - Jigoro Kano'nun (Judo'nun kurucusu) iki temel ilkesi: Seiryoku Zenyo ve
   Jita Kyoei — kendi yazılarında tanımladığı, yaygın kabul görmüş ilkeler.
 - Morihei Ueshiba (Aikido kurucusu) için tam alıntı yerine öğretisinin genel
@@ -18,8 +19,10 @@ belgelenmiş, kaynağı gösterilebilen öğretiler yer alır:
 Uydurma/kaynağı belirsiz "motivasyon sözü" YAZILMAZ. Emin olunmayan bir
 öğreti eklenmeden önce TODO.md'ye not düşülür.
 
-`day_of_year % len(TIPS)` ile günlük döner — tablo gerekmez, deterministik.
+`date.toordinal() % len(TIPS)` ile günlük döner (bkz. pick_daily_tip) — tablo gerekmez, deterministik.
 """
+
+from datetime import date
 
 TIPS: list[dict] = [
     {
@@ -27,7 +30,7 @@ TIPS: list[dict] = [
         "role_tr": "Shotokan karatenin kurucusu",
         "role_en": "Founder of Shotokan karate",
         "source": "Niju Kun (Karatenin Yirmi İlkesi)",
-        "tr": "Karate nezaketle (rei) başlar, nezaketle biter — teknikten önce saygı gelir.",
+        "tr": "Karate nezaketle (rei) başlar, nezaketle biter.",
         "en": "Karate begins with courtesy and ends with courtesy.",
     },
     {
@@ -43,8 +46,8 @@ TIPS: list[dict] = [
         "role_tr": "Shotokan karatenin kurucusu",
         "role_en": "Founder of Shotokan karate",
         "source": "Niju Kun",
-        "tr": "Başkalarını kontrol etmeye kalkışmadan önce kendini kontrol et.",
-        "en": "First control yourself before attempting to control others.",
+        "tr": "Önce kendini bil, sonra başkalarını.",
+        "en": "First know yourself, then know others.",
     },
     {
         "author": "Gichin Funakoshi",
@@ -99,14 +102,6 @@ TIPS: list[dict] = [
         "role_tr": "Kılıç ustası, Go Rin no Sho'nun yazarı",
         "role_en": "Swordsman, author of The Book of Five Rings",
         "source": "Dokkodo",
-        "tr": "Her şeyi olduğu gibi kabul et.",
-        "en": "Accept everything just the way it is.",
-    },
-    {
-        "author": "Miyamoto Musashi",
-        "role_tr": "Kılıç ustası, Go Rin no Sho'nun yazarı",
-        "role_en": "Swordsman, author of The Book of Five Rings",
-        "source": "Dokkodo",
         "tr": "Kendini hafife al, dünyayı derinden düşün.",
         "en": "Think lightly of yourself and deeply of the world.",
     },
@@ -130,8 +125,8 @@ TIPS: list[dict] = [
         "author": "Miyamoto Musashi",
         "role_tr": "Kılıç ustası, Go Rin no Sho'nun yazarı",
         "role_en": "Swordsman, author of The Book of Five Rings",
-        "source": "Go Rin no Sho (Beş Halka Kitabı) — yaygın çeviriyle",
-        "tr": "Bin gün çalışmak dövmek (temel atmak), on bin gün çalışmak cilalamaktır (ustalaşmaktır).",
+        "source": "Go Rin no Sho (Beş Halka Kitabı), Su Kitabı",
+        "tr": "Bin günlük çalışma temeli döver, on bin günlük çalışma onu arıtır.",
         "en": "A thousand days of training to forge, ten thousand days of training to refine.",
     },
     {
@@ -139,16 +134,16 @@ TIPS: list[dict] = [
         "role_tr": "Judo'nun kurucusu",
         "role_en": "Founder of Judo",
         "source": "Seiryoku Zenyo ilkesi",
-        "tr": "Seiryoku zenyo: enerjini en verimli şekilde kullan — güçle değil, doğru zamanlamayla kazan.",
-        "en": "Seiryoku zenyo: maximum efficient use of energy — win with timing, not brute force.",
+        "tr": "Seiryoku zenyo: zihnini ve bedenini en verimli şekilde kullan — yalnız tatamide değil, günlük hayatta da.",
+        "en": "Seiryoku zenyo: maximum efficient use of mind and body — on the mat and in daily life.",
     },
     {
         "author": "Jigoro Kano",
         "role_tr": "Judo'nun kurucusu",
         "role_en": "Founder of Judo",
         "source": "Jita Kyoei ilkesi",
-        "tr": "Jita kyoei: karşılıklı fayda ve ortak gelişim — antrenman partnerin senin en iyi öğretmenin.",
-        "en": "Jita kyoei: mutual welfare and benefit — your training partner is one of your best teachers.",
+        "tr": "Jita kyoei: karşılıklı yardım ve fayda — kendinle birlikte başkalarının da gelişmesini gözet.",
+        "en": "Jita kyoei: mutual welfare and benefit — progress together with others.",
     },
     {
         "author": "Morihei Ueshiba",
@@ -163,8 +158,8 @@ TIPS: list[dict] = [
         "role_tr": "Aikido'nun kurucusu",
         "role_en": "Founder of Aikido",
         "source": "Öğretisinin genel özeti (The Art of Peace derlemesi)",
-        "tr": "Gerçek çalışma günlük tekrardır — bir kerelik ilham değil, her gün dönüp gelen sadakattir.",
-        "en": "True practice is daily repetition — not a one-time inspiration, but a discipline you return to every day.",
+        "tr": "Gün be gün çalış ve tekniğini incelt; kendini hiçbir zaman tamamlanmış bir usta sayma, başkalarıyla birlikte çalışmayı sürdür.",
+        "en": "Train day after day and refine your technique; never think of yourself as a finished master — keep training together with others.",
     },
     # Genel, kaynağı kişiye bağlı olmayan, doğrulanabilir antrenman bilgeliği
     # (guide_content.py'deki "İpuçları" bölümleriyle aynı üslup).
@@ -177,8 +172,8 @@ TIPS: list[dict] = [
     {
         "author": None,
         "source": "Genel antrenman bilgeliği",
-        "tr": "Yorgunken çalışılan teknik, dinlenmişken çalışılandan daha kalıcı hata bırakır — dikkatli ol.",
-        "en": "Technique practiced while fatigued leaves more lasting mistakes than technique practiced while fresh — be careful.",
+        "tr": "Aşırı yorgunken yapılan çalışma beceri öğrenmeyi bozabilir ve etkisi yorgunluk geçtikten sonra da sürebilir — yorulunca tempoyu düşür ya da ara ver.",
+        "en": "Practising while heavily fatigued can impair skill learning, and the effect may outlast the fatigue — slow down or rest when tired.",
     },
     {
         "author": None,
@@ -187,3 +182,8 @@ TIPS: list[dict] = [
         "en": "Watching video isn't a substitute for training, but it trains the eye — use both together.",
     },
 ]
+
+
+def pick_daily_tip(today: date) -> dict:
+    """Tarihe göre deterministik günlük ipucu: aynı gün herkes aynısını görür."""
+    return TIPS[today.toordinal() % len(TIPS)]

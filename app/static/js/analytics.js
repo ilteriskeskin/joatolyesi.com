@@ -19,4 +19,10 @@
     const d = ev.detail || {};
     track("practice_logged", { discipline: d.discipline, minutes: d.minutes, source: d.source });
   });
+
+  // Basit tıklama olayı: data-track="olay_adı" taşıyan bağlantılar (ör. ipucu kartı)
+  document.addEventListener("click", (ev) => {
+    const el = ev.target.closest && ev.target.closest("[data-track]");
+    if (el) track(el.getAttribute("data-track"));
+  });
 })();
