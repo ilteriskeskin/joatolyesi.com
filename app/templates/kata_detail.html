@@ -2,8 +2,8 @@
 {% from "_jsonld.html" import breadcrumb %}
 {% set kata_title = kata.title_en if lang == 'en' else kata.title_tr %}
 {% set kata_desc = kata.description_en if lang == 'en' else kata.description_tr %}
-{% block title %}{{ kata_title }} — {{ t["discipline_" ~ kata.discipline] }} — Joryu{% endblock %}
-{% block meta_description %}{{ kata_desc | truncate(155) }}{% endblock %}
+{% block title %}{% if content %}{{ content.title }} — Joryu{% else %}{{ kata_title }} — {{ t["discipline_" ~ kata.discipline] }} — Joryu{% endif %}{% endblock %}
+{% block meta_description %}{% if content %}{{ content.meta }}{% else %}{{ kata_desc | truncate(155) }}{% endif %}{% endblock %}
 {% block og %}
   <meta property="og:type" content="{{ 'video.other' if kata.video_url else 'article' }}">
   <meta property="og:title" content="{{ self.title() }}">
@@ -35,7 +35,32 @@
   {% else %}
   <div class="video-placeholder">{{ t.kata_video_soon }}</div>
   {% endif %}
+  {% if content %}
+  <section class="kata-section kata-nedir">
+    <h2>{{ t.kata_sec_nedir }}</h2>
+    <p>{{ content.nedir }}</p>
+  </section>
+  {% if content.adimlar %}
+  <section class="kata-section kata-steps">
+    <h2>{{ t.kata_sec_steps }}</h2>
+    <ol>{% for a in content.adimlar %}<li>{{ a }}</li>{% endfor %}</ol>
+  </section>
+  {% endif %}
+  {% if content.sik_hatalar %}
+  <section class="kata-section kata-mistakes">
+    <h2>{{ t.kata_sec_mistakes }}</h2>
+    <ul>{% for m in content.sik_hatalar %}<li>{{ m }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+  {% if content_related %}
+  <section class="kata-section kata-related-techniques">
+    <h2>{{ t.kata_sec_related }}</h2>
+    <ul>{% for r in content_related %}<li><a href="/kata/{{ r.slug }}">{{ r.title_en if lang == 'en' else r.title_tr }}</a></li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+  {% else %}
   <p>{{ kata_desc }}</p>
+  {% endif %}
   {% if in_program %}
   <div class="card program-box">
     <p>{{ t.kata_in_program.format(week=in_program.week, days=in_program.days|join(', ')) }}</p>
@@ -69,7 +94,7 @@
   </div>
   {% endif %}
 
-  {% if related %}
+  {% if related and not content %}
   <section class="kata-related">
     <h2>{{ t.kata_related_title }}</h2>
     <div class="card-grid">

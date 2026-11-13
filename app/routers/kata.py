@@ -12,10 +12,11 @@ from app.constants import SELECTABLE_DISCIPLINES
 from app.db import get_db
 from app.config import settings
 from app.guide_content import GUIDE
+from app.kata_content import get_kata_content
 from app.deps import ProRequired, csrf_protect, get_current_user, is_pro, require_user, waitlist_gate
 from app.models import Kata, PracticeLog, User
 from app.rate_limit import limiter
-from app.render import render
+from app.render import render, resolve_lang
 from app.routers.practice import dashboard_context
 
 router = APIRouter(dependencies=[Depends(waitlist_gate)])
@@ -105,9 +106,17 @@ async def kata_detail(
         .limit(6)
     )
     related = list(related_result.scalars().all())
+    # B-40: slug'a özel içerik varsa yeni düzen; ilgili teknikler yalnız DB'de olanlar
+    content = get_kata_content(slug, resolve_lang(request, request.query_params.get("lang")))
+    content_related: list[Kata] = []
+    if content and content.get("ilgili"):
+        rel = await db.execute(select(Kata).where(Kata.slug.in_(content["ilgili"])))
+        by_slug = {k.slug: k for k in rel.scalars().all()}
+        content_related = [by_slug[s] for s in content["ilgili"] if s in by_slug]
     return render(
         request, "kata_detail.html", user=user, kata=kata, logged=logged,
         repeat_count=repeat_count, related=related,
+        content=content, content_related=content_related,
         guide_available=kata.discipline in GUIDE,
         in_program=KATA_PROGRAM_DAYS.get(kata.slug) if kata.discipline == "aikijo" else None,
     )

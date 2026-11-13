@@ -2076,3 +2076,9 @@ a.card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(184, 146
   .daily-kata-card__actions { flex-direction: column; align-items: stretch; }
   .daily-kata-card__actions .button { width: 100%; text-align: center; }
 }
+
+/* B-40: içerikli kata/teknik detayı (mobil öncelikli) */
+.kata-section { margin-top: 1.5rem; }
+.kata-section h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+.kata-section ol, .kata-section ul { padding-left: 1.3rem; }
+.kata-section li { margin-bottom: 0.6rem; line-height: 1.55; }

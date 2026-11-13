@@ -269,6 +269,10 @@ STRINGS = {
         "kata_repeat_count": "You have practiced this {n} times.",
         "kata_cta_text": "Save the days you practice this kata — create a free account.",
         "kata_related_title": "Related kata & techniques",
+        "kata_sec_nedir": "What it is",
+        "kata_sec_steps": "How to do it",
+        "kata_sec_mistakes": "Common mistakes",
+        "kata_sec_related": "Related techniques",
         "kata_search_placeholder": "Search kata and techniques…",
         # Weekly summary
         "week_title": "This week",
@@ -766,6 +770,10 @@ STRINGS = {
         "kata_repeat_count": "Bunu {n} kez çalıştın.",
         "kata_cta_text": "Bu kata'yı çalıştığın günleri kaydet — ücretsiz hesap oluştur.",
         "kata_related_title": "İlgili kata ve teknikler",
+        "kata_sec_nedir": "Nedir",
+        "kata_sec_steps": "Nasıl yapılır",
+        "kata_sec_mistakes": "Sık hatalar",
+        "kata_sec_related": "İlgili teknikler",
         "kata_search_placeholder": "Kata ve teknik ara…",
         # Haftalık özet
         "week_title": "Bu hafta",
