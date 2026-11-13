@@ -88,7 +88,7 @@ Hipotez (B-20/21): Instagram'dan gelen ziyaretçiye somut, ücretsiz bir 30 gün
 
 ## Bakım
 
-- [x] **B-36 Sitemap testi kırık.** _✓ 2026-11-10 (4ed7ab6, dalda): kök neden testin `.env`'deki BASE_URL'e bağlı olmasıydı (varsayılan localhost:8000). conftest'te BASE_URL sabitlendi; temiz ortamda 145/145._ Sorumlu: developer.
+- [x] **B-36 Sitemap testi kırık.** _✓ 2026-11-10 (4ed7ab6, dalda); prod BASE_URL İlteriş kontrol etti 2026-11-13: kök neden testin `.env`'deki BASE_URL'e bağlı olmasıydı (varsayılan localhost:8000). conftest'te BASE_URL sabitlendi; temiz ortamda 145/145._ Sorumlu: developer.
 
 - [x] **B-17 Test izolasyonu.** _✓ 2026-11-05 (dalda; seed edilen test kullanıcıları teardown'da siliniyor, aynı DB'de 11 koşu yeşil)._ `tests/test_demo_hidden.py::test_demo_hidden_from_public_surfaces` aynı test DB'sinde ikinci koşuda düşüyor (`weekly_leaders` önceki testlerin verisini görüyor). Sorumlu: developer.
 - [x] **B-18 Sitemap'e blog yazıları.** _✓ 2026-11-04 (81facbd, dalda); karate/taekwondo da dahil edildi (132e99a, İlteriş kararı)._ Sitemap blog yazılarını içermiyor; karate/taekwondo kata sayfaları da yok (İlteriş kararı bekliyor). Sorumlu: developer. Puan 4×4/1.
