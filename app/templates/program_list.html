@@ -8,16 +8,30 @@
   <a class="button" href="/billing">{{ t.kata_upgrade_cta }}</a>
 </div>
 {% endif %}
+{% if user %}<p class="muted">{{ t.programs_one_active_note }}</p>{% endif %}
 <div class="card-grid">
   {% for program in programs %}
-  <a class="card" href="/programs/{{ program.slug }}">
+  {% set done = progress.get(program.slug) if user else none %}
+  <div class="card">
     {% if pro_enabled %}
     <span class="badge badge--pro">{{ t.kata_locked }}</span>
     {% endif %}
-    <h3>{{ program.title_en if lang == 'en' else program.title_tr }}</h3>
+    <h3><a href="/programs/{{ program.slug }}">{{ program.title_en if lang == 'en' else program.title_tr }}</a></h3>
     <p class="muted">{{ program.description_en if lang == 'en' else program.description_tr }}</p>
     <span class="kata-discipline">{{ program.duration_days }} {{ t.program_days }}</span>
-  </a>
+    {% if user %}
+    {% if program.slug == active_slug %}
+    <p><strong>{{ t.programs_status_active }}</strong> · {{ t.program_enrolled.format(current=[done + 1, program.duration_days]|min, total=program.duration_days) }}</p>
+    <a class="button button--outline" href="/programs/{{ program.slug }}">{{ t.programs_continue }}</a>
+    {% else %}
+    {% if done is not none %}<p class="muted">{{ t.programs_status_started.format(done=done, total=program.duration_days) }}</p>{% endif %}
+    <form method="post" action="/programs/{{ program.slug }}/enroll">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="button button--outline">{{ t.programs_switch if done is not none else t.program_enroll }}</button>
+    </form>
+    {% endif %}
+    {% endif %}
+  </div>
   {% endfor %}
 </div>
 {% endblock %}

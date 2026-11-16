@@ -127,7 +127,7 @@ async def dashboard_context(db: AsyncSession, user: User, request: Request | Non
             select(Enrollment)
             .options(selectinload(Enrollment.program), selectinload(Enrollment.completed_days))
             .where(Enrollment.user_id == user.id)
-            .order_by(Enrollment.created_at.desc())
+            .order_by(Enrollment.activated_at.desc())
             .limit(1)
         )
         enrollment = enrollment_result.scalar_one_or_none()
