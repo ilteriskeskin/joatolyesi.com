@@ -6,7 +6,7 @@
 <article>
   <h1>{{ program.title_en if lang == 'en' else program.title_tr }}</h1>
   <p class="muted">{{ program.description_en if lang == 'en' else program.description_tr }}</p>
-  <p class="muted">{{ t.program_for_whom }}</p>
+  <p class="muted">{{ t.program_for_whom_bokken if is_bokken else t.program_for_whom }}</p>
 
   {% if not user %}
   {% set reg = '/register?next=' ~ ('/programs/' ~ program.slug)|urlencode %}
@@ -37,12 +37,21 @@
   {% else %}
   {% if finished %}
   <p class="form-message form-message--success">{{ t.program_finished }}</p>
-  <p class="program-cta"><a class="button" href="/kata?d=aikijo">{{ t.program_next_kata_link }}</a></p>
+  <p class="program-cta"><a class="button" href="/kata?d={{ 'bokken' if is_bokken else 'aikijo' }}">{{ t.program_next_kata_link_bokken if is_bokken else t.program_next_kata_link }}</a></p>
   {% elif enrollment %}
   {% if next_day %}
   <p class="form-message form-message--success">{{ t.program_done_tomorrow.format(n=next_day.day_number, title=(next_day.title_en if lang == 'en' else next_day.title_tr)) }}</p>
   {% endif %}
   <p><strong>{{ t.program_enrolled.format(current=current_day, total=program.duration_days) }}</strong></p>
+  {% if not is_active %}
+  <div class="program-note">
+    <p>{{ t.programs_not_active_note }}</p>
+    <form method="post" action="/programs/{{ program.slug }}/enroll">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button type="submit" class="button button--outline">{{ t.programs_switch }}</button>
+    </form>
+  </div>
+  {% endif %}
   {% if opens_tomorrow %}
   {% if not next_day %}<p class="muted">{{ t.program_opens_tomorrow_focus.format(n=current_day, focus=day_label(current_day_obj)) }}</p>{% endif %}
   {% else %}
@@ -61,6 +70,7 @@
     </ul>
     <p class="muted">{{ t.program_advice_note }}</p>
   </section>
+  {% if has_other_active %}<p class="muted">{{ t.programs_switch_note }}</p>{% endif %}
   <form method="post" action="/programs/{{ program.slug }}/enroll">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button type="submit" class="button button--block">{{ t.program_enroll }}</button>
@@ -79,6 +89,7 @@
   </div>
   {% endif %}
   {% include "_program_weeks.html" %}
+  <p class="muted"><a href="/programs">{{ t.programs_all_link }}</a></p>
   {% endif %}
 </article>
 {% endblock %}

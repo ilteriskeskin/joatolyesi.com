@@ -15,7 +15,7 @@ Kesin olmayan içerik (adım adım dökümler) buraya YAZILMAZ — TODO.md'deki
 "Rehber araştırma listesi"nde tutulur.
 """
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from app.db import async_session
@@ -158,25 +158,29 @@ BOKKEN = [
        "Geri adımla savunma pozisyonundan öne adımla kesiş. Geri çekilirken kılıç "
        "jodan'a kalkar.", kind="teknik"),
     _k("aiki-ken-suburi-3", "Aiki-ken suburi 3 — San no suburi",
-       "Low sweep then overhead cut.",
-       "Alt savuşturma (gedan) sonrası kesiş: kılıç önce aşağı süpürür, sonra tepeden "
-       "iner.", kind="teknik"),
+       "Step back, raise the sword and lower it to the right side at thigh height "
+       "(waki gamae); step forward with a shomen cut. Some dojos (e.g. Aikido Australia) "
+       "teach this suburi to gedan on the step back; follow your teacher's line.",
+       "Geri adımda kılıç kaldırılıp sağ yana, uyluk hizasına (waki gamae) indirilir; öne "
+       "adımla shomen kesişi. Bazı dojolar (ör. Aikido Australia) bu suburi'yi gedan'a geri "
+       "adımla öğretir; hocanın çizgisini izle.", kind="teknik"),
     _k("aiki-ken-suburi-4", "Aiki-ken suburi 4 — Yon no suburi",
        "Walking continuous shomen cuts, one per step.",
        "Ardışık kesiş yürüyüşü: her adımda bir shomen, dojo boyunca. Nefesle eşle: "
        "adım-kes-nefes.", kind="teknik"),
     _k("aiki-ken-suburi-5", "Aiki-ken suburi 5 — Go no suburi",
-       "Side deflection returning to a centre cut.",
-       "Yan savuşturma + kesiş: kılıç yana açılıp merkeze döner. Bileklerin çizdiği yay "
-       "küçük olmalı.", kind="teknik"),
+       "Advancing, alternating right and left diagonal cuts aimed at the side of the head.",
+       "İlerlerken sağa ve sola dönüşümlü, başın yanına yönelen çapraz kesişler.",
+       kind="teknik"),
     _k("aiki-ken-suburi-6", "Aiki-ken suburi 6 — Roku no suburi",
-       "Deflection finishing with a thrust.",
-       "Savuşturma + tsuki: kesiş yerine dürtüşle biter. Tsuki'de arka ayak topuğu "
-       "yerden kalkmaz.", kind="teknik"),
+       "A thrust (tsuki) after every cut, repeated alternately on the right and left side.",
+       "Her kesişin ardından tsuki; sağ ve sol tarafta dönüşümlü tekrarlanır.",
+       kind="teknik"),
     _k("aiki-ken-suburi-7", "Aiki-ken suburi 7 — Nana no suburi",
-       "Combines deflection, cut and thrust — the series in one flow.",
-       "Serinin birleşimi: savuşturma, kesiş ve tsuki tek akışta. Yedisi art arda = tam "
-       "bir mini kata.", kind="teknik"),
+       "Cut in the right stance, then step forward and thrust (tsuki) in the left stance; "
+       "repeated while advancing.",
+       "Sağ duruşta kesiş, ardından öne adımla sol duruşta tsuki; tekrarlanarak ilerlenir.",
+       kind="teknik"),
     # Teknik — Kamae
     _k("bokken-kamae-seigan", "Seigan / Chudan no kamae",
        "The basic guard — tip at the opponent's throat.",
@@ -847,6 +851,103 @@ def _build_program_days() -> list[dict]:
     return days
 
 
+# --- Bokken 30 gün programı (B-41a): metin YALNIZ docs/team/content/verified/2026-11-15-30-gun-bokken-programi.md ---
+BOKKEN_PROGRAM_SLUG = "30-day-bokken-suburi"
+
+BOKKEN_WEEKS = [
+    ("Foundation — ichi no suburi", "Temel — ichi no suburi"),  # gün 1-7
+    ("Stepping back — ni & san no suburi", "Geri adım — ni ve san no suburi"),  # gün 8-14
+    ("Advancing cuts — yon & go no suburi", "İlerleyen kesişler — yon ve go no suburi"),  # gün 15-21
+    ("Cut and thrust — roku & shichi no suburi", "Kesiş ve tsuki — roku ve shichi no suburi"),  # gün 22-28
+]
+BOKKEN_JOINING = ("Joining: full series", "Birleştirme: tüm seri")  # gün 29-30
+
+# (odak TR, focus EN); 7/14/21/28 tekrar günü
+BOKKEN_DAY_FOCUS = [
+    ("Duruş (migi hanmi) + ichi no suburi, yavaş", "Stance (migi hanmi) + ichi no suburi, slow"),
+    ("Ichi no suburi: 3 set x 10+", "Ichi no suburi: 3 sets of 10+"),
+    ("Ichi no suburi: kesiş ve ayak uyumu", "Ichi no suburi: cut and foot together"),
+    ("Ichi no suburi: hanmi duruşu, kesişte merkez hattı", "Ichi no suburi: hanmi stance, cutting on the centre line"),
+    ("Ichi no suburi: ayna karşısında, kılıç hattı", "Ichi no suburi: in front of a mirror, sword line"),
+    ("Ichi no suburi: uzun set, son set en yavaş", "Ichi no suburi: long set, last set slowest"),
+    ("Tekrar günü (hafta 1)", "Review day (week 1)"),
+    ("Ichi no suburi ısınma, sonra ni no suburi tanışma", "Ichi warm-up, then meet ni no suburi"),
+    ("Ni no suburi: geri adım ve kılıcı kaldırma", "Ni no suburi: step back and raise"),
+    ("Ichi + ni no suburi, dönüşümlü", "Ichi + ni no suburi, alternating"),
+    ("Ichi ısınma, sonra san no suburi tanışma", "Ichi warm-up, then meet san no suburi"),
+    ("San no suburi: geri adımla aşağı indirme, sonra kesiş", "San no suburi: step back and lower, then cut"),
+    ("Ni + san no suburi, dönüşümlü", "Ni + san no suburi, alternating"),
+    ("Tekrar günü (hafta 2: ichi, ni, san)", "Review day (week 2: ichi, ni, san)"),
+    ("Ichi-ni-san ısınma, sonra yon no suburi tanışma", "1-3 warm-up, then meet yon no suburi"),
+    ("Yon no suburi: ardışık kesişler, sağ-sol", "Yon no suburi: continuous cuts, right-left"),
+    ("Go no suburi tanışma (hocana danış)", "Meet go no suburi (ask your teacher)"),
+    ("Go no suburi: sağ-sol yönde çapraz kesiş", "Go no suburi: diagonal cuts, both sides"),
+    ("Yon + go no suburi, dönüşümlü", "Yon + go no suburi, alternating"),
+    ("Ichi'den yon'a kadar yavaş geçiş", "Slow run from ichi to yon"),
+    ("Tekrar günü (hafta 3: yon, go)", "Review day (week 3: yon, go)"),
+    ("Yon-go ısınma, sonra roku no suburi tanışma", "Yon-go warm-up, then meet roku no suburi"),
+    ("Roku no suburi: kesişten tsuki'ye geçiş", "Roku no suburi: from cut to thrust"),
+    ("Shichi no suburi tanışma", "Meet shichi (nana) no suburi"),
+    ("Shichi no suburi: kesiş, adım, tsuki", "Shichi no suburi: cut, step, thrust"),
+    ("Roku + shichi no suburi, dönüşümlü", "Roku + shichi no suburi, alternating"),
+    ("Ichi'den shichi'ye tüm seri, yarı hız", "Full series 1-7 at half speed"),
+    ("Tekrar günü (hafta 4: roku, shichi)", "Review day (week 4: roku, shichi)"),
+    ("Tüm seri, ayna karşısında; en zayıf suburi'ye ekstra tur",
+     "Full series in front of a mirror; extra round on the weakest"),
+    ("Tüm seri, sakin tempoda; ilerlemeni kaydet", "Full series, calm tempo; log your progress"),
+]
+
+
+def _build_bokken_program_days() -> list[dict]:
+    days = []
+    for day_num in range(1, 31):
+        theme_en, theme_tr = BOKKEN_WEEKS[(day_num - 1) // 7] if day_num <= 28 else BOKKEN_JOINING
+        focus_tr, focus_en = BOKKEN_DAY_FOCUS[day_num - 1]
+        if day_num % 7 == 0:
+            title_en, title_tr = focus_en, focus_tr
+            content_tr = (
+                f"Hafta teması: {theme_tr}. Bugün tekrar günü. 5 dakika ısın (bilek, omuz, kalça). "
+                "Sonra bu haftanın suburi'lerini 10 dakika yavaş ve bilinçli tekrar et. "
+                "Yarı hız, tam dikkat. 5 dakika serbest hareketle bitir."
+            )
+            content_en = (
+                f"Week theme: {theme_en}. Review day. Warm up 5 minutes (wrists, shoulders, hips). "
+                "Then 10 minutes of slow, deliberate repetition of this week's suburi. "
+                "Half speed, full attention. Finish with 5 minutes of free movement."
+            )
+        else:
+            title_en, title_tr = f"Focus: {focus_en}", f"Odak: {focus_tr}"
+            content_tr = (
+                f"Hafta teması: {theme_tr}. 5 dakika ısın (bilek, omuz, kalça). "
+                f"Ana çalışma: {focus_tr}. Her suburi için en az 10 tekrar önerilir; "
+                "ihtiyacın kadar set yap, son set ilkinden yavaş olsun: hızdan önce isabet. "
+                "Bu hareketi henüz hocandan öğrenmediysen önce ona danış. Bitirince seansını kaydet."
+            )
+            content_en = (
+                f"Week theme: {theme_en}. Warm up 5 minutes (wrists, shoulders, hips). "
+                f"Main work: {focus_en}. At least 10 repetitions per suburi is suggested; "
+                "do as many sets as you need, last set slower than the first: precision over speed. "
+                "If you haven't learned this movement from a teacher yet, ask yours first. Log your session when done."
+            )
+        days.append({
+            "day_number": day_num, "title_en": title_en, "title_tr": title_tr,
+            "content_en": content_en, "content_tr": content_tr,
+        })
+    return days
+
+
+async def _seed_program(db, slug: str, fields: dict, days: list[dict]) -> None:
+    """Program yalnız slug'ı yokken eklenir (idempotent); var olan programa/ilerlemeye dokunulmaz."""
+    exists = (await db.execute(select(Program.id).where(Program.slug == slug))).scalar_one_or_none()
+    if exists is not None:
+        return
+    program = Program(slug=slug, duration_days=30, **fields)
+    db.add(program)
+    await db.flush()
+    for day in days:
+        db.add(ProgramDay(program_id=program.id, **day))
+
+
 async def seed_content() -> None:
     async with async_session() as db:
         all_slugs: set[str] = set()
@@ -872,10 +973,10 @@ async def seed_content() -> None:
         # (kata tablosuna FK yok — pratik kayıtları etkilenmez).
         await db.execute(Kata.__table__.delete().where(Kata.slug.not_in(all_slugs)))
 
-        program_count = (await db.execute(select(func.count(Program.id)))).scalar_one()
-        if program_count == 0:
-            program = Program(
-                slug="30-day-jo-suburi",
+        await _seed_program(
+            db,
+            "30-day-jo-suburi",
+            dict(
                 title_en="30-Day Jo Suburi Program",
                 title_tr="30 Günlük Jo Suburi Programı",
                 description_en=(
@@ -888,11 +989,27 @@ async def seed_content() -> None:
                     "Dört haftalık tema: dürtüşler, vuruşlar, tek el ve hasso formları, "
                     "akış formları. Günde yaklaşık 10–20 dakika."
                 ),
-                duration_days=30,
-            )
-            db.add(program)
-            await db.flush()
-            for day in _build_program_days():
-                db.add(ProgramDay(program_id=program.id, **day))
+            ),
+            _build_program_days(),
+        )
+        await _seed_program(
+            db,
+            BOKKEN_PROGRAM_SLUG,
+            dict(
+                title_en="30-Day Bokken Suburi Program",
+                title_tr="30 Günlük Bokken Suburi Programı",
+                description_tr=(
+                    "Bir ay boyunca her gün yapılandırılmış bokken suburi çalışması. "
+                    "Önce ichi no suburi, sonra sırayla 2-7. Dört haftalık tema, ardından iki "
+                    "birleştirme günü. Günde yaklaşık 10-20 dakika; tekrar sayıları tavsiyedir."
+                ),
+                description_en=(
+                    "One month of daily, structured bokken suburi practice (aiki-ken suburi 1-7). "
+                    "Start with ichi no suburi, then add the rest in order. Four weekly themes "
+                    "plus two joining days. About 10-20 minutes a day; rep counts are suggestions."
+                ),
+            ),
+            _build_bokken_program_days(),
+        )
 
         await db.commit()

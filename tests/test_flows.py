@@ -539,8 +539,8 @@ async def test_pro_disabled_by_default(client):
     assert "/billing" not in r.text and 'href="/programs"' in r.text
 
     assert (await client.get("/billing")).status_code == 404
-    r = await client.get("/programs")  # tek yayimli program: dogrudan ona
-    assert r.status_code == 303 and r.headers["location"] == "/programs/30-day-jo-suburi"
+    r = await client.get("/programs")  # B-41a: iki program (jo, bokken) -> dizin sayfasi
+    assert r.status_code == 200 and "/programs/30-day-jo-suburi" in r.text
 
     # Pro kapaliyken odeme duvari yok: is_free=False isaretli kata da tamamen
     # erisilebilir olmali (listede gorunur, detay 200 doner) - aksi halde
@@ -1267,9 +1267,9 @@ async def test_visitor_nav_landing_and_programs_list(client):
     # ziyaretçi nav'ı (programlar sayfasi uzerinden)
     r = await client.get("/privacy")
     assert 'href="/programs"' in r.text
-    # /programs ziyaretciye acik: tek program -> detaya yonlenir, utm dusmez
+    # /programs ziyaretciye acik: B-41a ile iki program -> dizin sayfasi (tek program kalirsa detaya yonlenir)
     r = await client.get("/programs?utm_source=ig")
-    assert r.status_code == 303 and r.headers["location"] == "/programs/30-day-jo-suburi?utm_source=ig"
+    assert r.status_code == 200 and "/programs/30-day-bokken-suburi" in r.text
     en = await client.get("/?lang=en")
     assert "Free: 30-Day Jo Suburi Program →" in en.text and "Four weekly themes" in en.text
 

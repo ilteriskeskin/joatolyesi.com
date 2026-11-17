@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     resend_api_key: str = ""
     mail_from: str = "Joryu <noreply@joatolyesi.com>"
     base_url: str = "http://localhost:8000"
+    # Yalnız bu e-postayla giriş yapan kullanıcının görebildiği özel sayfalar (/ozel/...).
+    # Boşsa özel sayfalar kimseye açılmaz (404).
+    owner_email: str = ""
     ls_webhook_secret: str = ""
     ls_checkout_url_monthly: str = ""
     ls_checkout_url_yearly: str = ""

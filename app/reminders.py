@@ -42,7 +42,7 @@ async def _open_program_day(db: AsyncSession, user: User) -> tuple[Enrollment, P
             select(Enrollment)
             .options(selectinload(Enrollment.program), selectinload(Enrollment.completed_days))
             .where(Enrollment.user_id == user.id)
-            .order_by(Enrollment.created_at.desc())
+            .order_by(Enrollment.activated_at.desc())
             .limit(1)
         )
     ).scalar_one_or_none()

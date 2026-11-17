@@ -58,7 +58,7 @@ async def sitemap(db: AsyncSession = Depends(get_db)):
         from app.guide_content import GUIDE
         from app.models import Kata
 
-        paths += ["/guide", "/blog", "/resources", "/tips", "/kata", "/programs/30-day-jo-suburi"] + [f"/guide/{d}" for d in GUIDE]
+        paths += ["/guide", "/blog", "/resources", "/tips", "/kata", "/programs/30-day-jo-suburi", "/programs/30-day-bokken-suburi"] + [f"/guide/{d}" for d in GUIDE]
         # Tüm branşlar, karate/taekwondo dahil (İlteriş kararı 2026-11-04):
         # listede gizli olsalar da sayfaları yayında ve aranabilir olmalı
         slugs = (await db.execute(select(Kata.slug))).scalars().all()

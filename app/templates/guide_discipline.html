@@ -35,6 +35,7 @@
   <div class="card guide-program" id="program">
     <h2>{{ t.guide_program_title }}</h2>
     {% if d == 'aikijo' %}<p><a href="/programs/30-day-jo-suburi">{{ t.guide_program_short_link }}</a></p>{% endif %}
+    {% if d == 'bokken' %}<p><a href="/programs/30-day-bokken-suburi">{{ t.guide_program_short_link_bokken }}</a></p>{% endif %}
     <ol>
       {% for step in (g.program[lang] if lang in g.program else g.program.tr) %}
       <li>{{ step }}</li>

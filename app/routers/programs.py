@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy import select
+from sqlalchemy import func, select, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -35,6 +35,9 @@ router = APIRouter(dependencies=[Depends(waitlist_gate)])
 
 # Haftalık tema bloğu yalnız bu programda gösterilir (seed.WEEKS tek kaynak)
 JO_SUBURI_SLUG = "30-day-jo-suburi"
+BOKKEN_SUBURI_SLUG = "30-day-bokken-suburi"
+# Program slug'ı -> pratik kaydının branşı (analytics DISCIPLINES ile uyumlu)
+PROGRAM_DISCIPLINE = {JO_SUBURI_SLUG: "aikijo", BOKKEN_SUBURI_SLUG: "bokken"}
 # Seed'deki odak adı -> aiki-jo teknik slug'ı. Slug doğrudan eşleşmiyorsa buradan;
 # burada olmayan ve katalogda da bulunmayan odaklara link verilmez.
 FOCUS_SLUG_OVERRIDES = {
@@ -56,6 +59,19 @@ async def _get_enrollment(db: AsyncSession, user: User, program: Program) -> Enr
         .where(Enrollment.user_id == user.id, Enrollment.program_id == program.id)
     )
     return result.scalar_one_or_none()
+
+
+async def _user_programs(db: AsyncSession, user: User) -> tuple[str | None, dict[str, int]]:
+    """(aktif program slug'ı, slug -> tamamlanan gün sayısı). Aktif = en son etkinleştirilen kayıt."""
+    result = await db.execute(
+        select(Enrollment)
+        .options(selectinload(Enrollment.program), selectinload(Enrollment.completed_days))
+        .where(Enrollment.user_id == user.id)
+        .order_by(Enrollment.activated_at.desc())
+    )
+    enrollments = list(result.scalars().all())
+    progress = {e.program.slug: len(e.completed_days) for e in enrollments}
+    return (enrollments[0].program.slug if enrollments else None), progress
 
 
 def _week_index(day_number: int) -> int:
@@ -141,7 +157,8 @@ async def program_list(
     if len(programs) == 1:
         qs = f"?{request.url.query}" if request.url.query else ""  # utm/lang düşmesin
         return RedirectResponse(f"/programs/{programs[0].slug}{qs}", status_code=303)
-    return render(request, "program_list.html", user=user, programs=programs)
+    active_slug, progress = await _user_programs(db, user) if user else (None, {})
+    return render(request, "program_list.html", user=user, programs=programs, active_slug=active_slug, progress=progress)
 
 
 @router.get("/programs/{slug}", response_class=HTMLResponse)
@@ -173,6 +190,7 @@ async def program_detail(
     finished = enrollment is not None and len(completed) >= program.duration_days
     opens_tomorrow = enrollment is not None and not finished and completed_new_day_today(enrollment.completed_days)
     is_jo = program.slug == JO_SUBURI_SLUG
+    active_slug = (await _user_programs(db, user))[0] if user else None
     return render(
         request,
         "program_detail.html",
@@ -186,6 +204,9 @@ async def program_detail(
         weeks=await _week_blocks(db) if is_jo else [],
         day1_kata=await _focus_kata(db, program.days[0]) if is_jo and program.days else None,
         next_day=next_day,
+        is_active=active_slug == program.slug,
+        has_other_active=active_slug is not None and active_slug != program.slug,
+        is_bokken=program.slug == BOKKEN_SUBURI_SLUG,
         current_day_obj=program.days[current_day - 1] if current_day else None,
     )
 
@@ -195,16 +216,22 @@ async def enroll(slug: str, request: Request, user: User = Depends(require_progr
     program = await _get_program(db, slug)
     if program is None:
         return render(request, "404.html", user=user)
-    stmt = (
-        pg_insert(Enrollment)
-        .values(user_id=user.id, program_id=program.id)
-        .on_conflict_do_nothing(index_elements=["user_id", "program_id"])
-    )
-    result = await db.execute(stmt)
+    existing = await _get_enrollment(db, user, program)
+    is_new = False
+    if existing is not None:
+        # Daha önce başlanmış program: ilerleme korunur, yalnız aktif olur (B-41a)
+        await db.execute(update(Enrollment).where(Enrollment.id == existing.id).values(activated_at=func.now()))
+    else:
+        stmt = (
+            pg_insert(Enrollment)
+            .values(user_id=user.id, program_id=program.id)
+            .on_conflict_do_nothing(index_elements=["user_id", "program_id"])
+        )
+        is_new = bool((await db.execute(stmt)).rowcount)
     await db.commit()
-    response = RedirectResponse(f"/programs/{slug}/day/1", status_code=303)
+    response = RedirectResponse(f"/programs/{slug}/day/1" if existing is None else f"/programs/{slug}", status_code=303)
     params = program_enroll_params(slug)
-    if result.rowcount and params:  # yalnız yeni kayıtta; tekrar POST olayı çoğaltmaz
+    if is_new and params:  # yalnız yeni kayıtta; tekrar POST olayı çoğaltmaz
         set_pending_event(response, "program_enroll", params)
     return response
 
@@ -231,6 +258,7 @@ async def program_day(
     opens_tomorrow = day_number == unlocked_until and completed_new_day_today(enrollment.completed_days)
     is_locked = day_number > unlocked_until or opens_tomorrow
     review = _is_review_day(day_number)
+    is_jo = program.slug == JO_SUBURI_SLUG  # aiki-jo katalog linkleri yalnız jo programında
     return render(
         request,
         "program_day.html",
@@ -243,8 +271,8 @@ async def program_day(
         log_minutes=REVIEW_DAY_MINUTES if review else DAY_MINUTES,
         is_review=review,
         # Kilitli günde video/kata içeriği yok
-        focus_kata=None if is_locked or review else await _focus_kata(db, day),
-        review_katas=await _review_katas(db, day_number) if review and not is_locked else [],
+        focus_kata=None if is_locked or review or not is_jo else await _focus_kata(db, day),
+        review_katas=await _review_katas(db, day_number) if review and not is_locked and is_jo else [],
         # B-27 kartı: hatırlatması kapalı enroll olmuş kullanıcıya tek tıkla açma
         show_reminder_card=await _show_reminder_card(db, user, request),
     )
@@ -282,12 +310,17 @@ async def complete_day(
             # Aynı gün başka kayıt olsa da eklenir (dashboard ve kata hızlı kaydı da böyle; seri günleri
             # ayrık tarihle sayar, dakika toplamı gerçek çalışmayı yansıtır). Tekrar tamamlama rowcount=0.
             minutes = REVIEW_DAY_MINUTES if _is_review_day(day_number) else DAY_MINUTES
-            focus_kata = None if _is_review_day(day_number) else await _focus_kata(db, program.days[day_number - 1])
+            focus_kata = (
+                await _focus_kata(db, program.days[day_number - 1])
+                if slug == JO_SUBURI_SLUG and not _is_review_day(day_number)
+                else None
+            )
+            discipline = PROGRAM_DISCIPLINE.get(slug, "aikijo")
             db.add(
                 PracticeLog(
                     user_id=user.id,
                     practiced_on=datetime.now(UTC).date(),
-                    discipline="aikijo",
+                    discipline=discipline,
                     minutes=minutes,
                     notes=program.title_tr if (user.lang or "tr") == "tr" else program.title_en,
                     kata_slug=focus_kata.slug if focus_kata else None,
@@ -296,7 +329,7 @@ async def complete_day(
             complete_params = program_day_complete_params(slug, day_number)
             if complete_params:
                 events.append(("program_day_complete", complete_params))
-            practice_params = practice_logged_params("aikijo", minutes, "program")
+            practice_params = practice_logged_params(discipline, minutes, "program")
             if practice_params:
                 events.append(("practice_logged", practice_params))
         await db.commit()

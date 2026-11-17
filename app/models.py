@@ -143,6 +143,9 @@ class Enrollment(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     # Program e-posta dizisi (gün 1/3/7): en son gönderilen adım; aynı adım iki kez gitmez
     last_comeback_step: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    # B-41a: aktif program = kullanıcının en son etkinleştirdiği kayıt (en büyük activated_at).
+    # Programı değiştirmek eski kaydı/ilerlemesini silmez, yalnız bu zamanı günceller.
+    activated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
     program: Mapped[Program] = relationship()
     completed_days: Mapped[list["EnrollmentDay"]] = relationship(back_populates="enrollment")

@@ -14,7 +14,7 @@ if settings.sentry_dsn:
 
     sentry_sdk.init(dsn=settings.sentry_dsn, environment=settings.env, traces_sample_rate=0)
 from app.rate_limit import limiter
-from app.routers import admin, auth, billing, blog, guide, kata, landing, practice, profile, programs, push
+from app.routers import admin, auth, billing, blog, guide, kata, landing, practice, private, profile, programs, push
 from app.seed import seed_content
 
 # fonts/ ve js/vendor/ içeriği versiyonlanmış üçüncü taraf kütüphaneler —
@@ -44,6 +44,7 @@ app.mount("/static", CachedStaticFiles(directory="app/static"), name="static")
 
 app.include_router(landing.router)
 app.include_router(admin.router)  # token korumalı; waitlist aşamasında da erişilebilir olmalı
+app.include_router(private.router)  # yalnız OWNER_EMAIL hesabı; diğer herkese 404
 # Bu rotalar her zaman register edilir; WAITLIST_ONLY=true iken her birinin
 # kendi waitlist_gate bağımlılığı devreye girer (admin önizleme çerezi hariç).
 app.include_router(guide.router)

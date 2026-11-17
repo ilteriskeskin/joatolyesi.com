@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>90 Günlük Çeviklik ve Aikijo Programı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1218;--card:#181c24;--card2:#1f2430;--line:#2a3040;--txt:#e9ecf2;--mut:#9aa3b5;--red:#C9341F;--red2:#e5533c;--ok:#3fa36b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 Poppins,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:640px;margin:0 auto;padding:18px 14px 80px}
+header{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.seal{width:44px;height:44px;border-radius:8px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font:700 26px "Noto Serif JP",serif;flex:none}
+h1{font:700 21px/1.2 Lora,serif;margin:0}
+.sub{color:var(--mut);font-size:13px}
+.prog{height:6px;background:var(--line);border-radius:3px;margin:14px 0 4px;overflow:hidden}
+.prog>i{display:block;height:100%;background:var(--red)}
+.progtxt{display:flex;justify-content:space-between;color:var(--mut);font-size:12px}
+nav{display:flex;gap:8px;margin:14px 0;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5}
+nav button{flex:1;background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 6px;font:600 13px Poppins,sans-serif}
+nav button.on{background:var(--red);border-color:var(--red)}
+.day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.day.today{border:2px solid var(--red)}
+.day.done{opacity:.55}
+.dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.date{font:700 16px Lora,serif}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.5px;padding:2px 8px;border-radius:20px;background:var(--card2);color:var(--mut);margin-top:4px}
+.tag.a{background:#2b1d1a;color:#ff9c88}.tag.t{background:#1a2b22;color:#7fd6a4}.tag.k{background:#1a2333;color:#8fb8ff}.tag.s{background:#33261a;color:#ffc27a}
+.chk{flex:none;width:30px;height:30px;border-radius:8px;border:2px solid var(--line);background:none;color:#fff;font-size:17px}
+.chk.on{background:var(--ok);border-color:var(--ok)}
+.meta{color:var(--mut);font-size:12px;margin-top:2px}
+.blocks{margin:10px 0 0;padding:0;list-style:none}
+.blocks li{display:grid;grid-template-columns:52px 1fr;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.blocks b{color:var(--red2);font-size:13px}
+.blocks .t{font-weight:600}
+.blocks .d{color:var(--mut);font-size:13px}
+.note{background:var(--card2);border-left:3px solid var(--red);padding:8px 10px;border-radius:6px;font-size:13px;margin-top:10px}
+.wk{margin:22px 0 4px;color:var(--mut);font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.info{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;font-size:14px}
+.info h3{font:700 16px Lora,serif;margin:0 0 6px}
+.info ul{margin:6px 0;padding-left:18px}
+.hide{display:none}
+a.x{color:inherit;text-decoration:underline dotted var(--red2);text-underline-offset:3px;cursor:pointer}
+.sheet{position:fixed;inset:auto 0 0 0;background:var(--card2);border-top:2px solid var(--red);border-radius:16px 16px 0 0;padding:16px 16px 28px;max-height:70vh;overflow:auto;z-index:20;transform:translateY(105%);transition:transform .2s}
+.sheet.on{transform:none}
+.sheet h3{font:700 18px Lora,serif;margin:0 0 8px}
+.sheet .close{float:right;background:none;border:0;color:var(--mut);font-size:22px}
+.sheet ol{padding-left:18px;margin:6px 0}
+.gl{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:8px 0}
+.gl h4{margin:0 0 4px;font:700 15px Lora,serif}
+.gl ol{padding-left:18px;margin:4px 0;font-size:14px}
+.gl .tip{color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="seal">杖</div><div><h1>90 Günlük Çeviklik ve Aikijo Programı</h1><div class="sub">18 Kasım 2026 → 20 Şubat 2027 · Pzt / Çar / Cum · 60 dk</div></div></header>
+  <div class="prog"><i id="bar"></i></div>
+  <div class="progtxt"><span id="ptxt"></span><span id="ctxt"></span></div>
+  <nav>
+    <button data-v="today" class="on">Bugün</button>
+    <button data-v="week">Bu hafta</button>
+    <button data-v="all">Tüm plan</button>
+    <button data-v="moves">Hareketler</button>
+    <button data-v="info">Kurallar</button>
+  </nav>
+  <div id="out"></div>
+  <div id="moves" class="hide"></div>
+  <div id="info" class="hide">
+    <div class="info"><h3>Ortak ısınma (her antrenman, 10 dk)</h3><ul>
+      <li>3 dk eklem çevirme: boyun, omuz, kalça, diz, ayak bileği</li>
+      <li>4 dk mobilite: derin squat'ta bekleme, 90/90 kalça, göğüs omurgası rotasyonu</li>
+      <li>3 dk hafif ip ya da yerinde sekme</li></ul></div>
+    <div class="info"><h3>Evreler</h3><ul>
+      <li><b>1–4. hafta · Temel:</b> Hareketleri öğren, tempo düşük. Amaç: sakatlanmadan devam etmek.</li>
+      <li><b>5–8. hafta · Yükleme:</b> Süreler ve tekrarlar artar.</li>
+      <li><b>9–14. hafta · Zorlaştırma:</b> Tek bacak, kombinasyon, daha uzun kondisyon.</li></ul></div>
+    <div class="info"><h3>Kurallar</h3><ul>
+      <li>Takla ve ters dönüş yok. Ukemi'den ilerle.</li>
+      <li>Sıçramalar kumda ya da çimde, yumuşak iniş. Diz ya da bel ağrırsa sıçramayı o gün atla.</li>
+      <li>Ağaç: her antrenmanda 20 sayılı vuruş. Sayacı gerçek tut.</li>
+      <li>Kafeye gideceksen yedek tişört ve havlu. Terletmesi istenmeyen günlerde sıçrama ve kondisyon bölümlerini akşama kaydır.</li>
+      <li>Bir antrenman kaçarsa telafi etmeye çalışma, bir sonrakine devam et.</li></ul></div>
+    <div class="info"><h3>Kilo için</h3><ul>
+      <li>Antrenman olmayan günlerde de günde 7–8 bin adım.</li>
+      <li>Her öğünde yeterli protein.</li>
+      <li>Şekerli içecek yok, düzenli uyku.</li>
+      <li>Ciddi bir hedef için diyetisyen.</li></ul></div>
+    <div class="info"><h3>Çeviklik testi (5 madde, aynı yer, aynı açı)</h3><ul>
+      <li>30 sn tai sabaki (tenkan-tenkai) kaç tekrar</li>
+      <li>Öne ukemi → kalk → tek vuruş (süre)</li>
+      <li>Derin squat, topuklar yerde (saniye)</li>
+      <li>20 sn yana sıçrama kaç tekrar</li>
+      <li>Tekme yüksekliği, yandan çekim, sabit referans</li></ul>
+      Sonuçları STOK.md'deki tabloya yaz.</div>
+  </div>
+</div>
+<div class="sheet" id="sheet"><button class="close" id="sclose" aria-label="Kapat">×</button><div id="sbody"></div></div>
+<script>
+const START=new Date(2026,10,18), END=new Date(2027,1,20), WEEK0=new Date(2026,10,16);
+const TESTS={'2026-11-21':1,'2026-12-05':14,'2026-12-19':28,'2027-01-02':42,'2027-01-16':56,'2027-02-20':90};
+const KAN_S=new Date(2027,0,11), KAN_E=new Date(2027,0,20);
+const DAYN=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+const MON=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const wk=d=>Math.floor((d-WEEK0)/864e5/7)+1;
+function phase(w){return w<=4?1:w<=8?2:3}
+const P={
+ 1:{ip:'6 tur: 40 sn çalış / 20 sn dinlen',kuv:'3 tur: squat ×12 · şınav ×8 · plank 30 sn',ply:'Yerinde sekme 3×20 · yana sıçrama 3×8 (her yöne)',uk:'Öne ve geriye yuvarlanma, 8+8',emom:'12 dk: her dakikanın başında 8 hızlı jo vuruşu + 5 squat',tek:'Mae geri, yoko, mawashi · her biri 2×8 her bacak, yavaş',tb:'Bölünmüş squat 2×8 · kalça köprüsü 2×12 · yan plank 2×20 sn'},
+ 2:{ip:'7 tur: 45 sn çalış / 15 sn dinlen',kuv:'4 tur: squat ×15 · şınav ×10 · plank 40 sn',ply:'Yana sıçrama 3×10 · ileri sıçrama 3×5',uk:'Yuvarlan + jo ile kalk ve vur, 6+6',emom:'14 dk: 10 hızlı jo vuruşu + 6 squat',tek:'Mae geri, yoko, mawashi · 3×8 her bacak, yükseklik artır',tb:'Bölünmüş squat 3×10 · tek bacak köprü 3×10 · yan plank 3×25 sn'},
+ 3:{ip:'8 tur: 50 sn çalış / 10 sn dinlen',kuv:'4 tur: squat ×15 · şınav ×12 · plank 45 sn',ply:'Tek bacak sekme 3×8 · yana sıçrama 3×12 · ileri sıçrama 3×6',uk:'Yuvarlan → kalk → iki vuruşlu kombinasyon, 6+6',emom:'16 dk: 10 hızlı jo vuruşu + 8 squat',tek:'Kombinasyon: mae geri → mawashi · 3×6 her bacak',tb:'Bulgar squat 3×8 · tek bacak köprü 3×12 · yan plank 3×30 sn'}
+};
+const ISI={m:10,t:'Ortak ısınma',d:'3 dk eklem çevirme · 4 dk mobilite: derin squat\'ta bekleme, 90/90 kalça, göğüs omurgası rotasyonu · 3 dk hafif ip ya da yerinde sekme'};
+const ESN={m:5,t:'Esneme',d:'Kalça, arka bacak, omuz'};
+const AGAC={m:3,t:'Ağaç: 20 sayılı vuruş',d:'Sayacı not et'};
+function plan(d){
+  const k=key(d), dow=d.getDay(), w=wk(d), ph=phase(w), p=P[ph];
+  const kan=d>=KAN_S&&d<=KAN_E;
+  let r={tag:'',cls:'',blocks:[],note:''};
+  if(k==='2026-12-31'){r.tag='YILIN SON SABAHI · 108 VURUŞ';r.cls='s';r.blocks=[ISI,{m:20,t:'108 vuruş',d:'Joya no kane gibi: 108 sayılı vuruş. Sabit plan + yakın plan çek. Sayaca +108'},{m:10,t:'Hafif suburi',d:'Sakin, nefesle'},ESN];r.note='Akşam 18:00 reels.';return r}
+  if(k==='2027-01-01'){r.tag='YILIN İLK GÜNEŞİ';r.cls='s';r.blocks=[{m:30,t:'Gün doğumunda hafif jo akışı',d:'Canlı story çek'},{m:'—',t:'Yürüyüş',d:'Sahilde'}];return r}
+  if(TESTS[k]){const ti=Object.keys(TESTS).indexOf(k);r.tag='ÇEVİKLİK TESTİ · '+(ti===0?'BAŞLANGIÇ':ti===5?'FİNAL':(ti+1)+'/6');r.cls='t';r.blocks=[ISI,{m:15,t:'5 maddelik test',d:'Aynı yer, aynı kamera açısı, aynı kıyafet. Sonuçları tabloya yaz'},{m:10,t:'Serbest jo / çekim',d:'İstersen ekstra görüntü'}];if(TESTS[k]===1)r.note='İlk gün: 1 dakikalık "neden başlıyorum" konuşmasını da çek.';return r}
+  if(dow===1){r.tag='A · AYAK İŞİ + JO TEMELİ';r.cls='a';r.blocks=[ISI,{m:12,t:'Çeviklik',d:'İp: '+p.ip+'. Sonra çizgide hızlı adım'},{m:20,t:'Jo',d:'Suburi 1–10 (temizliğe bak) · jo ile tai sabaki: tenkan, tenshin, tenkai'},AGAC,{m:10,t:'Kuvvet',d:p.kuv},ESN]}
+  else if(dow===3){r.tag='B · PATLAYICILIK + UKEMİ + TEKME';r.cls='a';r.blocks=[ISI,{m:10,t:'Sıçrama',d:p.ply+'. Kum ya da çim'},{m:12,t:'Ukemi',d:p.uk},AGAC,{m:12,t:'Tekme',d:p.tek},{m:8,t:'Tek bacak kuvveti',d:p.tb},ESN]}
+  else if(dow===5){r.tag='C · JO AKIŞI + KONDİSYON';r.cls='a';r.blocks=[ISI,{m:15,t:'Jo',d:'Suburi 11–20'},AGAC,{m:15,t:'Serbest akış',d:'Birden çok rakip hayal et · haftanın çekim günü'},{m:12,t:'Kondisyon',d:p.emom},ESN]}
+  else if(dow===0){r.tag='DİNLENME';r.blocks=[{m:'—',t:'Yürüyüş',d:'7–8 bin adım'}]}
+  else if(dow===6){r.tag='HAFİF GÜN';r.blocks=[{m:20,t:'İsteğe bağlı',d:'Hafif jo ya da çekim · yürüyüş'}]}
+  else {r.tag='DİNLENME';r.blocks=[{m:10,t:'Mobilite (isteğe bağlı)',d:'Derin squat\'ta bekleme · 90/90 kalça · göğüs omurgası rotasyonu'},{m:'—',t:'Yürüyüş',d:'7–8 bin adım · akşam dojo varsa aikido'}]}
+  if(kan){r.cls=r.cls||'k';r.tag='KANGEİKO · '+r.tag;if(!(dow===1||dow===3||dow===5))r.blocks=[{m:20,t:'Kangeiko sabahı',d:'Erken, soğukta: suburi + ağaç 20 vuruş'},{m:'—',t:'Story',d:'15–30 sn klip: "Kangeiko gün X"'}];r.note='Kangeiko (11–20 Ocak): her sabah kısa antrenman + story. Son gün özet reels.'}
+  if(w===1&&dow===3&&k==='2026-11-18')r.note='Başlangıç. Tempo düşük; amaç hareketleri öğrenmek.';
+  return r;
+}
+
+const GL=[
+ {k:"derin squat'ta bekleme",t:"Derin squat'ta bekleme",s:["Ayaklar omuz genişliğinde, parmak uçları hafif dışa.","Topuklar yerde kalarak olabildiğince aşağı çök. Göğüs dik, dirsekler dizlerin iç tarafını hafifçe dışa itsin.","30–60 saniye bekle, rahat nefes al."],tip:"Topukların kalkıyorsa topuk altına ince bir şey koy ya da bir direğe tutun. Zamanla açılır."},
+ {k:"90/90 kalça",t:"90/90 kalça",s:["Yere otur. Öndeki bacak gövdenin önünde, diz 90 derece bükülü.","Arkadaki bacak yanda, o da diz 90 derece bükülü. İki bacak yerde bir 'Z' çizer.","Gövdeni dik tut, öndeki bacağın üstüne doğru hafifçe eğil, 20–30 sn bekle.","Dizleri yerden kaldırmadan diğer tarafa dön. Her yana 2–3 kez."],tip:"Ellerinle arkadan destek alabilirsin."},
+ {k:"göğüs omurgası rotasyonu",t:"Göğüs omurgası rotasyonu (açık kitap)",s:["Yan yat, dizler 90 derece bükülü ve üst üste, iki kol önde birleşik.","Üstteki kolu tavana kaldır ve geriye doğru, kitap açar gibi aç. Gözün elini takip etsin.","Dizler birbirinden ayrılmasın. Yavaşça geri gel.","Her yana 8 tekrar."],tip:"Sırtın üst kısmını açar; jo kaldırırken ve vururken omuz rahatlar."},
+ {k:"yerinde sekme",t:"Yerinde sekme",s:["Dizler hafif bükülü, ayak bileklerinden küçük ve hızlı zıpla.","Topuklar yere değmesin, sessiz in.","Belirtilen tekrar kadar, sonra dinlen."],tip:"Ip atlar gibi ama ipsiz. Baldır ve ayak bileği yaylanmasını geliştirir."},
+ {k:"yana sıçrama",t:"Yana sıçrama (patenci sıçraması)",s:["Sağ ayakla sola doğru yana sıçra, sol ayağın üzerine yumuşakça in.","İnerken sağ bacak sol bacağın arkasından çapraz geçsin; paten kayar gibi.","1 saniye dengede kal, sonra aynı şekilde sağa sıçra. İki yana = 1 tekrar."],tip:"Mesafeyi küçük başlat. Önemli olan sessiz ve dengeli iniş; tai sabaki'deki yan geçişlerin sıçramalı hali."},
+ {k:"ileri sıçrama",t:"İleri sıçrama",s:["İki ayak yan yana, kollar arkada.","Kollarını öne savurarak iki ayakla ileri sıçra.","Dizler bükülü, yumuşak in ve inişte dur. Geri yürü, tekrar."],tip:"Uzaklık değil, kontrollü iniş önemli."},
+ {k:"tek bacak sekme",t:"Tek bacak sekme",s:["Tek ayakta dur, küçük sekmelerle yerinde zıpla.","Diz hafif bükülü, iniş sessiz.","Diğer bacakla tekrarla."],tip:"Zorlanırsan sayıyı düşür; dengede kalmak öncelik."},
+ {k:"çizgide hızlı adım",t:"Çizgide hızlı adım",s:["Yere bir çizgi çiz ya da jo'yu yere koy.","Ayaklarını çizginin bir önüne bir arkasına hızlıca adımla, sonra sağına soluna.","20 saniye çalış, 10 saniye dinlen, 3–4 tur."],tip:"Ayak parmak uçlarında, hafif ve hızlı."},
+ {k:"bölünmüş squat",t:"Bölünmüş squat",s:["Bir ayak önde, bir ayak geride; geniş bir adım duruşu.","Arka dizini dümdüz aşağı, yere doğru indir (yere değdirme).","Ön diz ayak bileğinin üstünde kalsın, ileri kaymasın.","Ön bacaktan iterek kalk. Önce bir bacağın tüm tekrarları, sonra diğeri."],tip:"Denge zorsa bir ağaca ya da jo'ya tutun. Hamni duruşundaki ön-arka bacak gücünü geliştirir."},
+ {k:"bulgar squat",t:"Bulgar squat",s:["Bölünmüş squat ile aynı, ama arka ayağın üstü bir banka ya da basamağa dayalı.","Arka dizini aşağı indir, ön bacaktan iterek kalk."],tip:"Bölünmüş squat'tan zordur; 9. haftadan itibaren."},
+ {k:"kalça köprüsü",t:"Kalça köprüsü",s:["Sırtüstü yat, dizler bükülü, ayak tabanları yerde.","Topuklardan iterek kalçanı yukarı kaldır; omuz, kalça ve diz düz bir çizgi olsun.","Tepede kalçayı 1–2 saniye sık, yavaşça in."],tip:"Belinden değil kalçandan kaldır. Masa başı oturmanın gevşettiği kalça kaslarını çalıştırır."},
+ {k:"tek bacak köprü",t:"Tek bacak köprü",s:["Kalça köprüsünün aynısı, ama bir bacak havada düz uzatılmış.","Yerdeki bacağın topuğundan iterek kalçayı kaldır."],tip:"Kalça yana düşmesin."},
+ {k:"yan plank",t:"Yan plank",s:["Yan yat, dirsek omzun tam altında, ayaklar üst üste.","Kalçanı yerden kaldır; baştan topuğa düz bir çizgi.","Süre boyunca bekle, diğer yana geç."],tip:"Zorsa alttaki dizi yere koyarak başla."},
+ {k:"plank",t:"Plank",s:["Dirsekler omuzların altında, ön kollar yerde.","Vücut baştan topuğa düz; kalça ne düşsün ne kalksın.","Karnı sık, nefes almaya devam et."],tip:"Kalça düşmeye başladıysa set bitmiştir."},
+ {k:"şınav",t:"Şınav",s:["Eller omuz genişliğinde, vücut düz.","Göğsünü yere yaklaştır, dirsekler gövdeye 45 derece açıyla.","İterek kalk."],tip:"Tekrar sayısına yetişemiyorsan dizleri yere koyarak yap."},
+ {k:"squat",t:"Squat",s:["Ayaklar omuz genişliğinde.","Kalçayı geriye ve aşağı gönder, sandalyeye oturur gibi; dizler ayak uçlarıyla aynı yöne.","Topuklardan iterek kalk."],tip:"Göğüs dik, topuklar yerde."},
+ {k:"ukemi",t:"Ukemi",s:["Dojoda öğrendiğin öne (mae) ve geriye (ushiro) yuvarlanma.","Çimde ya da kumda yap; önce yavaş, kafanı korumaya dikkat.","İlerledikçe elinde jo ile yuvarlan, kalk ve vur."],tip:"Takla yok; sadece ukemi."}
+];
+const GLI={};GL.forEach((g,i)=>GLI[g.k.toLocaleLowerCase('tr')]=i);
+const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const GRE=new RegExp('('+GL.map(g=>g.k).sort((a,b)=>b.length-a.length).map(k=>{const c=k.charAt(0);const u=c.toLocaleUpperCase('tr');return (u!==c?'['+esc(c)+esc(u)+']':esc(c))+esc(k.slice(1))}).join('|')+')','g');
+function linkify(t){return t.replace(GRE,m=>{const i=GLI[m.toLocaleLowerCase('tr')];return i===undefined?m:`<a class="x" data-x="${i}">${m}</a>`})}
+function glHTML(g){return `<h3>${g.t}</h3><ol>${g.s.map(x=>'<li>'+x+'</li>').join('')}</ol><div class="tip" style="color:var(--mut);font-size:13px">${g.tip}</div>`}
+
+let done={};try{done=JSON.parse(localStorage.getItem('prg90')||'{}')}catch(e){}
+function save(){try{localStorage.setItem('prg90',JSON.stringify(done))}catch(e){}}
+const today=new Date();today.setHours(0,0,0,0);
+function days(){const a=[];for(let d=new Date(START);d<=END;d.setDate(d.getDate()+1))a.push(new Date(d));return a}
+const ALL=days();
+function isTrain(d){const r=plan(d);return r.cls!==''}
+function card(d){
+  const r=plan(d),k=key(d),t=+d===+today,dn=done[k];
+  const mins=r.blocks.reduce((s,b)=>s+(typeof b.m==='number'?b.m:0),0);
+  const gun=Math.round((d-START)/864e5)+1;
+  return `<div class="day${t?' today':''}${dn?' done':''}" id="d${k}">
+   <div class="dh"><div><div class="date">${d.getDate()} ${MON[d.getMonth()]} · ${DAYN[d.getDay()]}${t?' · BUGÜN':''}</div>
+   <span class="tag ${r.cls}">${r.tag}</span><div class="meta">Hafta ${wk(d)} · Gün ${gun}${mins?' · '+mins+' dk':''}</div></div>
+   ${r.cls?`<button class="chk${dn?' on':''}" data-k="${k}" aria-label="Tamamlandı">${dn?'✓':''}</button>`:''}</div>
+   <ul class="blocks">${r.blocks.map(b=>`<li><b>${b.m}${typeof b.m==='number'?' dk':''}</b><div><div class="t">${linkify(b.t)}</div><div class="d">${linkify(b.d)}</div></div></li>`).join('')}</ul>
+   ${r.note?`<div class="note">${r.note}</div>`:''}</div>`}
+function render(v){
+  const out=document.getElementById('out'),info=document.getElementById('info'),mv=document.getElementById('moves');
+  info.classList.toggle('hide',v!=='info');mv.classList.toggle('hide',v!=='moves');out.classList.toggle('hide',v==='info'||v==='moves');
+  if(v==='moves'){mv.innerHTML=GL.map(g=>'<div class="gl">'+glHTML(g).replace('<h3>','<h4>').replace('</h3>','</h4>')+'</div>').join('');return}
+  if(v==='info')return;
+  let list;
+  if(v==='today'){
+    let d=today<START?START:today;
+    let next=ALL.find(x=>x>d&&isTrain(x));
+    list=[d];if(!isTrain(d)&&next)list.push(next);
+    out.innerHTML=(today<START?'<div class="note">Program yarın başlıyor.</div>':'')+list.map((x,i)=>(i===1?'<div class="wk">Sıradaki antrenman</div>':'')+card(x)).join('');
+  } else if(v==='week'){
+    const ref=today<START?START:today;const m=new Date(ref);m.setDate(m.getDate()-((m.getDay()+6)%7));
+    list=ALL.filter(x=>x>=m&&x<new Date(m.getTime()+7*864e5));out.innerHTML=list.map(card).join('');
+  } else {
+    let h='',lw=0;ALL.forEach(x=>{const w=wk(x);if(w!==lw){h+=`<div class="wk">Hafta ${w} · ${['','Temel','Yükleme','Zorlaştırma'][phase(w)]}</div>`;lw=w}h+=card(x)});
+    out.innerHTML=h;const t=document.getElementById('d'+key(today));if(t)t.scrollIntoView({block:'center'});
+  }
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');render(b.dataset.v)});
+document.body.addEventListener('click',e=>{const a=e.target.closest('a.x');if(a){document.getElementById('sbody').innerHTML=glHTML(GL[+a.dataset.x]);document.getElementById('sheet').classList.add('on');return}});
+document.getElementById('sclose').onclick=()=>document.getElementById('sheet').classList.remove('on');
+document.getElementById('out').addEventListener('click',e=>{const b=e.target.closest('.chk');if(!b)return;const k=b.dataset.k;done[k]=!done[k];if(!done[k])delete done[k];save();stats();render(document.querySelector('nav button.on').dataset.v)});
+function stats(){
+  const tr=ALL.filter(isTrain),n=tr.length,c=tr.filter(d=>done[key(d)]).length;
+  const g=Math.max(0,Math.min(95,Math.round((today-START)/864e5)+1));
+  document.getElementById('bar').style.width=(c/n*100)+'%';
+  document.getElementById('ptxt').textContent=c+' / '+n+' antrenman';
+  document.getElementById('ctxt').textContent=today<START?'Başlangıç: 18 Kasım':'Gün '+g;
+}
+stats();render('today');
+</script>
+</body>
+</html>

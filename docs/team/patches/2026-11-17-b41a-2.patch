@@ -1,0 +1,68 @@
+diff --git a/app/seed.py b/app/seed.py
+index 4526e76..9ef4a73 100644
+--- a/app/seed.py
++++ b/app/seed.py
+@@ -151,12 +151,11 @@ BOKKEN = [
+     # Teknik — 7 suburi
+     _k("bokken-shomen-suburi", "Aiki-ken suburi 1 — Ichi no suburi",
+        "Full overhead cut finishing at belly height; body drops with the cut.",
+-       "Tam shomen kesişi: kılıç başın üstünde tam açılır, kesiş göbek hizasında biter. "
+-       "Diz-kalça-omuz aynı anda düşer; kol gücüyle kesme.", True, "teknik"),
++       "Hanmi duruştan tek, düz shomen kesişi (tepeden aşağı dikey kesiş).", True, "teknik"),
+     _k("aiki-ken-suburi-2", "Aiki-ken suburi 2 — Ni no suburi",
+        "Step back to jodan, step in and cut.",
+-       "Geri adımla savunma pozisyonundan öne adımla kesiş. Geri çekilirken kılıç "
+-       "jodan'a kalkar.", kind="teknik"),
++       "Sağ ayakla geri adım atarken kılıç başın üstüne kalkar; ardından öne adımla düz "
++       "shomen kesişi.", kind="teknik"),
+     _k("aiki-ken-suburi-3", "Aiki-ken suburi 3 — San no suburi",
+        "Step back, raise the sword and lower it to the right side at thigh height "
+        "(waki gamae); step forward with a shomen cut. Some dojos (e.g. Aikido Australia) "
+@@ -166,8 +165,7 @@ BOKKEN = [
+        "adımla öğretir; hocanın çizgisini izle.", kind="teknik"),
+     _k("aiki-ken-suburi-4", "Aiki-ken suburi 4 — Yon no suburi",
+        "Walking continuous shomen cuts, one per step.",
+-       "Ardışık kesiş yürüyüşü: her adımda bir shomen, dojo boyunca. Nefesle eşle: "
+-       "adım-kes-nefes.", kind="teknik"),
++       "İlerlerken sağ-sol duruş değiştirerek art arda shomen kesişi.", kind="teknik"),
+     _k("aiki-ken-suburi-5", "Aiki-ken suburi 5 — Go no suburi",
+        "Advancing, alternating right and left diagonal cuts aimed at the side of the head.",
+        "İlerlerken sağa ve sola dönüşümlü, başın yanına yönelen çapraz kesişler.",
+diff --git a/docs/team/content/audit-log.md b/docs/team/content/audit-log.md
+index 97802e1..df8d125 100644
+--- a/docs/team/content/audit-log.md
++++ b/docs/team/content/audit-log.md
+@@ -18,3 +18,4 @@ fact-checker her sprint mevcut site içeriğinden örneklem denetler.
+ | 2026-11-11 | app/tips_content.py `TIPS` (21 madde, B-31 "Günün ipucu" hazırlığı) | Niju Kun (9), Dokkōdō (4), Go Rin no Sho (1), Kano ilkeleri (2), Ueshiba özetleri (2) ve genel antrenman bilgeliği (3) atıf ve çevirileri | ⚠️ DÜZELTİLDİ (öneri, kod değişmedi). 13 ONAY, 8 DÜZELT, 0 KALDIR. #3 "kendini kontrol et" yanlış çeviri, asıl ifade "önce kendini bil, sonra başkalarını". #10 "her şeyi olduğu gibi kabul et" Dokkōdō 1. maddesinin anlamını kaydırıyor (Ikeda, Tokitsu). Bu maddenin Japonca aslı edisyondan teyit edilmeli. #1, #15, #16, #18'de kaynakta olmayan yorum eklenmiş. #14 için kaynak etiketi Su Kitabı sonsözü olarak düzeltildi. #20 eLife bulgusundan güçlü yazılmış. Bkz. content/verified/2026-11-11-gunun-ipucu-denetimi.md | https://themartialway.com.au/?p=3629, https://terebess.hu/zen/mesterek/musashi.html, https://www.koten.net/gorin/gen/238/, https://judoinfo.com/?p=410, https://omlc.org/aikido/talk/osensei/artofpeace/index.html, https://elifesciences.org/articles/40578 |
+ | 2026-11-13 | app/seed.py teknik açıklamaları (B-37 denetimi sırasında) | zenkutsu "%60" ve "ön diz bükük (dizden ayak ucu görünmez)"; kiba "dizler dışa"; naeryo "hamstring esnekliği ister" | ⚠️ DÜZELTME ÖNERİSİ (kod değişmedi). %60 tek oran değil: kaynaklar 60/40, ~2/3 ve ~%80 veriyor. Metin "ağırlığın çoğu önde, oran kaynağa göre değişir" olmalı. "Dizden ayak ucu görünmez" ölçütü hiçbir kaynakta yok, kaldırılmalı. Kiba "dizler dışa" iki orta kaynakla destekleniyor (Wikipedia hafif içe diyor); "okula göre değişir" notu eklenmeli. "Hamstring esnekliği" yalnız tek kaynakta, o da sakatlanma riski olarak geçiyor; kaldırılmalı. Bkz. content/verified/2026-11-13-b37-ilk-5-sayfa.md | https://www.themartialway.com.au/?p=7099, https://i-budo.com/techniques/basics/stances/front-stance/, https://ojs.ub.uni-konstanz.de/cpa/article/view/1457, https://www.themartialway.com.au/?p=7167, https://www.flashmavi.com/learn/kiba-dachi-karate, https://taekwondopreschool.com/axekick.html |
+ | 2026-11-15 | app/seed.py BOKKEN `aiki-ken-suburi-3`, `-5`, `-6`, `-7` (B-41a denetimi sırasında) | 3: "Alt savuşturma (gedan) … kılıç önce aşağı süpürür"; 5: "Yan savuşturma + kesiş: kılıç yana açılıp merkeze döner"; 6: "Savuşturma + tsuki … arka ayak topuğu yerden kalkmaz"; 7: "savuşturma, kesiş ve tsuki … tam bir mini kata" | ✅ DÜZELTİLDİ (2026-11-16, B-41a kod). 3: kaynakların çoğu waki gamae'ye geri adım diyor (Takemusu Iwama, Aikido Warrior/Saito, Shuren, Wikipedia); gedan yalnız Aikido Australia'da, "süpürme" hiçbirinde yok. 5: "savuşturma" hiçbir kaynakta yok; kaynaklar ilerlerken sağ-sol dönüşümlü yan/çapraz kesiş anlatıyor. 6: "savuşturma" ve "topuk kalkmaz" kaynaksız; hareket kesiş + tsuki. 7: "savuşturma" ve "mini kata" kaynaksız; hareket sağda kesiş, adımla solda tsuki. Önerilen metinler: content/verified/2026-11-15-30-gun-bokken-programi.md bölüm 4. Düzeltme taslağı açılmalı. | https://takemusu-iwama-aikido.org/?p=305, https://aikido-shuren-dojo.com/?p=83, https://aikidoaus.com.au/library/aiki-ken-curriculum/, https://theaikidowarrior.com/third-suburi-san-no-suburi/, https://theaikidowarrior.com/fifth-suburi-go-no-suburi/ |
++| 2026-11-17 | app/seed.py BOKKEN `bokken-shomen-suburi` (1), `aiki-ken-suburi-2`, `-4` TR metinleri (B-41a-2) | 1: "kılıç başın üstünde tam açılır… diz-kalça-omuz aynı anda düşer"; 2: "savunma pozisyonundan"; 4: "dojo boyunca… adım-kes-nefes" | ✅ DÜZELTİLDİ (kod). TR metinler onaylı belge bölüm 4 ile birebir; test belgeyi ayrıştırıp 1-7 TR'yi karşılaştırır. EN metinler değişmedi: belgede suburi başına onaylı EN yok, fact-checker onayı bekliyor. | content/verified/2026-11-15-30-gun-bokken-programi.md |
+diff --git a/tests/test_b41.py b/tests/test_b41.py
+index da97e8c..131c7f5 100644
+--- a/tests/test_b41.py
++++ b/tests/test_b41.py
+@@ -78,6 +78,24 @@ async def test_seed_bokken_suburi_texts_corrected(client):
+         assert "savuşturma" not in k[f"aiki-ken-suburi-{s}"].description_tr.lower()
+ 
+ 
++def test_seed_bokken_suburi_tr_matches_verified_doc():
++    """Seed TR metinleri onaylı belgenin 4. bölümüyle birebir aynı (B-41a-2)."""
++    import re
++    from pathlib import Path
++
++    from app.seed import BOKKEN
++
++    doc = (Path(__file__).resolve().parent.parent
++           / "docs/team/content/verified/2026-11-15-30-gun-bokken-programi.md").read_text(encoding="utf-8")
++    section = doc.split("## 4. Suburi hareket açıklamaları", 1)[1].split("\n## ", 1)[0]
++    approved = dict(re.findall(r"^(\d)\. \*\*[^*]+\.\*\* (.+)$", section, flags=re.M))
++    assert sorted(approved) == list("1234567")
++    slugs = {"1": "bokken-shomen-suburi", **{str(n): f"aiki-ken-suburi-{n}" for n in range(2, 8)}}
++    seed = {k["slug"]: k for k in BOKKEN}
++    for n, text in approved.items():
++        assert seed[slugs[n]]["description_tr"] == text, f"suburi {n}"
++
++
+ async def test_program_index_lists_both_and_links_from_dashboard(client):
+     await seeded()
+     r = await client.get("/programs")  # ziyaretçi
