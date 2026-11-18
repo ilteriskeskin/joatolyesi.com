@@ -1,16 +1,10 @@
-# Aktif Sprint — 2026-11-17
+# Aktif Sprint — 2026-11-18
 
-Dal: `team/sprint-2026-11-17` (`team/sprint-2026-11-16` üstünden; 11-15 ve 11-16 henüz merge edilmedi). Push, deploy ve prod erişimi yok, `.env` okunmaz.
-Planlı sprint. Plan BACKLOG sırasını izler: B-41a-2 (küçük kod). Planı orkestratör yazdı (kullanım tasarrufu).
+Dal: `team/sprint-2026-11-18` (`team/sprint-2026-11-17` üstünden; 11-15, 11-16, 11-17 henüz merge edilmedi). Push, deploy ve prod erişimi yok, `.env` okunmaz.
+Merge edilmemiş 3 sprint dalı var: kural gereği **kod işi yok**, yalnız içerik. Planı orkestratör yazdı (kullanım tasarrufu).
 
-## İş 1: B-41a-2 — seed bokken suburi 1/2/4 metinleri onaylı belgeyle uyum — `developer` → `qa-reviewer`
-Yalnız onaylı içerik: `docs/team/content/verified/2026-11-15-30-gun-bokken-programi.md` (4. bölüm).
-- `app/seed.py` içindeki `bokken-shomen-suburi` (suburi 1), `aiki-ken-suburi-2`, `aiki-ken-suburi-4` TR/EN metinleri onaylı belgedeki metinle birebir olur. Belgede onaylı metni olmayan alan değişmez.
-- Seed program başına idempotent kalır; mevcut DB'de metin güncellemesi seed'in mevcut düzeniyle yapılır (yeni migration gerekmiyorsa açılmaz).
-- Test eklenir (metin onaylı belgeyle eşleşir), tüm paket geçer.
-
-## Başarı ölçütü
-Hijyen işi (B-41 bokken programının doğruluğu): seed metinleri ile onaylı belge arasında fark sıfır.
+## İş 1: B-41 hijyen — aiki-ken suburi 1-7 için onaylı EN metin — `content-writer` → `fact-checker`
+Dayanak: `docs/team/content/verified/2026-11-15-30-gun-bokken-programi.md` §4. Seed'e uygulanması merge sonrası developer işi.
 
 ## Sonuç
-İş 1: kod yazıldı ama **test paketi çalıştırılamadı** (Docker daemon kapalı, test Postgres açılmadı; yerel venv yok). QA'ya "GEÇTİ" verdirilemezdi, kod commit edilmedi. Değişiklik `docs/team/patches/2026-11-17-b41a-2.patch` olarak saklandı (`git apply --check` temiz). EN metinler (1/2/4) değişmedi: onaylı belgede suburi başına EN metin yok.
+Fact-checker: ONAY. `docs/team/content/verified/2026-11-18-bokken-suburi-en.md`. Değişecek EN: suburi 1, 2, 4; 3/5/6/7 aynen kalır.
