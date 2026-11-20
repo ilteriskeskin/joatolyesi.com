@@ -150,13 +150,12 @@ BOKKEN = [
        "gölge olarak çalış: mesafeyi zihninde kur, duraklamaları koru."),
     # Teknik — 7 suburi
     _k("bokken-shomen-suburi", "Aiki-ken suburi 1 — Ichi no suburi",
-       "Full overhead cut finishing at belly height; body drops with the cut.",
-       "Tam shomen kesişi: kılıç başın üstünde tam açılır, kesiş göbek hizasında biter. "
-       "Diz-kalça-omuz aynı anda düşer; kol gücüyle kesme.", True, "teknik"),
+       "A single, straight shomen cut (a vertical cut from overhead down), made from hanmi stance.",
+       "Hanmi duruştan tek, düz shomen kesişi (tepeden aşağı dikey kesiş).", True, "teknik"),
     _k("aiki-ken-suburi-2", "Aiki-ken suburi 2 — Ni no suburi",
-       "Step back to jodan, step in and cut.",
-       "Geri adımla savunma pozisyonundan öne adımla kesiş. Geri çekilirken kılıç "
-       "jodan'a kalkar.", kind="teknik"),
+       "Step back with the right foot as the sword rises overhead; then step forward with a straight shomen cut.",
+       "Sağ ayakla geri adım atarken kılıç başın üstüne kalkar; ardından öne adımla düz "
+       "shomen kesişi.", kind="teknik"),
     _k("aiki-ken-suburi-3", "Aiki-ken suburi 3 — San no suburi",
        "Step back, raise the sword and lower it to the right side at thigh height "
        "(waki gamae); step forward with a shomen cut. Some dojos (e.g. Aikido Australia) "
@@ -165,9 +164,8 @@ BOKKEN = [
        "adımla shomen kesişi. Bazı dojolar (ör. Aikido Australia) bu suburi'yi gedan'a geri "
        "adımla öğretir; hocanın çizgisini izle.", kind="teknik"),
     _k("aiki-ken-suburi-4", "Aiki-ken suburi 4 — Yon no suburi",
-       "Walking continuous shomen cuts, one per step.",
-       "Ardışık kesiş yürüyüşü: her adımda bir shomen, dojo boyunca. Nefesle eşle: "
-       "adım-kes-nefes.", kind="teknik"),
+       "Advancing, switching between right and left stance, with continuous shomen cuts.",
+       "İlerlerken sağ-sol duruş değiştirerek art arda shomen kesişi.", kind="teknik"),
     _k("aiki-ken-suburi-5", "Aiki-ken suburi 5 — Go no suburi",
        "Advancing, alternating right and left diagonal cuts aimed at the side of the head.",
        "İlerlerken sağa ve sola dönüşümlü, başın yanına yönelen çapraz kesişler.",
@@ -176,7 +174,7 @@ BOKKEN = [
        "A thrust (tsuki) after every cut, repeated alternately on the right and left side.",
        "Her kesişin ardından tsuki; sağ ve sol tarafta dönüşümlü tekrarlanır.",
        kind="teknik"),
-    _k("aiki-ken-suburi-7", "Aiki-ken suburi 7 — Nana no suburi",
+    _k("aiki-ken-suburi-7", "Aiki-ken suburi 7 — Shichi (nana) no suburi",
        "Cut in the right stance, then step forward and thrust (tsuki) in the left stance; "
        "repeated while advancing.",
        "Sağ duruşta kesiş, ardından öne adımla sol duruşta tsuki; tekrarlanarak ilerlenir.",

@@ -1,12 +1,10 @@
 """B-41a: program dizini, bokken 30 gün programı, tek aktif program, seed düzeltmeleri."""
 
-import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from tests.test_b27 import client, db_user, get_csrf, signup  # noqa: F401
 
-pytestmark = pytest.mark.asyncio
 
 JO = "30-day-jo-suburi"
 BOKKEN = "30-day-bokken-suburi"
@@ -76,6 +74,43 @@ async def test_seed_bokken_suburi_texts_corrected(client):
     assert k["aiki-ken-suburi-7"].description_tr.startswith("Sağ duruşta kesiş, ardından öne adımla sol duruşta tsuki")
     for s in ("3", "5", "6", "7"):
         assert "savuşturma" not in k[f"aiki-ken-suburi-{s}"].description_tr.lower()
+
+
+def test_seed_bokken_suburi_tr_matches_verified_doc():
+    """Seed TR metinleri onaylı belgenin 4. bölümüyle birebir aynı (B-41a-2)."""
+    import re
+    from pathlib import Path
+
+    from app.seed import BOKKEN
+
+    doc = (Path(__file__).resolve().parent.parent
+           / "docs/team/content/verified/2026-11-15-30-gun-bokken-programi.md").read_text(encoding="utf-8")
+    section = doc.split("## 4. Suburi hareket açıklamaları", 1)[1].split("\n## ", 1)[0]
+    approved = dict(re.findall(r"^(\d)\. \*\*[^*]+\.\*\* (.+)$", section, flags=re.M))
+    assert sorted(approved) == list("1234567")
+    slugs = {"1": "bokken-shomen-suburi", **{str(n): f"aiki-ken-suburi-{n}" for n in range(2, 8)}}
+    seed = {k["slug"]: k for k in BOKKEN}
+    for n, text in approved.items():
+        assert seed[slugs[n]]["description_tr"] == text, f"suburi {n}"
+
+
+def test_seed_bokken_suburi_en_matches_verified_doc():
+    """Seed EN metinleri onaylı EN belgesiyle birebir; suburi 7 başlığı §4 ile uyumlu (B-41a-2)."""
+    import re
+    from pathlib import Path
+
+    from app.seed import BOKKEN
+
+    root = Path(__file__).resolve().parent.parent / "docs/team/content/verified"
+    doc = (root / "2026-11-18-bokken-suburi-en.md").read_text(encoding="utf-8")
+    approved = dict(re.findall(r"^\| `([^`]+)` \| (.+?) \| [^|]+ \|$", doc, flags=re.M))
+    assert sorted(approved) == sorted(["bokken-shomen-suburi", *[f"aiki-ken-suburi-{n}" for n in range(2, 8)]])
+    seed = {k["slug"]: k for k in BOKKEN}
+    for slug, text in approved.items():
+        assert seed[slug]["description_en"] == text, slug
+
+    assert seed["aiki-ken-suburi-7"]["title_en"] == "Aiki-ken suburi 7 — Shichi (nana) no suburi"
+    assert seed["aiki-ken-suburi-7"]["title_tr"] == seed["aiki-ken-suburi-7"]["title_en"]
 
 
 async def test_program_index_lists_both_and_links_from_dashboard(client):
