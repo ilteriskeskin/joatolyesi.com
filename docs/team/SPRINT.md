@@ -1,10 +1,13 @@
-# Aktif Sprint — 2026-11-18
+# Aktif Sprint — 2026-11-20
 
-Dal: `team/sprint-2026-11-18` (`team/sprint-2026-11-17` üstünden; 11-15, 11-16, 11-17 henüz merge edilmedi). Push, deploy ve prod erişimi yok, `.env` okunmaz.
-Merge edilmemiş 3 sprint dalı var: kural gereği **kod işi yok**, yalnız içerik. Planı orkestratör yazdı (kullanım tasarrufu).
+Dal: `team/sprint-2026-11-20` (`team/sprint-2026-11-19` üstünden; o dal merge bekliyor). Push, deploy ve prod erişimi yok, `.env` okunmaz.
+Planı orkestratör yazdı (kullanım tasarrufu).
 
-## İş 1: B-41 hijyen — aiki-ken suburi 1-7 için onaylı EN metin — `content-writer` → `fact-checker`
-Dayanak: `docs/team/content/verified/2026-11-15-30-gun-bokken-programi.md` §4. Seed'e uygulanması merge sonrası developer işi.
+Test ortamı hâlâ yok (`.venv`'de pytest yok), bu yüzden B-41a-2 yaması beklemede ve bugün kod işi açılmadı.
+
+## İş 1: B-39 adım 2-3 — karate/tkd video adayları, ilk 15 sayfa — `growth-marketer` → `fact-checker`
+Admin listesi gelmediği için "video yok" varsayıldı. Sayfa sırası `marketing/2026-11-12-gsc-analizi.md` gösterimlerine göre.
+Çıktı: `docs/team/marketing/2026-11-20-b39-video-adaylari.md`. İlteriş onayı olmadan seed'e girmez.
 
 ## Sonuç
-Fact-checker: ONAY. `docs/team/content/verified/2026-11-18-bokken-suburi-en.md`. Değişecek EN: suburi 1, 2, 4; 3/5/6/7 aynen kalır.
+15 slug'ın 7'sinde aday bulundu. Fact-checker yedisini de reddetti: kanalların kaynağı doğrulanamadı (6'sı ShotokanTV, 1'i JKA Perlis kanalındaki yeniden yükleme). Seed'e girecek video yok. Sonraki tur yalnız resmî JKA/ulusal federasyon ya da World Taekwondo/Kukkiwon kanallarında arama yapacak.
